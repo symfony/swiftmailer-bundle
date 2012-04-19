@@ -12,6 +12,7 @@
 namespace Symfony\Bundle\SwiftmailerBundle\EventListener;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\IntrospectableContainerInterface;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -34,6 +35,10 @@ class EmailSenderListener implements EventSubscriberInterface
 
     public function onKernelTerminate(PostResponseEvent $event)
     {
+        if ($container instanceof IntrospectableContainerInterface && !$container->initialized('mailer')) {
+            return;
+        }
+        
         $transport = $this->container->get('mailer')->getTransport();
         if (!$transport instanceof \Swift_Transport_SpoolTransport) {
             return;
