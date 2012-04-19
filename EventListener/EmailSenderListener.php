@@ -35,7 +35,7 @@ class EmailSenderListener implements EventSubscriberInterface
 
     public function onKernelTerminate(PostResponseEvent $event)
     {
-        if ($container instanceof IntrospectableContainerInterface && !$container->initialized('mailer')) {
+        if ($this->container instanceof IntrospectableContainerInterface && !$this->container->initialized('mailer')) {
             return;
         }
         
