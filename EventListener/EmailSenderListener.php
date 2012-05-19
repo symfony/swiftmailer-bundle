@@ -38,7 +38,7 @@ class EmailSenderListener implements EventSubscriberInterface
         if ($this->container instanceof IntrospectableContainerInterface && !$this->container->initialized('mailer')) {
             return;
         }
-        
+
         $transport = $this->container->get('mailer')->getTransport();
         if (!$transport instanceof \Swift_Transport_SpoolTransport) {
             return;
