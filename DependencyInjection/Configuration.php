@@ -80,7 +80,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('sleep')->defaultValue(0)->end()
                     ->end()
                 ->end()
-                ->scalarNode('delivery_address')
+                ->arrayNode('delivery_address')
                     ->beforeNormalization()
                         ->ifString()
                         ->then(function($v) {
