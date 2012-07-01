@@ -22,6 +22,8 @@
             <call method="setUsername"><argument>%swiftmailer.transport.smtp.username%</argument></call>
             <call method="setPassword"><argument>%swiftmailer.transport.smtp.password%</argument></call>
             <call method="setAuthMode"><argument>%swiftmailer.transport.smtp.auth_mode%</argument></call>
+            <call method="setTimeout"><argument>%swiftmailer.transport.smtp.timeout%</argument></call>
+            <call method="setSourceIp"><argument>%swiftmailer.transport.smtp.source_ip%</argument></call>
         </service>
     </services>
 </container>
