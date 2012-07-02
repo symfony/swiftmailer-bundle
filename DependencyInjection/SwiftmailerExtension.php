@@ -76,7 +76,7 @@ class SwiftmailerExtension extends Extension
             $config['port'] = 'ssl' === $config['encryption'] ? 465 : 25;
         }
 
-        foreach (array('encryption', 'port', 'host', 'username', 'password', 'auth_mode') as $key) {
+        foreach (array('encryption', 'port', 'host', 'username', 'password', 'auth_mode', 'timeout', 'source_ip') as $key) {
             $container->setParameter('swiftmailer.transport.smtp.'.$key, $config[$key]);
         }
 
