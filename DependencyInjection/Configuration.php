@@ -53,6 +53,8 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('password')->defaultNull()->end()
                 ->scalarNode('host')->defaultValue('localhost')->end()
                 ->scalarNode('port')->defaultFalse()->end()
+                ->scalarNode('timeout')->defaultValue(30)->end()
+                ->scalarNode('source_ip')->defaultNull()->end()
                 ->scalarNode('encryption')
                     ->defaultNull()
                     ->validate()
