@@ -11,6 +11,7 @@
     <xsd:all>
       <xsd:element name="spool" type="spool" minOccurs="0" maxOccurs="1" />
       <xsd:element name="antiflood" type="antiflood" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="delivery-address" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
     </xsd:all>
 
     <xsd:attribute name="username" type="xsd:string" />
@@ -21,7 +22,6 @@
     <xsd:attribute name="auth-mode" type="auth_mode" />
     <xsd:attribute name="transport" type="xsd:string" />
     <xsd:attribute name="type" type="xsd:string" />
-    <xsd:attribute name="delivery-address" type="xsd:string" />
     <xsd:attribute name="disable-delivery" type="xsd:boolean" />
     <xsd:attribute name="sender-address" type="xsd:boolean" />
     <xsd:attribute name="logging" type="xsd:string" />
