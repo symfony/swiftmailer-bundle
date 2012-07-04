@@ -47,6 +47,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('swiftmailer');
 
         $rootNode
+            ->fixXmlConfig('delivery_address', 'delivery_addresses')
             ->children()
                 ->scalarNode('transport')->defaultValue('smtp')->end()
                 ->scalarNode('username')->defaultNull()->end()
@@ -82,15 +83,8 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('sleep')->defaultValue(0)->end()
                     ->end()
                 ->end()
-                ->arrayNode('delivery_address')
-                    ->beforeNormalization()
-                        ->ifString()
-                        ->then(function($v) {
-                            return array($v);
-                        })
-
-                    ->end()
-                    ->prototype('scalar')->end()
+                ->arrayNode('delivery_addresses')
+                    ->prototype('variable')->end()
                 ->end()
                 ->booleanNode('disable_delivery')->end()
                 ->booleanNode('logging')->defaultValue($this->debug)->end()

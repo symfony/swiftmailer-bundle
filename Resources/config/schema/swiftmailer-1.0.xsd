@@ -11,7 +11,8 @@
     <xsd:all>
       <xsd:element name="spool" type="spool" minOccurs="0" maxOccurs="1" />
       <xsd:element name="antiflood" type="antiflood" minOccurs="0" maxOccurs="1" />
-      <xsd:element name="delivery-address" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+      <xsd:element name="delivery-address" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="delivery-addresses" type="delivery-addresses" minOccurs="0" maxOccurs="1" />
     </xsd:all>
 
     <xsd:attribute name="username" type="xsd:string" />
@@ -37,6 +38,12 @@
   <xsd:complexType name="antiflood">
     <xsd:attribute name="threshold" type="xsd:string" />
     <xsd:attribute name="sleep" type="xsd:string" />
+  </xsd:complexType>
+
+  <xsd:complexType name="delivery-addresses">
+    <xsd:sequence>
+      <xsd:element name="delivery-address" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+    </xsd:sequence>
   </xsd:complexType>
 
   <xsd:simpleType name="encryption">
