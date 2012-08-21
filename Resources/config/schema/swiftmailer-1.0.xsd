@@ -9,6 +9,7 @@
 
   <xsd:complexType name="config">
     <xsd:all>
+      <xsd:element name="delivery-whitelist" type="delivery_whitelist" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="spool" type="spool" minOccurs="0" maxOccurs="1" />
       <xsd:element name="antiflood" type="antiflood" minOccurs="0" maxOccurs="1" />
     </xsd:all>
@@ -62,4 +63,10 @@
       <xsd:enumeration value="none" />
     </xsd:restriction>
   </xsd:simpleType>
+
+  <xsd:complexType name="delivery_whitelist">
+    <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element name="pattern" type="xsd:string"/>
+    </xsd:choice>
+  </xsd:complexType>
 </xsd:schema>
