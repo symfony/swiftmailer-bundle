@@ -53,6 +53,30 @@ class SwiftmailerExtensionTest extends TestCase
     /**
      * @dataProvider getConfigTypes
      */
+    public function testFull($type)
+    {
+        $container = $this->loadContainerFromFile('full', $type);
+
+
+        $this->assertEquals('swiftmailer.transport.spool', (string) $container->getAlias('swiftmailer.transport'));
+        $this->assertEquals('swiftmailer.transport.smtp', (string) $container->getAlias('swiftmailer.transport.real'));
+        $this->assertTrue($container->has('swiftmailer.spool.memory'));
+        $this->assertEquals('example.org', $container->getParameter('swiftmailer.transport.smtp.host'));
+        $this->assertEquals('12345', $container->getParameter('swiftmailer.transport.smtp.port'));
+        $this->assertEquals('tls', $container->getParameter('swiftmailer.transport.smtp.encryption'));
+        $this->assertEquals('user', $container->getParameter('swiftmailer.transport.smtp.username'));
+        $this->assertEquals('pass', $container->getParameter('swiftmailer.transport.smtp.password'));
+        $this->assertEquals('login', $container->getParameter('swiftmailer.transport.smtp.auth_mode'));
+        $this->assertEquals('1000', $container->getParameter('swiftmailer.transport.smtp.timeout'));
+        $this->assertEquals('127.0.0.1', $container->getParameter('swiftmailer.transport.smtp.source_ip'));
+        $this->assertSame(array('swiftmailer.plugin' => array(array())), $container->getDefinition('swiftmailer.plugin.redirecting')->getTags());
+        $this->assertSame('single@host.com', $container->getParameter('swiftmailer.single_address'));
+        $this->assertEquals(array('/foo@.*/', '/.*@bar.com$/'), $container->getParameter('swiftmailer.delivery_whitelist'));
+    }
+
+    /**
+     * @dataProvider getConfigTypes
+     */
     public function testSpool($type)
     {
         $container = $this->loadContainerFromFile('spool', $type);
