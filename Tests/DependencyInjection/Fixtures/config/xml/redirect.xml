@@ -6,9 +6,7 @@
                         http://symfony.com/schema/dic/swiftmailer http://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
 
     <swiftmailer:config delivery-address="single@host.com">
-        <swiftmailer:delivery-whitelist>
-            <swiftmailer:pattern>/foo@.*/</swiftmailer:pattern>
-            <swiftmailer:pattern>/.*@bar.com$/</swiftmailer:pattern>
-        </swiftmailer:delivery-whitelist>
+        <swiftmailer:delivery-whitelist-pattern>/foo@.*/</swiftmailer:delivery-whitelist-pattern>
+        <swiftmailer:delivery-whitelist-pattern>/.*@bar.com$/</swiftmailer:delivery-whitelist-pattern>
     </swiftmailer:config>
 </container>
