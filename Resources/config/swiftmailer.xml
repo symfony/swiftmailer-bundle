@@ -63,6 +63,7 @@
 
         <service id="swiftmailer.plugin.redirecting" class="%swiftmailer.plugin.redirecting.class%" public="false">
             <argument>%swiftmailer.single_address%</argument>
+            <argument>%swiftmailer.delivery_whitelist%</argument>
         </service>
 
         <service id="swiftmailer.plugin.antiflood" class="%swiftmailer.plugin.antiflood.class%" public="false">
