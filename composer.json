@@ -23,7 +23,8 @@
     "require-dev": {
         "symfony/dependency-injection": "2.1.*",
         "symfony/http-kernel": "2.1.*",
-        "symfony/config": "2.1.*"
+        "symfony/config": "2.1.*",
+        "symfony/yaml": "2.1.*"
     },
     "autoload": {
         "psr-0": { "Symfony\\Bundle\\SwiftmailerBundle": "" }
@@ -33,5 +34,6 @@
         "branch-alias": {
             "dev-master": "2.1-dev"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }

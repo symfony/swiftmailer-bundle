@@ -8,10 +8,11 @@
   <xsd:element name="config" type="config" />
 
   <xsd:complexType name="config">
-    <xsd:all>
-      <xsd:element name="spool" type="spool" minOccurs="0" maxOccurs="1" />
+    <xsd:sequence>
       <xsd:element name="antiflood" type="antiflood" minOccurs="0" maxOccurs="1" />
-    </xsd:all>
+      <xsd:element name="spool" type="spool" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="delivery-whitelist-pattern" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
 
     <xsd:attribute name="username" type="xsd:string" />
     <xsd:attribute name="password" type="xsd:string" />
