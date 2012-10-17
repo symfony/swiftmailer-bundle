@@ -50,7 +50,7 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $mailer     = $this->getContainer()->get('swiftmailer.mailer');
+        $mailer     = $this->getContainer()->get('mailer');
         $transport  = $mailer->getTransport();
 
         if ($transport instanceof \Swift_Transport_SpoolTransport) {
