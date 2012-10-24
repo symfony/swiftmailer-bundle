@@ -23,7 +23,7 @@
     </parameters>
 
     <services>
-        <service id="swiftmailer.mailer" class="%swiftmailer.class%" public="false">
+        <service id="swiftmailer.mailer" class="%swiftmailer.class%"">
             <argument type="service" id="swiftmailer.transport" />
         </service>
 
