@@ -127,6 +127,10 @@ class SwiftmailerExtension extends Extension
             $container->setParameter('swiftmailer.single_address', null);
         }
         $container->setParameter('swiftmailer.delivery_whitelist', $config['delivery_whitelist']);
+
+        $this->addClassesToCompile(array(
+            'Symfony\\Bundle\\SwiftmailerBundle\\EventListener\\EmailSenderListener',
+        ));
     }
 
     /**
