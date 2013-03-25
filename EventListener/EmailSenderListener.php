@@ -28,7 +28,7 @@ class EmailSenderListener implements EventSubscriberInterface
 {
     private $container;
 
-    public function __construct(ContainerInterface $container, $autoStart = false)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
