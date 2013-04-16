@@ -24,13 +24,18 @@ class RegisterPluginsPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
-        if (!$container->hasDefinition('swiftmailer.mailer')) {
+        if (!$container->findDefinition('swiftmailer.mailer') || !$container->getParameter('swiftmailer.mailers')) {
             return;
         }
 
-        $definition = $container->findDefinition('swiftmailer.transport');
-        foreach ($container->findTaggedServiceIds('swiftmailer.plugin') as $id => $args) {
-            $definition->addMethodCall('registerPlugin', array(new Reference($id)));
+        $mailers = $container->getParameter('swiftmailer.mailers');
+        foreach ($mailers as $name => $mailer) {
+            $plugins = $container->findTaggedServiceIds(sprintf('swiftmailer.%s.plugin', $name));
+            $transport = sprintf('swiftmailer.mailer.%s.transport', $name);
+            $definition = $container->findDefinition($transport);
+            foreach ($plugins as $id => $args) {
+                $definition->addMethodCall('registerPlugin', array(new Reference($id)));
+            }
         }
     }
 }

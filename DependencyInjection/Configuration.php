@@ -47,6 +47,47 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('swiftmailer');
 
         $rootNode
+            ->beforeNormalization()
+                ->ifTrue(function ($v) { return is_array($v) && !array_key_exists('mailers', $v) && !array_key_exists('mailer', $v); })
+                ->then(function($v) {
+                    $mailer = array();
+                    foreach ($v as $key => $value) {
+                        if ('default_mailer' == $key) {
+                            continue;
+                        }
+                        $mailer[$key] = $v[$key];
+                        unset($v[$key]);
+                    }
+                    $v['default_mailer'] = isset($v['default_mailer']) ? (string) $v['default_mailer'] : 'default';
+                    $v['mailers'] = array($v['default_mailer'] => $mailer);
+
+                    return $v;
+                })
+            ->end()
+            ->children()
+                ->scalarNode('default_mailer')->end()
+                ->append($this->getMailersNode())
+            ->end()
+            ->fixXmlConfig('mailer')
+        ;
+
+        return $treeBuilder;
+    }
+
+    /**
+     * Return the mailers node
+     *
+     * @return ArrayNodeDefinition
+     */
+    private function getMailersNode()
+    {
+        $treeBuilder = new TreeBuilder();
+        $node = $treeBuilder->root('mailers');
+
+        $node
+            ->requiresAtLeastOneElement()
+            ->useAttributeAsKey('name')
+                ->prototype('array')
             ->children()
                 ->scalarNode('transport')->defaultValue('smtp')->end()
                 ->scalarNode('username')->defaultNull()->end()
@@ -69,20 +110,21 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('The %s authentication mode is not supported')
                     ->end()
                 ->end()
-                ->arrayNode('spool')
-                    ->children()
-                        ->scalarNode('type')->defaultValue('file')->end()
-                        ->scalarNode('path')->defaultValue('%kernel.cache_dir%/swiftmailer/spool')->end()
-                    ->end()
-                ->end()
                 ->scalarNode('sender_address')->end()
+                ->scalarNode('delivery_address')->end()
                 ->arrayNode('antiflood')
                     ->children()
                         ->scalarNode('threshold')->defaultValue(99)->end()
                         ->scalarNode('sleep')->defaultValue(0)->end()
                     ->end()
                 ->end()
-                ->scalarNode('delivery_address')->end()
+                ->booleanNode('logging')->defaultValue($this->debug)->end()
+                ->arrayNode('spool')
+                    ->children()
+                        ->scalarNode('type')->defaultValue('file')->end()
+                        ->scalarNode('path')->defaultValue('%kernel.cache_dir%/swiftmailer/spool')->end()
+                    ->end()
+                ->end()
             ->end()
             ->fixXmlConfig('delivery_whitelist_pattern', 'delivery_whitelist')
             ->children()
@@ -91,10 +133,9 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->booleanNode('disable_delivery')->end()
-                ->booleanNode('logging')->defaultValue($this->debug)->end()
             ->end()
         ;
 
-        return $treeBuilder;
+        return $node;
     }
 }
