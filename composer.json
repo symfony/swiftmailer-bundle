@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": ">=5.3.2",
-        "swiftmailer/swiftmailer": ">=4.2.0,<4.4-dev",
+        "swiftmailer/swiftmailer": ">=4.2.0,<5.1-dev",
         "symfony/swiftmailer-bridge": "~2.1"
     },
     "require-dev": {
