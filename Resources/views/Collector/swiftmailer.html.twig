@@ -47,7 +47,7 @@
 
             <p>
                 <pre>
-                    {%- if message.charset %}
+                    {%- if messagePart.charset is defined and message.charset %}
                         {{- message.body|e('html', message.charset)|convert_encoding('UTF-8', message.charset) }}
                     {%- else %}
                         {{- message.body|e('html') }}
