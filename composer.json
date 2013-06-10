@@ -24,6 +24,8 @@
         "symfony/yaml": "~2.3|~3.0"
     },
     "require-dev": {
+        "symfony/console": "~2.3|~3.0",
+        "symfony/framework-bundle": "~2.3|~3.0",
         "symfony/phpunit-bridge": "~2.7|~3.0"
     },
     "suggest": {
