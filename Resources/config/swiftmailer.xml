@@ -16,25 +16,34 @@
         <parameter key="swiftmailer.plugin.impersonate.class">Swift_Plugins_ImpersonatePlugin</parameter>
         <parameter key="swiftmailer.plugin.messagelogger.class">Swift_Plugins_MessageLogger</parameter>
         <parameter key="swiftmailer.plugin.antiflood.class">Swift_Plugins_AntiFloodPlugin</parameter>
-        <parameter key="swiftmailer.plugin.antiflood.threshold">99</parameter>
-        <parameter key="swiftmailer.plugin.antiflood.sleep">0</parameter>
 
-        <parameter key="swiftmailer.data_collector.class">Symfony\Bridge\Swiftmailer\DataCollector\MessageDataCollector</parameter>
+        <parameter key="swiftmailer.transport.smtp.class">Swift_Transport_EsmtpTransport</parameter>
+
+        <parameter key="swiftmailer.plugin.redirecting.class">Swift_Plugins_RedirectingPlugin</parameter>
+        <parameter key="swiftmailer.plugin.blackhole.class">Swift_Plugins_BlackholePlugin</parameter>
+
+        <parameter key="swiftmailer.spool.file.class">Swift_FileSpool</parameter>
+
+        <parameter key="swiftmailer.spool.memory.class">Swift_MemorySpool</parameter>
+        <parameter key="swiftmailer.email_sender.listener.class">Symfony\Bundle\SwiftmailerBundle\EventListener\EmailSenderListener</parameter>
+
+        <parameter key="swiftmailer.data_collector.class">Symfony\Bundle\SwiftmailerBundle\DataCollector\MessageDataCollector</parameter>
     </parameters>
 
     <services>
-        <service id="swiftmailer.mailer" class="%swiftmailer.class%" public="false">
+        <service id="swiftmailer.mailer.abstract" class="%swiftmailer.class%" public="true" abstract="true">
             <argument type="service" id="swiftmailer.transport" />
         </service>
 
-        <service id="swiftmailer.transport.sendmail" class="%swiftmailer.transport.sendmail.class%" public="false">
+        <service id="swiftmailer.transport.sendmail.abstract" class="%swiftmailer.transport.sendmail.class%" abstract="true" public="false">
             <argument type="service" id="swiftmailer.transport.buffer" />
-            <argument type="service" id="swiftmailer.transport.eventdispatcher" />
         </service>
 
-        <service id="swiftmailer.transport.mail" class="%swiftmailer.transport.mail.class%" public="false">
+        <service id="swiftmailer.transport.mail.abstract" class="%swiftmailer.transport.mail.class%" abstract="true" public="false">
             <argument type="service" id="swiftmailer.transport.mailinvoker" />
-            <argument type="service" id="swiftmailer.transport.eventdispatcher" />
+        </service>
+
+        <service id="swiftmailer.transport.null.abstract" class="Swift_Transport_NullTransport" abstract="true" public="false">
         </service>
 
         <service id="swiftmailer.transport.failover" class="%swiftmailer.transport.failover.class%" public="false" />
@@ -53,35 +62,36 @@
             </argument>
         </service>
 
-        <service id="swiftmailer.transport.eventdispatcher" class="Swift_Events_SimpleEventDispatcher" public="false" />
+        <service id="swiftmailer.transport.eventdispatcher.abstract" class="Swift_Events_SimpleEventDispatcher" abstract="true" public="false" />
 
         <service id="swiftmailer.transport.replacementfactory" class="Swift_StreamFilters_StringReplacementFilterFactory" public="false" />
 
-        <service id="swiftmailer.transport.null" class="Swift_Transport_NullTransport" public="false">
-            <argument type="service" id="swiftmailer.transport.eventdispatcher" />
+        <service id="swiftmailer.plugin.redirecting.abstract" class="%swiftmailer.plugin.redirecting.class%" abstract="true" public="false" />
+
+        <service id="swiftmailer.plugin.antiflood.abstract" class="%swiftmailer.plugin.antiflood.class%" abstract="true" public="false" />
+
+        <service id="swiftmailer.plugin.impersonate.abstract" class="%swiftmailer.plugin.impersonate.class%" abstract="true" public="false" />
+
+        <service id="swiftmailer.plugin.messagelogger.abstract" class="%swiftmailer.plugin.messagelogger.class%" abstract="true" />
+
+        <service id="swiftmailer.transport.smtp.abstract" class="%swiftmailer.transport.smtp.class%" public="false" abstract="true" />
+
+        <service id="swiftmailer.transport.spool.abstract" class="Swift_Transport_SpoolTransport" public="false" abstract="true" />
+
+        <service id="swiftmailer.spool.file.abstract" class="%swiftmailer.spool.file.class%" public="false" abstract="true">
+            <argument>%kernel.root_dir%/../data/swiftmailer/spool</argument>
         </service>
 
-        <service id="swiftmailer.plugin.redirecting" class="%swiftmailer.plugin.redirecting.class%" public="false">
-            <argument>%swiftmailer.single_address%</argument>
-            <argument>%swiftmailer.delivery_whitelist%</argument>
-        </service>
+        <service id="swiftmailer.spool.memory.abstract" class="%swiftmailer.spool.memory.class%" public="false" abstract="true" />
 
-        <service id="swiftmailer.plugin.antiflood" class="%swiftmailer.plugin.antiflood.class%" public="false">
-            <argument>%swiftmailer.plugin.antiflood.threshold%</argument>
-            <argument>%swiftmailer.plugin.antiflood.sleep%</argument>
+        <service id="swiftmailer.email_sender.listener" class="%swiftmailer.email_sender.listener.class%">
+            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="service_container" />
         </service>
-
-        <service id="swiftmailer.plugin.impersonate" class="%swiftmailer.plugin.impersonate.class%" public="false">
-            <argument>%swiftmailer.sender_address%</argument>
-        </service>
-
-        <service id="swiftmailer.plugin.messagelogger" class="%swiftmailer.plugin.messagelogger.class%" />
 
         <service id="swiftmailer.data_collector" class="%swiftmailer.data_collector.class%" public="false">
             <argument type="service" id="service_container" />
-            <argument>%swiftmailer.spool.enabled%</argument>
         </service>
 
-        <service id="swiftmailer.transport" alias="swiftmailer.transport.smtp" public="false" />
     </services>
 </container>

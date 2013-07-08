@@ -38,18 +38,21 @@ class EmailSenderListener implements EventSubscriberInterface
         if ($this->container instanceof IntrospectableContainerInterface && !$this->container->initialized('mailer')) {
             return;
         }
-
-        $transport = $this->container->get('mailer')->getTransport();
-        if (!$transport instanceof \Swift_Transport_SpoolTransport) {
-            return;
+        $mailers = array_keys($this->container->getParameter('swiftmailer.mailers'));
+        foreach ($mailers as $name) {
+            if ($this->container->initialized(sprintf('swiftmailer.mailer.%s', $name))) {
+                if ($this->container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name))) {
+                    $mailer = $this->container->get(sprintf('swiftmailer.mailer.%s', $name));
+                    $transport = $mailer->getTransport();
+                    if ($transport instanceof \Swift_Transport_SpoolTransport) {
+                        $spool = $transport->getSpool();
+                        if ($spool instanceof \Swift_MemorySpool) {
+                            $spool->flushQueue($this->container->get(sprintf('swiftmailer.mailer.%s.transport.real', $name)));
+                        }
+                    }
+                }
+            }
         }
-
-        $spool = $transport->getSpool();
-        if (!$spool instanceof \Swift_MemorySpool) {
-            return;
-        }
-
-        $spool->flushQueue($this->container->get('swiftmailer.transport.real'));
     }
 
     static public function getSubscribedEvents()
