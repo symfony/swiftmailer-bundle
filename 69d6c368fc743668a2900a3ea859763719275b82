@@ -1,0 +1,253 @@
+---------------------------------------------------------------------------
+
+by stof at 2013-04-17T13:06:54Z
+
+You should have 2 tests with the extended config formats: one with several mailers (the one you added here) and 1 with a single mailer IMO. It will show you that the XML config is wrong currently (parsing XML produces a different result for 1 or several childs, and using a bad XML structure does not allow the Config component to normalize it)
+
+---------------------------------------------------------------------------
+
+by stof at 2013-04-17T13:12:37Z
+
+you also need to update the profiler integration to avoid mixing the different mailers together (it might require branching for 2.3 as the DataCollector is in the bridge)
+
+---------------------------------------------------------------------------
+
+by jeremyFreeAgent at 2013-04-29T16:46:43Z
+
+I've added the test with a single mailer and the DataCollector.
+
+---------------------------------------------------------------------------
+
+by shouze at 2013-04-30T00:17:55Z
+
+Nice job! :+1:
+
+---------------------------------------------------------------------------
+
+by bmeynell at 2013-05-02T20:20:20Z
+
+:+1: Much needed
+
+---------------------------------------------------------------------------
+
+by jeremyFreeAgent at 2013-05-03T14:31:36Z
+
+What to you think about it @stof ?
+
+---------------------------------------------------------------------------
+
+by shouze at 2013-05-03T14:32:42Z
+
+Tested, looks ready :hammer:
+
+---------------------------------------------------------------------------
+
+by bmeynell at 2013-05-03T17:38:19Z
+
+@jeremyFreeAgent / @shouze - it says Travis is failing?
+
+---------------------------------------------------------------------------
+
+by jeremyFreeAgent at 2013-05-03T17:42:10Z
+
+@bmeynell it's because of the `Resources/config/schema/swiftmailer-1.0.xsd` update and the
+```xml
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:swiftmailer="http://symfony.com/schema/dic/swiftmailer"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd
+                        http://symfony.com/schema/dic/swiftmailer http://symfony.com/schema/dic/swiftmailer/swiftmailer-1.0.xsd">
+```
+in the tests XML files.
+
+---------------------------------------------------------------------------
+
+by shouze at 2013-05-03T17:48:10Z
+
+@bmeynell : @jeremyFreeAgent can't upload the new xsd on symfony.com... so unless he puts a file:// scheme with the complete local filesystem path to the xsd it won't pass tests... and of course no way to do it.
+
+This feature is non BC break and tests will pass when the new xsd will be online.
+If you try locally on your computer with the file:// scheme trick you'll see it's okay :wink:
+
+---------------------------------------------------------------------------
+
+by shouze at 2013-05-03T17:57:58Z
+
+@bmeynell there's one solution : having a proxy that match & serve the local xsd during the tests instead of fetching the online (and maybe not up2date) one.
+
+@stof what about implementing this solution ?
+
+---------------------------------------------------------------------------
+
+by bmeynell at 2013-05-03T20:07:52Z
+
+Is this a configuration BC break? I seemed to had to define the `mailers:` node even for just *one mailer*. I also had to comment out my antiflood configuration or else an exception was thrown. Other than that, I'm successfully using two mailers now in my fork! :)
+
+---------------------------------------------------------------------------
+
+by bmeynell at 2013-05-03T20:27:39Z
+
+Hmm.. CLI works but symfony doesn't load via the web:
+
+```
+ErrorException: Warning: Missing argument 2 for Symfony\Bridge\Swiftmailer\DataCollector\MessageDataCollector::__construct(), called in app/cache/dev/appDevDebugProjectContainer.php on line 3348 and defined in src/vendor/symfony/src/Symfony/Bridge/Swiftmailer/DataCollector/MessageDataCollector.php line 39
+```
+
+Thoughts?
+
+---------------------------------------------------------------------------
+
+by shouze at 2013-05-03T20:53:16Z
+
+Yes there's also a PR on SwiftMailerBridge ;)
+
+Le vendredi 3 mai 2013, Ben Meynell a écrit :
+
+> Hmm.. CLI works but symfony doesn't load via the web:
+>
+> ErrorException: Warning: Missing argument 2 for Symfony\Bridge\Swiftmailer\DataCollector\MessageDataCollector::__construct(), called in app/cache/dev/appDevDebugProjectContainer.php on line 3348 and defined in src/vendor/symfony/src/Symfony/Bridge/Swiftmailer/DataCollector/MessageDataCollector.php line 39
+>
+> Thoughts?
+>
+> —
+> Reply to this email directly or view it on GitHub<https://github.com/symfony/SwiftmailerBundle/pull/34#issuecomment-17416287>
+> .
+>
+
+--
+Cordialement,
+Sébastien HOUZÉ
+
+---------------------------------------------------------------------------
+
+by jeremyFreeAgent at 2013-05-03T22:26:18Z
+
+Yes, you should update the bridge too. @bmeynell can you write your config please? I will take a look. Thanky.
+
+---------------------------------------------------------------------------
+
+by bmeynell at 2013-05-06T16:08:42Z
+
+Bridge updated! TY!
+
+@jeremyFreeAgent - My config:
+
+```yaml
+    mailers:
+        default:
+            encryption: ssl
+            auth_mode:  login
+            transport:  %mailer.transport%
+            host:       %mailer.host%
+            port:       %mailer.port%
+            username:   %mailer.user%
+            password:   %mailer.password%
+            antiflood:
+                threshold:            100
+                sleep:                1
+        second:
+            encryption: ssl
+            auth_mode:  login
+            transport:  %mailer.transport%
+            host:       %mailer.host%
+            port:       %mailer.port%
+            username:   %second.mailer.user%
+            password:   %second.mailer.password%
+            antiflood:
+                threshold:            100
+                sleep:                1
+```
+
+Error:
+
+```
+  [Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException]
+  The service "swiftmailer.mailer.default.pl
+  ugin.antiflood" has a dependency on a non-
+  existent parameter "swiftmailer.mailer.def
+  ault.antiflood.threshold".
+```
+
+---------------------------------------------------------------------------
+
+by jeremyFreeAgent at 2013-05-06T16:19:56Z
+
+@bmeynell Fixed, typo in the parameter name. Sorry.
+
+---------------------------------------------------------------------------
+
+by stof at 2013-05-10T09:43:19Z
+
+If the XSD is validated using the file on symfony.com, it means there is a bug in Symfony. The code should use the local XSD file: https://github.com/symfony/symfony/blob/master/src/Symfony/Component/DependencyInjection/Loader/XmlFileLoader.php#L282
+
+---------------------------------------------------------------------------
+
+by jeremyFreeAgent at 2013-05-10T09:45:17Z
+
+@stof Good to know. Thanky.
+
+---------------------------------------------------------------------------
+
+by jeremyFreeAgent at 2013-05-10T13:39:23Z
+
+Time to squash?
+
+---------------------------------------------------------------------------
+
+by jeremyFreeAgent at 2013-05-10T14:44:06Z
+
+I've squashed the commits.
+
+---------------------------------------------------------------------------
+
+by tyx at 2013-05-10T15:06:21Z
+
+:beer:
+
+---------------------------------------------------------------------------
+
+by shouze at 2013-05-10T15:11:58Z
+
+@fabpot, @stof  It's sunny there in Marseille, can't wait.... merge time ? :beers:
+
+---------------------------------------------------------------------------
+
+by jeremyFreeAgent at 2013-05-15T08:59:15Z
+
+I've rebased to merge #37 updates.
+
+---------------------------------------------------------------------------
+
+by shouze at 2013-05-17T13:42:36Z
+
+@fabpot ping
+
+---------------------------------------------------------------------------
+
+by lfalorni at 2013-05-20T07:00:12Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by popofr13 at 2013-05-21T15:53:08Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by npotier at 2013-05-31T10:45:51Z
+
+:+1:
+
+---------------------------------------------------------------------------
+
+by csanquer at 2013-06-01T10:09:59Z
+
+i wonder if i should merge and adapt my pull request #35 ( a sending test email command) with your PR ?
+
+---------------------------------------------------------------------------
+
+by shouze at 2013-06-12T15:09:47Z
+
+@csanquer yes, sounds a good idea but I can't take the decision myself.
