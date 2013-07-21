@@ -44,6 +44,28 @@ class SwiftmailerExtensionTest extends TestCase
     /**
      * @dataProvider getConfigTypes
      */
+    public function testSendmailConfig($type)
+    {
+        $container = $this->loadContainerFromFile('sendmail', $type);
+
+        $this->assertEquals('swiftmailer.mailer.default.transport', (string) $container->getAlias('swiftmailer.transport'));
+        $this->assertEquals('swiftmailer.mailer.default.transport.sendmail', (string) $container->getAlias('swiftmailer.mailer.default.transport'));
+    }
+    
+    /**
+     * @dataProvider getConfigTypes
+     */
+    public function testMailConfig($type)
+    {
+        $container = $this->loadContainerFromFile('mail', $type);
+
+        $this->assertEquals('swiftmailer.mailer.default.transport', (string) $container->getAlias('swiftmailer.transport'));
+        $this->assertEquals('swiftmailer.mailer.default.transport.mail', (string) $container->getAlias('swiftmailer.mailer.default.transport'));
+    }
+    
+    /**
+     * @dataProvider getConfigTypes
+     */
     public function testNullTransport($type)
     {
         $container = $this->loadContainerFromFile('null', $type);
