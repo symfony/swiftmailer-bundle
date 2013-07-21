@@ -134,11 +134,24 @@ class SwiftmailerExtension extends Extension
                 ->addMethodCall('setSourceIp', array('%swiftmailer.mailer.' . $name . '.transport.smtp.source_ip%'))
             ;
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
-        } elseif (in_array($transport, array('mail', 'sendmail'))) {
+        } elseif ('sendmail' === $transport) {
             $definitionDecorator = new DefinitionDecorator(sprintf('swiftmailer.transport.%s.abstract', $transport));
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport), $definitionDecorator)
-                ->addArgument(new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)))
+                ->setArguments(array(
+                    new Reference('swiftmailer.transport.buffer'),
+                    new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
+                ))
+            ;
+            $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
+        } elseif ('mail' === $transport) {
+            $definitionDecorator = new DefinitionDecorator(sprintf('swiftmailer.transport.%s.abstract', $transport));
+            $container
+                ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport), $definitionDecorator)
+                ->setArguments(array(
+                    new Reference('swiftmailer.transport.mailinvoker'),
+                    new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
+                ))
             ;
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
         } elseif ('null' === $transport) {
