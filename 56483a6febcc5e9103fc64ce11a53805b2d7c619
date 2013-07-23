@@ -1,0 +1,88 @@
+---------------------------------------------------------------------------
+
+by stof at 2013-07-20T14:37:00Z
+
+Can you add a test covering this issue to avoid regressions ?
+
+---------------------------------------------------------------------------
+
+by csanquer at 2013-07-20T16:09:10Z
+
+I don't know how to test this, the exception occured when we call the replaceArgument on the DefinitionDecorator class but it is the Definition::replaceArgument method which is really called
+
+---------------------------------------------------------------------------
+
+by stof at 2013-07-20T18:00:46Z
+
+does your test fail if you undo your patch ? This is the good way to see if the test is accurate: failing without the patch and passing with it
+
+---------------------------------------------------------------------------
+
+by csanquer at 2013-07-21T09:16:43Z
+
+I can't reproduce the bug inside the bundle with phpunit and the bundles vendors, but without this patch it failed every time on my symfony 2.3 project
+
+---------------------------------------------------------------------------
+
+by csanquer at 2013-07-21T09:22:13Z
+
+I think in a real symfony project the definition decorator doesn't respect fully the service configuration set in swiftmailer.xml :
+
+```xml
+<service id="swiftmailer.transport.sendmail.abstract" class="%swiftmailer.transport.sendmail.class%" abstract="true" public="false">
+    <argument type="service" id="swiftmailer.transport.buffer" />
+</service>
+
+<service id="swiftmailer.transport.mail.abstract" class="%swiftmailer.transport.mail.class%" abstract="true" public="false">
+    <argument type="service" id="swiftmailer.transport.mailinvoker" />
+</service>
+```
+
+compared to :
+
+```php
+} elseif (in_array($transport, array('mail', 'sendmail'))) {
+            $definitionDecorator = new DefinitionDecorator(sprintf('swiftmailer.transport.%s.abstract', $transport));
+            $container
+                ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport), $definitionDecorator)
+                ->addArgument(new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)))
+            ;
+            $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
+        }
+```
+
+---------------------------------------------------------------------------
+
+by csanquer at 2013-07-21T09:26:06Z
+
+Maybe an explicit definition arguments settings will be clearer :
+
+```php
+} elseif ('sendmail' === $transport) {
+            $definitionDecorator = new DefinitionDecorator(sprintf('swiftmailer.transport.%s.abstract', $transport));
+            $container
+                ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport), $definitionDecorator)
+                ->setArguments(array(
+                    new Reference('swiftmailer.transport.buffer'),
+                    new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
+                ))
+            ;
+            $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
+        } elseif ('mail' === $transport) {
+            $definitionDecorator = new DefinitionDecorator(sprintf('swiftmailer.transport.%s.abstract', $transport));
+            $container
+                ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport), $definitionDecorator)
+                ->setArguments(array(
+                    new Reference('swiftmailer.transport.mailinvoker'),
+                    new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
+                ))
+            ;
+            $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
+        }
+```
+
+---------------------------------------------------------------------------
+
+by bamarni at 2013-07-23T13:32:32Z
+
+:+1: I'm facing the same bug (since #34 has been merged) and I can confirm this patch fixes it.
