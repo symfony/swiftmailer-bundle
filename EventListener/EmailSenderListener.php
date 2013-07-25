@@ -35,12 +35,12 @@ class EmailSenderListener implements EventSubscriberInterface
 
     public function onKernelTerminate(PostResponseEvent $event)
     {
-        if ($this->container instanceof IntrospectableContainerInterface && !$this->container->initialized('mailer')) {
+        if (!$this->container->has('mailer')) {
             return;
         }
         $mailers = array_keys($this->container->getParameter('swiftmailer.mailers'));
         foreach ($mailers as $name) {
-            if ($this->container->initialized(sprintf('swiftmailer.mailer.%s', $name))) {
+            if ($this->container instanceof IntrospectableContainerInterface ? $this->container->initialized(sprintf('swiftmailer.mailer.%s', $name)) : $this->container->has(sprintf('swiftmailer.mailer.%s', $name))) {
                 if ($this->container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name))) {
                     $mailer = $this->container->get(sprintf('swiftmailer.mailer.%s', $name));
                     $transport = $mailer->getTransport();
