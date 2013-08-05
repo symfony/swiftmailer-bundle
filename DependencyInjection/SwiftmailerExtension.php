@@ -59,7 +59,7 @@ class SwiftmailerExtension extends Extension
         $container->setParameter('swiftmailer.mailers', $mailers);
         $container->setParameter('swiftmailer.default_mailer', $config['default_mailer']);
 
-        $container->findDefinition('swiftmailer.data_collector')->addTag('data_collector', array('template' => 'SwiftmailerBundle:Collector:swiftmailer', 'id' => 'swiftmailer'));
+        $container->findDefinition('swiftmailer.data_collector')->addTag('data_collector', array('template' => '@Swiftmailer/Collector/swiftmailer.html.twig', 'id' => 'swiftmailer'));
 
         $container->setAlias('mailer', 'swiftmailer.mailer');
     }
