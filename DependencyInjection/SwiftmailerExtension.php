@@ -149,7 +149,6 @@ class SwiftmailerExtension extends Extension
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport), $definitionDecorator)
                 ->setArguments(array(
-                    new Reference('swiftmailer.transport.mailinvoker'),
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
                 ))
             ;
