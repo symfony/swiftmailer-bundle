@@ -178,8 +178,12 @@ class SwiftmailerExtension extends Extension
     {
         if (isset($mailer['spool'])) {
             $type = $mailer['spool']['type'];
-            foreach (array('path') as $key) {
-                $container->setParameter(sprintf('swiftmailer.spool.%s.%s.%s', $name, $type, $key), $mailer['spool'][$key] . '/' . $name);
+            if ('service' === $type) {
+                $container->setAlias(sprintf('swiftmailer.mailer.%s.spool.service', $name), $mailer['spool']['id']);
+            } else {
+                foreach (array('path') as $key) {
+                    $container->setParameter(sprintf('swiftmailer.spool.%s.%s.%s', $name, $type, $key), $mailer['spool'][$key] . '/' . $name);
+                }
             }
 
             $definitionDecorator = new DefinitionDecorator(sprintf('swiftmailer.spool.%s.abstract', $type));
