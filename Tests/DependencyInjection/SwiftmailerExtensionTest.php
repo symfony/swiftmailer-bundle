@@ -186,6 +186,30 @@ class SwiftmailerExtensionTest extends TestCase
     /**
      * @dataProvider getConfigTypes
      */
+    public function testServiceSpool($type)
+    {
+        $container = $this->loadContainerFromFile('spool_service', $type);
+
+        $this->assertEquals('swiftmailer.mailer.default.transport', (string) $container->getAlias('swiftmailer.transport'));
+        $this->assertEquals('swiftmailer.mailer.default.transport.spool', (string) $container->getAlias('swiftmailer.mailer.default.transport'));
+        $this->assertEquals('swiftmailer.mailer.default.transport.real', (string) $container->getAlias('swiftmailer.transport.real'));
+        $this->assertEquals('swiftmailer.mailer.default.transport.smtp', (string) $container->getAlias('swiftmailer.mailer.default.transport.real'));
+        $this->assertEquals('custom_service_id', (string) $container->getAlias('swiftmailer.mailer.default.spool.service'));
+        $this->assertTrue($container->has('swiftmailer.mailer.default.spool.service'), 'Service based spool is configured');
+    }
+
+    /**
+     * @dataProvider getConfigTypes
+     * @expectedException \Symfony\Component\Config\Definition\Exception\InvalidConfigurationException
+     */
+    public function testInvalidServiceSpool($type)
+    {
+        $this->loadContainerFromFile('spool_service_invalid', $type);
+    }
+
+    /**
+     * @dataProvider getConfigTypes
+     */
     public function testSmtpConfig($type)
     {
         $container = $this->loadContainerFromFile('smtp', $type);
