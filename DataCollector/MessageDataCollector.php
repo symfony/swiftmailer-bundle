@@ -113,11 +113,11 @@ class MessageDataCollector extends DataCollector
     }
 
     /**
-     * Returns the message of a mailer.
+     * Returns the messages of a mailer.
      *
      * @return array The messages.
      */
-    public function getMessages($name)
+    public function getMessages($name = 'default')
     {
         if ($data = $this->getMailerData($name)) {
             return $data['messages'];
