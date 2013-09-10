@@ -269,6 +269,7 @@ class SwiftmailerExtensionTest extends TestCase
         $container = $this->loadContainerFromFile('sender_address', $type);
 
         $this->assertEquals('noreply@test.com', $container->getParameter('swiftmailer.mailer.default.sender_address'));
+        $this->assertEquals('swiftmailer.mailer.default.sender_address', (string) $container->getAlias('swiftmailer.sender_address'));
         $this->assertTrue($container->hasParameter('swiftmailer.mailer.default.sender_address'), 'The sender address is configured');
     }
 

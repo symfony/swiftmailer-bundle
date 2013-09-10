@@ -101,6 +101,7 @@ class SwiftmailerExtension extends Extension
         if ($isDefaultMailer) {
             $container->setAlias('swiftmailer.mailer', sprintf('swiftmailer.mailer.%s', $name));
             $container->setAlias('swiftmailer.transport', sprintf('swiftmailer.mailer.%s.transport', $name));
+            $container->setAlias('swiftmailer.sender_address', sprintf('swiftmailer.mailer.%s.sender_address', $name));
             $container->setParameter('swiftmailer.spool.enabled', $container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)));
             $container->setParameter('swiftmailer.delivery.enabled', $container->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)));
             $container->setParameter('swiftmailer.single_address', $container->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name)));
