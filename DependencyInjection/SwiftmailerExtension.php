@@ -92,6 +92,7 @@ class SwiftmailerExtension extends Extension
 
         $this->configureMailerTransport($name, $mailer, $container, $transport, $isDefaultMailer);
         $this->configureMailerSpool($name, $mailer, $container, $transport, $isDefaultMailer);
+        $this->configureMailerSenderAddress($name, $mailer, $container, $isDefaultMailer);
         $this->configureMailerAntiFlood($name, $mailer, $container, $isDefaultMailer);
         $this->configureMailerDeliveryAddress($name, $mailer, $container, $isDefaultMailer);
         $this->configureMailerLogging($name, $mailer, $container, $isDefaultMailer);
