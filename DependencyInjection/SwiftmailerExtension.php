@@ -101,7 +101,6 @@ class SwiftmailerExtension extends Extension
         if ($isDefaultMailer) {
             $container->setAlias('swiftmailer.mailer', sprintf('swiftmailer.mailer.%s', $name));
             $container->setAlias('swiftmailer.transport', sprintf('swiftmailer.mailer.%s.transport', $name));
-            $container->setAlias('swiftmailer.sender_address', sprintf('swiftmailer.mailer.%s.sender_address', $name));
             $container->setParameter('swiftmailer.spool.enabled', $container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)));
             $container->setParameter('swiftmailer.delivery.enabled', $container->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)));
             $container->setParameter('swiftmailer.single_address', $container->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name)));
@@ -234,6 +233,7 @@ class SwiftmailerExtension extends Extension
             $container->getDefinition(sprintf('swiftmailer.mailer.%s.plugin.impersonate', $name))->addTag(sprintf('swiftmailer.%s.plugin', $name));
             if (true === $isDefaultMailer) {
                 $container->setAlias('swiftmailer.plugin.impersonate', sprintf('swiftmailer.mailer.%s.plugin.impersonate', $name));
+                $container->setParameter('swiftmailer.sender_address', $container->getParameter(sprintf('swiftmailer.mailer.%s.sender_address', $name)));
             }
         } else {
             $container->setParameter(sprintf('swiftmailer.mailer.%s.plugin.impersonate', $name), null);
