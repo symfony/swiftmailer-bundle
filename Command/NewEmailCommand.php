@@ -51,7 +51,6 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $options = array();
         $mailerServiceName = sprintf('swiftmailer.mailer.%s', $this->getOption('mailer'));
         if (!$this->getContainer()->has($mailerServiceName)) {
             throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist', $this->getOption('mailer')));
@@ -59,16 +58,11 @@ EOF
 
         $dialog = $this->getHelper('dialog');
         foreach ($this->options as $option) {
+            $input->setOption($option, $dialog->ask($output,
+                sprintf('<question>%s</question>: ', ucfirst($option))
+            ));
         }
 
-        $message = \Swift_Message::newInstance(
-            $options['subject'],
-            $options['body'],
-            $options['content-type'],
-            $options['charset']
-        )
-            ->setFrom($options['from'])
-            ->setTo($options['to']);
         $transport = $this->getContainer()->get($mailerServiceName)->getTransport();
         $transport->start();
         $output->writeln(sprintf('<info>Sent %s emails<info>', $transport->send($message)));
@@ -81,5 +75,19 @@ EOF
     public function isEnabled()
     {
         return $this->getContainer()->has('mailer');
+    }
+
+    public function createMessage(InputInterface $input)
+    {
+        $message = \Swift_Message::newInstance(
+            $input->getOption('subject'),
+            $input->getOption('body'),
+            $input->getOption('content-type'),
+            $input->getOption('charset')
+        );
+        $message->setFrom($input->getOption('from'));
+        $message->setTo($input->getOption('to'));
+
+        return $message;
     }
 }
