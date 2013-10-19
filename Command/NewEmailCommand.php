@@ -74,7 +74,7 @@ EOF
                 ));
             }
         }
-        switch ($this->getOption('body-input')) {
+        switch ($input->getOption('body-input')) {
             case 'file':
                 $filename = $input->getOption('body');
                 $content = file_get_contents($filename);
