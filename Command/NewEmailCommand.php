@@ -36,6 +36,7 @@ class NewEmailCommand extends ContainerAwareCommand
         $this
             ->setName('swiftmailer:email:new')
             ->setDescription('Send simple email message')
+            ->addOption('mailer', 'm', InputOption::VALUE_OPTIONAL, 'The mailer name', 'default')
             ->addOption('content-type', 'ct', InputOption::VALUE_OPTIONAL, 'The body content type of the message', 'text/html')
             ->addOption('charset', null, InputOption::VALUE_OPTIONAL, 'The body charset of the message', 'UTF8')
             ->setHelp(<<<EOF
@@ -51,6 +52,10 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $options = array();
+        $mailerServiceName = sprintf('swiftmailer.mailer.%s', $this->getOption('mailer'));
+        if (!$this->getContainer()->has($mailerServiceName)) {
+            throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist', $this->getOption('mailer')));
+        }
 
         $dialog = $this->getHelper('dialog');
         foreach ($this->options as $option) {
@@ -64,7 +69,7 @@ EOF
         )
             ->setFrom($options['from'])
             ->setTo($options['to']);
-        $transport = $this->getContainer()->get('mailer')->getTransport();
+        $transport = $this->getContainer()->get($mailerServiceName)->getTransport();
         $transport->start();
         $output->writeln(sprintf('<info>Sent %s emails<info>', $transport->send($message)));
         $transport->stop();
