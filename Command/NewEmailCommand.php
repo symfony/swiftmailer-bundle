@@ -26,7 +26,7 @@ class NewEmailCommand extends ContainerAwareCommand
      * The mail parts
      * @var array
      */
-    private $options = array('from', 'to', 'body', 'subject', 'content-type', 'charset');
+    private $options = array('from', 'to', 'subject', 'body');
 
     /**
      * {@inheritdoc}
@@ -36,10 +36,6 @@ class NewEmailCommand extends ContainerAwareCommand
         $this
             ->setName('swiftmailer:email:new')
             ->setDescription('Send simple email message')
-            ->addOption('from', 'f', InputOption::VALUE_OPTIONAL, 'The from address of the message')
-            ->addOption('to', 't', InputOption::VALUE_OPTIONAL, 'The to address of the message')
-            ->addOption('body', 'b', InputOption::VALUE_OPTIONAL, 'The body of the message')
-            ->addOption('subject', 'sub', InputOption::VALUE_OPTIONAL, 'The subject of the message')
             ->addOption('content-type', 'ct', InputOption::VALUE_OPTIONAL, 'The body content type of the message', 'text/html')
             ->addOption('charset', null, InputOption::VALUE_OPTIONAL, 'The body charset of the message', 'UTF8')
             ->setHelp(<<<EOF
@@ -58,12 +54,6 @@ EOF
 
         $dialog = $this->getHelper('dialog');
         foreach ($this->options as $option) {
-            $default = $input->getOption($option);
-            $options[$option] = $dialog->ask(
-                $output,
-                sprintf('<question>%s</question><info>[%s]</info>: ', ucfirst($option), $default),
-                $default
-            );
         }
 
         $message = \Swift_Message::newInstance(
