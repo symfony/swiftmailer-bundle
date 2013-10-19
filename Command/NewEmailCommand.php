@@ -36,11 +36,17 @@ class NewEmailCommand extends ContainerAwareCommand
         $this
             ->setName('swiftmailer:email:new')
             ->setDescription('Send simple email message')
+            ->addOption('from', 'f', InputOption::VALUE_OPTIONAL, 'The from address of the message')
+            ->addOption('to', 't', InputOption::VALUE_OPTIONAL, 'The to address of the message')
+            ->addOption('subject', 'sub', InputOption::VALUE_OPTIONAL, 'The subject of the message')
+            ->addOption('body', 'b', InputOption::VALUE_OPTIONAL, 'The body of the message')
             ->addOption('mailer', 'm', InputOption::VALUE_OPTIONAL, 'The mailer name', 'default')
             ->addOption('content-type', 'ct', InputOption::VALUE_OPTIONAL, 'The body content type of the message', 'text/html')
             ->addOption('charset', null, InputOption::VALUE_OPTIONAL, 'The body charset of the message', 'UTF8')
             ->setHelp(<<<EOF
-The <info>swiftmailer:email:new</info> command creates and send simple email message.
+The <info>%command.name%</info> command creates and send simple email message.
+
+<info>php %command.full_name% -m custom_mailer -ct text/xml</info>
 
 EOF
             );
@@ -51,18 +57,21 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $mailerServiceName = sprintf('swiftmailer.mailer.%s', $this->getOption('mailer'));
+        $mailerServiceName = sprintf('swiftmailer.mailer.%s', $input->getOption('mailer'));
         if (!$this->getContainer()->has($mailerServiceName)) {
             throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist', $this->getOption('mailer')));
         }
 
         $dialog = $this->getHelper('dialog');
         foreach ($this->options as $option) {
-            $input->setOption($option, $dialog->ask($output,
-                sprintf('<question>%s</question>: ', ucfirst($option))
-            ));
+            if ($input->getOption($option) === null) {
+                $input->setOption($option, $dialog->ask($output,
+                    sprintf('<question>%s</question>: ', ucfirst($option))
+                ));
+            }
         }
 
+        $message = $this->createMessage($input);
         $transport = $this->getContainer()->get($mailerServiceName)->getTransport();
         $transport->start();
         $output->writeln(sprintf('<info>Sent %s emails<info>', $transport->send($message)));
