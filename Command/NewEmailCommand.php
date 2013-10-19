@@ -43,10 +43,14 @@ class NewEmailCommand extends ContainerAwareCommand
             ->addOption('mailer', 'm', InputOption::VALUE_OPTIONAL, 'The mailer name', 'default')
             ->addOption('content-type', 'ct', InputOption::VALUE_OPTIONAL, 'The body content type of the message', 'text/html')
             ->addOption('charset', null, InputOption::VALUE_OPTIONAL, 'The body charset of the message', 'UTF8')
+            ->assOption('body-input', null, InputOption::VALUE_OPTIONAL, 'The source where body come from [stdin|file]', 'stdin')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates and send simple email message.
 
 <info>php %command.full_name% -m custom_mailer -ct text/xml</info>
+
+You can get body of message from file:
+<info>php %command.full_name% --body-input=file -b /path/to/file</info>
 
 EOF
             );
@@ -69,6 +73,20 @@ EOF
                     sprintf('<question>%s</question>: ', ucfirst($option))
                 ));
             }
+        }
+        switch ($this->getOption('body-input')) {
+            case 'file':
+                $filename = $input->getOption('body');
+                $content = file_get_contents($filename);
+                if ($content === false) {
+                    throw new \Exception('Could not get contents from ' . $filename);
+                }
+                $input->setOption('body', $content);
+                break;
+            case 'stdin':
+                break;
+            default:
+                throw new \InvalidArgumentException('Body-input option should be "stdin" or "file"');
         }
 
         $message = $this->createMessage($input);
