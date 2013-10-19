@@ -43,7 +43,7 @@ class NewEmailCommand extends ContainerAwareCommand
             ->addOption('mailer', 'm', InputOption::VALUE_OPTIONAL, 'The mailer name', 'default')
             ->addOption('content-type', 'ct', InputOption::VALUE_OPTIONAL, 'The body content type of the message', 'text/html')
             ->addOption('charset', null, InputOption::VALUE_OPTIONAL, 'The body charset of the message', 'UTF8')
-            ->assOption('body-input', null, InputOption::VALUE_OPTIONAL, 'The source where body come from [stdin|file]', 'stdin')
+            ->addOption('body-input', null, InputOption::VALUE_OPTIONAL, 'The source where body come from [stdin|file]', 'stdin')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command creates and send simple email message.
 
