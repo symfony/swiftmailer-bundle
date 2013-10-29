@@ -86,7 +86,7 @@ class SwiftmailerExtension extends Extension
             $container->setParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name), true);
         }
 
-        if (false === $mailer['port']) {
+        if (empty($mailer['port'])) {
             $mailer['port'] = 'ssl' === $mailer['encryption'] ? 465 : 25;
         }
 
