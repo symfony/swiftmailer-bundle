@@ -57,9 +57,12 @@ class EmailSenderListener implements EventSubscriberInterface
 
     static public function getSubscribedEvents()
     {
-        return array(
-            KernelEvents::TERMINATE  => 'onTerminate',
-            ConsoleEvents::TERMINATE => 'onTerminate'
-        );
+        $listeners = array(KernelEvents::TERMINATE => 'onTerminate');
+
+        if (class_exists('Symfony\Component\Console\ConsoleEvents')) {
+            $listeners[ConsoleEvents::TERMINATE] = 'onTerminate';
+        }
+
+        return $listeners;
     }
 }
