@@ -92,6 +92,7 @@ class SwiftmailerExtension extends Extension
 
         $this->configureMailerTransport($name, $mailer, $container, $transport, $isDefaultMailer);
         $this->configureMailerSpool($name, $mailer, $container, $transport, $isDefaultMailer);
+        $this->configureMailerSenderAddress($name, $mailer, $container, $isDefaultMailer);
         $this->configureMailerAntiFlood($name, $mailer, $container, $isDefaultMailer);
         $this->configureMailerDeliveryAddress($name, $mailer, $container, $isDefaultMailer);
         $this->configureMailerLogging($name, $mailer, $container, $isDefaultMailer);
@@ -232,6 +233,7 @@ class SwiftmailerExtension extends Extension
             $container->getDefinition(sprintf('swiftmailer.mailer.%s.plugin.impersonate', $name))->addTag(sprintf('swiftmailer.%s.plugin', $name));
             if (true === $isDefaultMailer) {
                 $container->setAlias('swiftmailer.plugin.impersonate', sprintf('swiftmailer.mailer.%s.plugin.impersonate', $name));
+                $container->setParameter('swiftmailer.sender_address', $container->getParameter(sprintf('swiftmailer.mailer.%s.sender_address', $name)));
             }
         } else {
             $container->setParameter(sprintf('swiftmailer.mailer.%s.plugin.impersonate', $name), null);
