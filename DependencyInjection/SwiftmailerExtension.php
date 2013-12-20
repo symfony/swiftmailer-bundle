@@ -117,20 +117,24 @@ class SwiftmailerExtension extends Extension
             ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name), $definitionDecorator)
         ;
         if ('smtp' === $transport) {
+            $authDecorator = new DefinitionDecorator('swiftmailer.transport.authhandler.abstract');
+            $container
+                ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.authhandler', $name), $authDecorator)
+                ->addMethodCall('setUsername', array('%swiftmailer.mailer.' . $name . '.transport.smtp.username%'))
+                ->addMethodCall('setPassword', array('%swiftmailer.mailer.' . $name . '.transport.smtp.password%'))
+                ->addMethodCall('setAuthMode', array('%swiftmailer.mailer.' . $name . '.transport.smtp.auth_mode%'));
+
             $definitionDecorator = new DefinitionDecorator('swiftmailer.transport.smtp.abstract');
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.smtp', $name), $definitionDecorator)
                 ->setArguments(array(
                     new Reference('swiftmailer.transport.buffer'),
-                    array(new Reference('swiftmailer.transport.authhandler')),
+                    array(new Reference(sprintf('swiftmailer.mailer.%s.transport.authhandler', $name))),
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
                 ))
                 ->addMethodCall('setHost', array('%swiftmailer.mailer.' . $name . '.transport.smtp.host%'))
                 ->addMethodCall('setPort', array('%swiftmailer.mailer.' . $name . '.transport.smtp.port%'))
                 ->addMethodCall('setEncryption', array('%swiftmailer.mailer.' . $name . '.transport.smtp.encryption%'))
-                ->addMethodCall('setUsername', array('%swiftmailer.mailer.' . $name . '.transport.smtp.username%'))
-                ->addMethodCall('setPassword', array('%swiftmailer.mailer.' . $name . '.transport.smtp.password%'))
-                ->addMethodCall('setAuthMode', array('%swiftmailer.mailer.' . $name . '.transport.smtp.auth_mode%'))
                 ->addMethodCall('setTimeout', array('%swiftmailer.mailer.' . $name . '.transport.smtp.timeout%'))
                 ->addMethodCall('setSourceIp', array('%swiftmailer.mailer.' . $name . '.transport.smtp.source_ip%'))
             ;

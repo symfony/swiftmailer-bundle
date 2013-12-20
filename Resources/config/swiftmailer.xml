@@ -53,7 +53,7 @@
             <argument type="service" id="swiftmailer.transport.replacementfactory" />
         </service>
 
-        <service id="swiftmailer.transport.authhandler" class="Swift_Transport_Esmtp_AuthHandler" public="false">
+        <service id="swiftmailer.transport.authhandler.abstract" class="Swift_Transport_Esmtp_AuthHandler" abstract="true" public="false">
             <argument type="collection">
                 <argument type="service"><service class="Swift_Transport_Esmtp_Auth_CramMd5Authenticator" public="false" /></argument>
                 <argument type="service"><service class="Swift_Transport_Esmtp_Auth_LoginAuthenticator" public="false" /></argument>
