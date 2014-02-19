@@ -49,7 +49,7 @@
 
         <service id="swiftmailer.transport.mailinvoker" class="Swift_Transport_SimpleMailInvoker" public="false" />
 
-        <service id="swiftmailer.transport.buffer" class="Swift_Transport_StreamBuffer" public="false">
+        <service id="swiftmailer.transport.buffer.abstract" class="Swift_Transport_StreamBuffer" abstract="true" public="false">
             <argument type="service" id="swiftmailer.transport.replacementfactory" />
         </service>
 

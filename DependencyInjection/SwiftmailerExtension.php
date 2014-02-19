@@ -124,11 +124,15 @@ class SwiftmailerExtension extends Extension
                 ->addMethodCall('setPassword', array('%swiftmailer.mailer.' . $name . '.transport.smtp.password%'))
                 ->addMethodCall('setAuthMode', array('%swiftmailer.mailer.' . $name . '.transport.smtp.auth_mode%'));
 
+            $bufferDecorator = new DefinitionDecorator('swiftmailer.transport.buffer.abstract');
+            $container
+                ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.buffer', $name), $bufferDecorator);
+
             $definitionDecorator = new DefinitionDecorator('swiftmailer.transport.smtp.abstract');
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.smtp', $name), $definitionDecorator)
                 ->setArguments(array(
-                    new Reference('swiftmailer.transport.buffer'),
+                    new Reference(sprintf('swiftmailer.mailer.%s.transport.buffer', $name)),
                     array(new Reference(sprintf('swiftmailer.mailer.%s.transport.authhandler', $name))),
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
                 ))
