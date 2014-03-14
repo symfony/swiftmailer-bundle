@@ -49,11 +49,11 @@
 
         <service id="swiftmailer.transport.mailinvoker" class="Swift_Transport_SimpleMailInvoker" public="false" />
 
-        <service id="swiftmailer.transport.buffer" class="Swift_Transport_StreamBuffer" public="false">
+        <service id="swiftmailer.transport.buffer.abstract" class="Swift_Transport_StreamBuffer" abstract="true" public="false">
             <argument type="service" id="swiftmailer.transport.replacementfactory" />
         </service>
 
-        <service id="swiftmailer.transport.authhandler" class="Swift_Transport_Esmtp_AuthHandler" public="false">
+        <service id="swiftmailer.transport.authhandler.abstract" class="Swift_Transport_Esmtp_AuthHandler" abstract="true" public="false">
             <argument type="collection">
                 <argument type="service"><service class="Swift_Transport_Esmtp_Auth_CramMd5Authenticator" public="false" /></argument>
                 <argument type="service"><service class="Swift_Transport_Esmtp_Auth_LoginAuthenticator" public="false" /></argument>
