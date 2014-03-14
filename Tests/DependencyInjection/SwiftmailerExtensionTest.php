@@ -274,8 +274,8 @@ class SwiftmailerExtensionTest extends TestCase
     }
 
     /**
-     * @param string $file
-     * @param string $type
+     * @param  string           $file
+     * @param  string           $type
      * @return ContainerBuilder
      */
     private function loadContainerFromFile($file, $type)

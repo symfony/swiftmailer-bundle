@@ -49,7 +49,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->beforeNormalization()
                 ->ifTrue(function ($v) { return is_array($v) && !array_key_exists('mailers', $v) && !array_key_exists('mailer', $v); })
-                ->then(function($v) {
+                ->then(function ($v) {
                     $mailer = array();
                     foreach ($v as $key => $value) {
                         if ('default_mailer' == $key) {

@@ -55,7 +55,7 @@ class EmailSenderListener implements EventSubscriberInterface
         }
     }
 
-    static public function getSubscribedEvents()
+    public static function getSubscribedEvents()
     {
         $listeners = array(KernelEvents::TERMINATE => 'onTerminate');
 
