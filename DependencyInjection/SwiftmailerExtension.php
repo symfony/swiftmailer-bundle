@@ -142,10 +142,17 @@ class SwiftmailerExtension extends Extension
             ;
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
         } elseif ('sendmail' === $transport) {
+            $bufferDecorator = new DefinitionDecorator('swiftmailer.transport.buffer.abstract');
+            $container
+                ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.buffer', $name), $bufferDecorator);
+
             $definitionDecorator = new DefinitionDecorator(sprintf('swiftmailer.transport.%s.abstract', $transport));
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport), $definitionDecorator)
-                ->addArgument(new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)))
+                ->setArguments(array(
+                    new Reference(sprintf('swiftmailer.mailer.%s.transport.buffer', $name)),
+                    new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name))
+                ))
             ;
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
         } elseif ('mail' === $transport) {
