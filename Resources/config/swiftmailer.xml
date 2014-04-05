@@ -34,9 +34,7 @@
             <argument type="service" id="swiftmailer.transport" />
         </service>
 
-        <service id="swiftmailer.transport.sendmail.abstract" class="%swiftmailer.transport.sendmail.class%" abstract="true" public="false">
-            <argument type="service" id="swiftmailer.transport.buffer" />
-        </service>
+        <service id="swiftmailer.transport.sendmail.abstract" class="%swiftmailer.transport.sendmail.class%" abstract="true" public="false" />
 
         <service id="swiftmailer.transport.mail.abstract" class="%swiftmailer.transport.mail.class%" abstract="true" public="false">
             <argument type="service" id="swiftmailer.transport.mailinvoker" />
