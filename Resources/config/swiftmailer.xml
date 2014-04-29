@@ -84,6 +84,7 @@
         <service id="swiftmailer.email_sender.listener" class="%swiftmailer.email_sender.listener.class%">
             <tag name="kernel.event_subscriber" />
             <argument type="service" id="service_container" />
+            <argument type="service" id="logger" on-invalid="null" />
         </service>
 
         <service id="swiftmailer.data_collector" class="%swiftmailer.data_collector.class%" public="false">
