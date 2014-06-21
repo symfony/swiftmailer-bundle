@@ -30,9 +30,8 @@
         "psr/log": "Allows logging"
     },
     "autoload": {
-        "psr-0": { "Symfony\\Bundle\\SwiftmailerBundle": "" }
+        "psr-4": { "Symfony\\Bundle\\SwiftmailerBundle\\": "" }
     },
-    "target-dir": "Symfony/Bundle/SwiftmailerBundle",
     "extra": {
         "branch-alias": {
             "dev-master": "2.3-dev"
