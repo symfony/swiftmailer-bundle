@@ -68,7 +68,7 @@ EOF
             throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist.', $name));
         }
 
-        $output->write(sprintf('Processing <info>%s</info> mailer... ', $name));
+        $output->write(sprintf('<info>[%s]</info> Processing <info>%s</info> mailer... ', date('Y-m-d H:i:s'), $name));
         if ($this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name))) {
             $mailer = $this->getContainer()->get(sprintf('swiftmailer.mailer.%s', $name));
             $transport = $mailer->getTransport();
