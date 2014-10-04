@@ -195,12 +195,12 @@ class SwiftmailerExtension extends Extension
             }
 
             $definitionDecorator = new DefinitionDecorator(sprintf('swiftmailer.spool.%s.abstract', $type));
-            if ($type === 'file') {
+            if ('file' === $type) {
                 $container
                     ->setDefinition(sprintf('swiftmailer.mailer.%s.spool.file', $name), $definitionDecorator)
                     ->replaceArgument(0, sprintf('%%swiftmailer.spool.%s.file.path%%', $name))
                 ;
-            } elseif ($type === 'memory') {
+            } elseif ('memory' === $type) {
                 $container
                     ->setDefinition(sprintf('swiftmailer.mailer.%s.spool.memory', $name), $definitionDecorator)
                 ;
