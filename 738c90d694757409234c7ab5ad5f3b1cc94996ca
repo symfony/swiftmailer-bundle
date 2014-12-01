@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by matthieuauger at 2014-12-01T16:04:33Z
+
+Ping @stof
+
+The swiftmailer:debug command is the only one remaining which has not been moved to debug namespace
+
+---------------------------------------------------------------------------
+
+by xabbuh at 2014-12-01T17:42:19Z
+
+Imho this change makes sense.
