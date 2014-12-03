@@ -94,8 +94,8 @@ EOF
             }
         }
         
-        if('default' === $input->getOption('mailer')) {
-            $input->setOption('mailer',$dialog->ask($output, sprintf('<question>Mailer (Enter for \'default\'): </question>'),'default'));
+        if ('default' === $input->getOption('mailer')) {
+            $input->setOption('mailer',$dialog->ask($output, sprintf('<question>Mailer (Enter for \'default\'): </question>'), 'default'));
         }
     }
 
