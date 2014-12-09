@@ -11,9 +11,9 @@
 
 namespace Symfony\Bundle\SwiftmailerBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * RegisterPluginsPass registers Swiftmailer plugins.
@@ -22,6 +22,9 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
  */
 class RegisterPluginsPass implements CompilerPassInterface
 {
+    /**
+     * @param ContainerBuilder $container
+     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->findDefinition('swiftmailer.mailer') || !$container->getParameter('swiftmailer.mailers')) {
@@ -30,12 +33,34 @@ class RegisterPluginsPass implements CompilerPassInterface
 
         $mailers = $container->getParameter('swiftmailer.mailers');
         foreach ($mailers as $name => $mailer) {
-            $plugins = $container->findTaggedServiceIds(sprintf('swiftmailer.%s.plugin', $name));
+            $plugins = $this->findSortedByPriorityTaggedServiceIds($container, sprintf('swiftmailer.%s.plugin', $name));
             $transport = sprintf('swiftmailer.mailer.%s.transport', $name);
             $definition = $container->findDefinition($transport);
             foreach ($plugins as $id => $args) {
                 $definition->addMethodCall('registerPlugin', array(new Reference($id)));
             }
         }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string           $name      The tag name
+     *
+     * @return array
+     */
+    private function findSortedByPriorityTaggedServiceIds(ContainerBuilder $container, $name)
+    {
+        $taggedServices = $container->findTaggedServiceIds($name);
+        uasort(
+            $taggedServices,
+            function ($tagA, $tagB) {
+                $priorityTagA = isset($tagA[0]['priority']) ? $tagA[0]['priority'] : 0;
+                $priorityTagB = isset($tagB[0]['priority']) ? $tagB[0]['priority'] : 0;
+
+                return $priorityTagA - $priorityTagB;
+            }
+        );
+
+        return $taggedServices;
     }
 }
