@@ -11,9 +11,9 @@
 
 namespace Symfony\Bundle\SwiftmailerBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * RegisterPluginsPass registers Swiftmailer plugins.
@@ -30,12 +30,31 @@ class RegisterPluginsPass implements CompilerPassInterface
 
         $mailers = $container->getParameter('swiftmailer.mailers');
         foreach ($mailers as $name => $mailer) {
-            $plugins = $container->findTaggedServiceIds(sprintf('swiftmailer.%s.plugin', $name));
+            $plugins = $this->findSortedByPriorityTaggedServiceIds($container, sprintf('swiftmailer.%s.plugin', $name));
             $transport = sprintf('swiftmailer.mailer.%s.transport', $name);
             $definition = $container->findDefinition($transport);
             foreach ($plugins as $id => $args) {
                 $definition->addMethodCall('registerPlugin', array(new Reference($id)));
             }
         }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string $serviceId
+     * @return array
+     */
+    protected function findSortedByPriorityTaggedServiceIds(ContainerBuilder $container, $serviceId)
+    {
+        $taggedServices = $container->findTaggedServiceIds($serviceId);
+        uasort(
+            $taggedServices,
+            function ($a, $b) {
+                $a = isset($a[0]['priority']) ? $a[0]['priority'] : 0;
+                $b = isset($b[0]['priority']) ? $b[0]['priority'] : 0;
+                return $a > $b ? -1 : 1;
+            }
+        );
+        return $taggedServices;
     }
 }
