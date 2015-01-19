@@ -43,16 +43,17 @@ class RegisterPluginsPass implements CompilerPassInterface
      * @param ContainerBuilder $container
      * @param string $name The tag name
      * @return array
+     * @internal
      */
-    protected function findSortedByPriorityTaggedServiceIds(ContainerBuilder $container, $name)
+    public function findSortedByPriorityTaggedServiceIds(ContainerBuilder $container, $name)
     {
         $taggedServices = $container->findTaggedServiceIds($name);
         uasort(
             $taggedServices,
-            function ($a, $b) {
-                $a = isset($a[0]['priority']) ? $a[0]['priority'] : 0;
-                $b = isset($b[0]['priority']) ? $b[0]['priority'] : 0;
-                return $a > $b ? -1 : 1;
+            function ($tagA, $tagB) {
+                $priorityTagA = isset($tagA[0]['priority']) ? $tagA[0]['priority'] : 0;
+                $priorityTagB = isset($tagB[0]['priority']) ? $tagB[0]['priority'] : 0;
+                return $priorityTagA - $priorityTagB;
             }
         );
         return $taggedServices;
