@@ -77,7 +77,7 @@ EOF
                 $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name)),
                 $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)) ? 'YES' : 'NO',
                 $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)) ? 'YES' : 'NO',
-                $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name))
+                $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name)),
             );
         }
 
