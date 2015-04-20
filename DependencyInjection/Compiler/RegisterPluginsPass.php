@@ -44,7 +44,8 @@ class RegisterPluginsPass implements CompilerPassInterface
 
     /**
      * @param ContainerBuilder $container
-     * @param string $name The tag name
+     * @param string           $name      The tag name
+     *
      * @return array
      */
     private function findSortedByPriorityTaggedServiceIds(ContainerBuilder $container, $name)
@@ -55,6 +56,7 @@ class RegisterPluginsPass implements CompilerPassInterface
             function ($tagA, $tagB) {
                 $priorityTagA = isset($tagA[0]['priority']) ? $tagA[0]['priority'] : 0;
                 $priorityTagB = isset($tagB[0]['priority']) ? $tagB[0]['priority'] : 0;
+
                 return $priorityTagA - $priorityTagB;
             }
         );
