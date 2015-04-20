@@ -22,6 +22,9 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class RegisterPluginsPass implements CompilerPassInterface
 {
+    /**
+     * @param ContainerBuilder $container
+     */
     public function process(ContainerBuilder $container)
     {
         if (!$container->findDefinition('swiftmailer.mailer') || !$container->getParameter('swiftmailer.mailers')) {
@@ -43,9 +46,8 @@ class RegisterPluginsPass implements CompilerPassInterface
      * @param ContainerBuilder $container
      * @param string $name The tag name
      * @return array
-     * @internal
      */
-    public function findSortedByPriorityTaggedServiceIds(ContainerBuilder $container, $name)
+    private function findSortedByPriorityTaggedServiceIds(ContainerBuilder $container, $name)
     {
         $taggedServices = $container->findTaggedServiceIds($name);
         uasort(
@@ -56,6 +58,7 @@ class RegisterPluginsPass implements CompilerPassInterface
                 return $priorityTagA - $priorityTagB;
             }
         );
+
         return $taggedServices;
     }
 }
