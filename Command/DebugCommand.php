@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
- * A console command for retrieving information about mailers
+ * A console command for retrieving information about mailers.
  *
  * @author Jérémy Romey <jeremy@free-agent.fr>
  */
