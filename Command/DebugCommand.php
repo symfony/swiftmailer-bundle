@@ -25,7 +25,6 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  */
 class DebugCommand extends ContainerAwareCommand
 {
-
     /**
      * @see Command
      */
@@ -81,7 +80,12 @@ EOF
             );
         }
 
-        $table = new Table($output);
+        if(class_exists('Table')) {
+            $table = new Table($output);
+        } else {
+            $table = $this->getHelper('table');
+        }
+
         $table
             ->setHeaders(array('Name', 'Transport', 'Spool', 'Delivery', 'Single Address'))
             ->setRows($rows)
