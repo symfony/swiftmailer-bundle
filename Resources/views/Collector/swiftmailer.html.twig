@@ -182,7 +182,6 @@
                     <p>No e-mail messages were sent.</p>
                 </div>
             {% else %}
-
                 {% for message in collector.messages(name) %}
                     {% if collector.messages(name)|length > 1 %}
                         <h4>E-mail #{{ loop.index }} details</h4>
