@@ -1,5 +1,7 @@
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
+{% block page_title 'E-mails' %}
+
 {% block toolbar %}
     {% set profiler_markup_version = profiler_markup_version|default(1) %}
 
@@ -75,7 +77,7 @@
             h3 span { color: #999; font-weight: normal; }
             h3 small { color: #999; }
             h4 { font-size: 14px; font-weight: bold; }
-            .card { background: rgba(241, 247, 226, .6); margin: .5em 0 1em; padding: .5em; }
+            .card { background: #F5F5F5; margin: .5em 0 1em; padding: .5em; }
             .card .label { display: block; font-size: 13px; font-weight: bold; margin-bottom: .5em; }
             .card .card-block { margin-bottom: 1em; }
         </style>
