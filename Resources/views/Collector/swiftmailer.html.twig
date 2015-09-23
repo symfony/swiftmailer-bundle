@@ -182,7 +182,7 @@
                         </pre>
                     </div>
 
-                    {% for messagePart in message.children if messagePart.contentType == 'text/plain' or messagePart.contentType == 'text/html' %}
+                    {% for messagePart in message.children if messagePart.contentType in ['text/plain', 'text/html'] %}
                         <div class="card-block">
                             <span class="label">Alternative part ({{ messagePart.contentType }})</span>
                             <pre>
