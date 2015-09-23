@@ -157,7 +157,7 @@
             </div>
         {% else %}
             {% for message in collector.messages(name) %}
-                {% if collector.messages(name)|length > 1 %}
+                {% if loop.length > 1 %}
                     <h4>E-mail #{{ loop.index }} details</h4>
                 {% else %}
                     <h4>E-mail details</h4>
