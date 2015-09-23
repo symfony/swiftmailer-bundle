@@ -22,7 +22,6 @@
 
             {% if profiler_markup_version == 1 %}
                 {% for name in collector.mailers %}
-                    <hr>
                     <div class="sf-toolbar-info-piece">
                         <b>{{ name }}</b>
                         <span>{{ collector.messageCount(name) }}</span>
@@ -31,6 +30,10 @@
                         <b>Is spooled?</b>
                         <span>{{ collector.isSpool(name) ? 'yes' : 'no' }}</span>
                     </div>
+
+                    {% if not loop.first %}
+                        <hr>
+                    {% endif %}
                 {% endfor %}
             {% else %}
                 {% for name in collector.mailers %}
