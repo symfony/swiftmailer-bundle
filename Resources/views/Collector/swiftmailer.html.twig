@@ -92,55 +92,36 @@
         </div>
     {% endif %}
 
-    {% if profiler_markup_version == 1 %}
+    {% if profiler_markup_version == 1 or collector.mailers|length > 1 %}
         <table>
             <thead>
                 <tr>
-                    <th scope="col">Mailer</th>
-                    <th scope="col">Messages</th>
+                    <th scope="col">Mailer Name</th>
+                    <th scope="col">Num. of messages</th>
+                    <th scope="col">Messages status</th>
+                    <th scope="col">Notes</th>
                 </tr>
             </thead>
             <tbody>
                 {% for name in collector.mailers %}
                     <tr>
-                        <th>{{ name }}{{ collector.isDefaultMailer(name) ? ' (default mailer)' : '' }}</th>
-                        <td>{{ collector.messageCount(name) }} {{ collector.isSpool(name) ? 'spooled' : 'sent' }}</td>
+                        <th class="font-normal">{{ name }}</th>
+                        <td class="font-normal">{{ collector.messageCount(name) }}</td>
+                        <td class="font-normal">{{ collector.isSpool(name) ? 'spooled' : 'sent' }}</td>
+                        <td class="font-normal">{{ collector.isDefaultMailer(name) ? 'This is the default mailer' }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% else %}
-        {% if collector.mailers|length > 1 %}
-            <h3>Messages sent by each mailer</h3>
-
-            <div class="metrics">
-                {% for name in collector.mailers %}
-                    <div class="metric">
-                        <span class="value">{{ collector.messageCount(name) }}
-                        {% if collector.messageCount(name) > 0 %}
-                            <span class="unit">{{ collector.isSpool(name) ? 'spooled' : 'sent' }}</span>
-                        {% endif %}
-                        </span>
-                        <span class="label">
-                            {{ name }} {{ collector.isDefaultMailer(name) ? ' (default app mailer)' }}
-                        </span>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="metrics">
-                {% for name in collector.mailers %}
-                    <div class="metric">
-                        <span class="value">{{ collector.messageCount(name) }}
-                        {% if collector.messageCount(name) > 0 %}
-                            <span class="unit">{{ collector.isSpool(name) ? 'spooled' : 'sent' }}</span>
-                        {% endif %}
-                        </span>
-                        <span class="label">sent messages</span>
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+        <div class="metrics">
+            {% for name in collector.mailers %}
+                <div class="metric">
+                    <span class="value">{{ collector.messageCount(name) }}</span>
+                    <span class="label">{{ collector.isSpool(name) ? 'spooled' : 'sent' }} {{ collector.messageCount(name) == 1 ? 'message' : 'messages' }}</span>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
 
     {% for name in collector.mailers %}
