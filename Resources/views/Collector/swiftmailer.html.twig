@@ -175,9 +175,9 @@
                         <span class="label">Message body</span>
                         <pre>
                             {%- if messagePart.charset is defined and message.charset %}
-                                {{- message.body|e('html', message.charset)|convert_encoding('UTF-8', message.charset) }}
+                                {{- message.body|convert_encoding('UTF-8', message.charset) }}
                             {%- else %}
-                                {{- message.body|e('html') }}
+                                {{- message.body }}
                             {%- endif -%}
                         </pre>
                     </div>
@@ -187,9 +187,9 @@
                             <span class="label">Alternative part ({{ messagePart.contentType }})</span>
                             <pre>
                                 {%- if messagePart.charset %}
-                                    {{- messagePart.body|e('html', messagePart.charset)|convert_encoding('UTF-8', messagePart.charset) }}
+                                    {{- messagePart.body|convert_encoding('UTF-8', messagePart.charset) }}
                                 {%- else %}
-                                    {{- messagePart.body|e('html') }}
+                                    {{- messagePart.body }}
                                 {%- endif -%}
                             </pre>
                         </div>
