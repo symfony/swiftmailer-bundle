@@ -1,0 +1,177 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-07-30T15:56:28Z
+
+why are you reverting an empty commit ? It looks to me you are missing the point of ``git revert`` :)
+
+---------------------------------------------------------------------------
+
+by sstok at 2015-07-30T18:05:03Z
+
+@javiereguiluz `git commit --amend` also creates a "new" commit which you can force push ;)
+
+---------------------------------------------------------------------------
+
+by stof at 2015-07-30T18:06:26Z
+
+anyway, I can just squash the empty commits with gh before merging the changes, but this will wait until the new toolbar design is accepted in symfony itself
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-08-24T07:24:41Z
+
+This pull request is now ready for the final review. It contains the redesign of both the toolbar and the profiler.
+
+---------------------------------------------------------------------------
+
+by WouterJ at 2015-08-25T20:03:50Z
+
+It's called "E-mails" in the menu and "Swiftmailer" in the page title. That's inconsistent imo and I propose to change the title to "E-mails".
+
+---------------------------------------------------------------------------
+
+by WouterJ at 2015-08-25T20:05:05Z
+
+Also, all other panels show a dashed border + a nice message when no info is shown. In the case of emails, there is a table with only the table head visible (as there is no table body). Imo, there should be the same nice dash-bordered box as in other panels.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-08-26T06:21:25Z
+
+@WouterJ about the dashed border, when no emails are sent, the following code is executed:
+
+```twig
+        {% if not collector.mailers %}
+            <div class="empty">
+                <p>No e-mail messages were sent.</p>
+            </div>
+        {% endif %}
+```
+
+At least locally is working for me:
+
+![no-email-sent](https://cloud.githubusercontent.com/assets/73419/9486735/5adb0df0-4bcb-11e5-82cf-11b7ad3cf04c.png)
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-08-26T06:47:21Z
+
+> It's called "E-mails" in the menu and "Swiftmailer" in the page title. That's inconsistent imo and I propose to change the title to "E-mails".
+
+You are right about this inconsistency. Sadly, most panels use a name different than their menu option. I've fixed it in https://github.com/symfony/symfony/commit/43f5639023fdb4d44624d7acd8c10cc511c58d4f but maybe the best solution would be to not show the panel name in the page title.
+
+---------------------------------------------------------------------------
+
+by WouterJ at 2015-08-26T07:16:42Z
+
+@javiereguiluz as mentioned in the other PR, I forgot I also had to bring a new version of Swiftmailer. So I actually reviewed the old design :)
+
+---------------------------------------------------------------------------
+
+by stof at 2015-08-26T07:19:12Z
+
+> You are right about this inconsistency. Sadly, most panels use a name different than their menu option. I've fixed it in symfony/symfony@43f5639 but maybe the best solution would be to not show the panel name in the page title.
+
+The solution might be to let the panel provide the text displayed in the title
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-08-26T11:19:07Z
+
+@stof I think that in b3dd574 I finally did what you were looking for. We now use the exact same code for both the old and the new profiler ... except for some metrics/tables. The trick is to add some lines of CSS for the old profiler to make it look better.
+
+This is how it looks the latest code of this PR inside an old Symfony application:
+
+**Usual scenario: 1 mailer 1 email**
+
+![mailer-4](https://cloud.githubusercontent.com/assets/73419/9492118/d62717aa-4bf4-11e5-85b3-c75a22ec3865.png)
+
+**1 mailer 2 emails**
+
+![mailer-3](https://cloud.githubusercontent.com/assets/73419/9492120/dcd61bfa-4bf4-11e5-968a-71496e441e4f.png)
+
+**2 mailers but only one sends emails**
+
+![mailer-2](https://cloud.githubusercontent.com/assets/73419/9492130/e7b634c4-4bf4-11e5-8501-078338fbe2c0.png)
+
+**Most complex scenario: several mailers and several emails**
+
+![mailer-1](https://cloud.githubusercontent.com/assets/73419/9492134/f0931c2e-4bf4-11e5-9ab8-6ae90dd77981.png)
+
+---------------------------------------------------------------------------
+
+by stof at 2015-09-22T08:33:56Z
+
+@javiereguiluz can you post a screenshot for a realistic use case for HTML parts of emails, i.e. a big HTML blob rather than a single line ? I was never able to write a real HTML email with such a small markup :smile:
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-23T12:23:02Z
+
+> can you post a screenshot for a realistic use case for HTML parts of emails
+
+Here it is a real example with a real HTML newsletter:
+
+![real-email](https://cloud.githubusercontent.com/assets/73419/10044802/02c61616-61fe-11e5-90f5-d88358ef9eb7.png)
+
+As you can see, the result is abominable. I propose to improve this as follows (in a separate pull request): I'd like to apply a `max-height` property on the email contents (as StackOverflow does for code blocks).
+
+Another improvement (again in a separate PR) I'd like to do is to implement [this great idea](http://symfony.com/blog/new-in-symfony-2-8-redesigned-profiler#comment-20015) proposed by @garak to allow render the real HTML contents instead of just displaying the raw HTML tags.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-23T13:14:15Z
+
+Status of this PR: I've implemented all the changes proposed by @stof, there is a new proposal pending approval (https://github.com/javiereguiluz/SwiftmailerBundle/commit/7b5178decb95c0256e9c2ddbf14306c9b491bd30) and there are two other ideas that will be implemented in a separate PR.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-09-23T14:08:40Z
+
+Can you post a screenshot of your new proposal ? I don't have a project using this bundle to try it locally (and even less a 2.8 project)
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-23T14:29:51Z
+
+@stof the screenshots for the small redesign can be seen here: https://github.com/symfony/swiftmailer-bundle/pull/109#discussion_r40200606
+
+---------------------------------------------------------------------------
+
+by stof at 2015-09-23T15:27:15Z
+
+Except it is totally unreadable (the width of the image is 149px), so I cannot see how the top of the page looks like
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-23T15:33:18Z
+
+@stof we are not understanding each other :)
+
+The unreadable image of [this comment](https://github.com/symfony/swiftmailer-bundle/pull/109#issuecomment-142583358) shows the current design with a real email. It just shows how bad long emails are displayed. This problem will be solved later in another PR.
+
+The small redesign that I propose for this PR is explained in the three screenshots included [in this other comment](https://github.com/symfony/swiftmailer-bundle/pull/109#discussion_r40200606).
+
+---------------------------------------------------------------------------
+
+by stof at 2015-09-28T14:36:05Z
+
+@javiereguiluz can you rebase your branch to fix conflicts ? the merge of #112 is causing one
+
+---------------------------------------------------------------------------
+
+by stof at 2015-09-28T14:36:17Z
+
+the small redesign looks good to me btw
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-28T14:36:19Z
+
+As said above, the two pending issues will be solved in different PRs. I'm going to rebase this to be able to merge it ASAP. Thanks.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-28T14:39:58Z
+
+Rebased.
