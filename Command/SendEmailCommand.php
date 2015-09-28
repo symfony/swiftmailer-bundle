@@ -39,7 +39,7 @@ class SendEmailCommand extends ContainerAwareCommand
             ->setHelp(<<<EOF
 The <info>swiftmailer:spool:send</info> command sends all emails from the spool.
 
-<info>php %command.full_name% swiftmailer:spool:send --message-limit=10 --time-limit=10 --recover-timeout=900 --mailer=default</info>
+<info>php %command.full_name% --message-limit=10 --time-limit=10 --recover-timeout=900 --mailer=default</info>
 
 EOF
             )
