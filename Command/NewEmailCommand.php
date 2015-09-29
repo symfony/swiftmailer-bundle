@@ -15,9 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\DialogHelper;
-use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * A console command for creating and sending simple emails.
@@ -40,19 +38,34 @@ class NewEmailCommand extends ContainerAwareCommand
             ->addOption('charset', null, InputOption::VALUE_REQUIRED, 'The body charset of the message', 'UTF8')
             ->addOption('body-source', null, InputOption::VALUE_REQUIRED, 'The source where body come from [stdin|file]', 'stdin')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command creates and send simple email message.
+The <info>%command.name%</info> command creates and sends a simple email message.
 
 <info>php %command.full_name% --mailer=custom_mailer --content-type=text/xml</info>
 
-You can get body of message from file:
+You can get body of message from a file:
 <info>php %command.full_name% --body-source=file --body=/path/to/file</info>
 
 EOF
             );
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $output = new SymfonyStyle($input, $output);
+        $output->title('SwiftMailer\'s Interactive Email Sender');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+>>>>>>> Updated the styles of the SwiftMailer commands
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output = new SymfonyStyle($input, $output);
+
         $mailerServiceName = sprintf('swiftmailer.mailer.%s', $input->getOption('mailer'));
         if (!$this->getContainer()->has($mailerServiceName)) {
             throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist.', $input->getOption('mailer')));
@@ -74,7 +87,9 @@ EOF
 
         $message = $this->createMessage($input);
         $mailer = $this->getContainer()->get($mailerServiceName);
-        $output->writeln(sprintf('<info>Sent %s emails<info>', $mailer->send($message)));
+        $sentMessages = $mailer->send($message);
+
+        $output->success(sprintf('%s emails were successfully sent.', $sentMessages));
     }
 
     /**
@@ -82,19 +97,10 @@ EOF
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        // Symfony <2.5 BC
-        /** @var QuestionHelper|DialogHelper $questionHelper */
-        $questionHelper = $this->getHelperSet()->has('question') ? $this->getHelperSet()->get('question') : $this->getHelperSet()->get('dialog');
-
+        $output = new SymfonyStyle($input, $output);
         foreach ($input->getOptions() as $option => $value) {
             if ($value === null) {
-                // Symfony <2.5 BC
-                if ($questionHelper instanceof QuestionHelper) {
-                    $question = new Question(sprintf('<question>%s</question>: ', ucfirst($option)));
-                } else {
-                    $question = sprintf('<question>%s</question>: ', ucfirst($option));
-                }
-                $input->setOption($option, $questionHelper->ask($input, $output, $question));
+                $input->setOption($option, $output->ask(sprintf('%s', ucfirst($option))));
             }
         }
     }
