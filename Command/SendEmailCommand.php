@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Send Emails from the spool.
@@ -25,6 +26,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SendEmailCommand extends ContainerAwareCommand
 {
+    /** @var SymfonyStyle */
+    private $io;
+
     protected function configure()
     {
         $this
@@ -47,6 +51,8 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->io = new SymfonyStyle($input, $output);
+
         $name = $input->getOption('mailer');
         if ($name) {
             $this->processMailer($name, $input, $output);
@@ -64,7 +70,7 @@ EOF
             throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist.', $name));
         }
 
-        $output->write(sprintf('<info>[%s]</info> Processing <info>%s</info> mailer... ', date('Y-m-d H:i:s'), $name));
+        $this->io->text(sprintf('<info>[%s]</info> Processing <info>%s</info> mailer spool... ', date('Y-m-d H:i:s'), $name));
         if ($this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name))) {
             $mailer = $this->getContainer()->get(sprintf('swiftmailer.mailer.%s', $name));
             $transport = $mailer->getTransport();
@@ -77,7 +83,7 @@ EOF
                 $this->recoverSpool($name, $transport, $input, $output);
             }
         } else {
-            $output->writeln('No email to send as the spool is disabled.');
+            $this->io->warning('There are no emails to send because the spool is disabled.');
         }
     }
 
@@ -101,7 +107,7 @@ EOF
             $transportService = $input->getOption('transport') ?: sprintf('swiftmailer.mailer.%s.transport.real', $name);
             $sent = $spool->flushQueue($this->getContainer()->get($transportService));
 
-            $output->writeln(sprintf('<comment>%d</comment> emails sent', $sent));
+            $this->io->text(sprintf('<comment>%d</comment> emails sent', $sent));
         }
     }
 }
