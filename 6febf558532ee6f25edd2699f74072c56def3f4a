@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-09-30T14:03:21Z
+
+what would be the behavior on older versions ?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-30T14:07:15Z
+
+In the old Symfony versions, this panel will appear before any panel which doesn't define the priority (most of them) or define a priority lower than 260 (all of them). For some users it may be confusing because they are used to certain panel order.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-09-30T14:10:52Z
+
+Coudln't we use 255 or 254, to keep it after core panels in Symfony 2.7 and older (they are at 255) ?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-30T14:23:23Z
+
+Good idea! I've used `250` for Doctrine and `245` for SwiftMailer. This should work right in any Symfony version.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-09-30T15:01:24Z
+
+I'm just waiting for Travis to run (but the Travis quota is per repo owner, and symfony/symfony has a bunch of queued builds right now)
