@@ -135,6 +135,21 @@ class SwiftmailerExtensionTest extends TestCase
         $this->assertEquals('1000', $container->getParameter('swiftmailer.mailer.third_mailer.transport.smtp.timeout'));
         $this->assertEquals('127.0.0.1', $container->getParameter('swiftmailer.mailer.third_mailer.transport.smtp.source_ip'));
     }
+    /**
+     * @dataProvider getConfigTypes
+     */
+    public function testUrls($type)
+    {
+        $container = $this->loadContainerFromFile('urls', $type);
+
+
+        $this->assertEquals('example.com', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.host'));
+        $this->assertEquals('12345', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.port'));
+        $this->assertEquals('tls', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.encryption'));
+        $this->assertEquals('username', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.username'));
+        $this->assertEquals('password', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.password'));
+        $this->assertEquals('login', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.auth_mode'));
+    }
 
         /**
      * @dataProvider getConfigTypes
