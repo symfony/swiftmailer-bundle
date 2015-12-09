@@ -275,14 +275,15 @@ class SwiftmailerExtension extends Extension
 
     protected function configureMailerDeliveryAddress($name, array $mailer, ContainerBuilder $container, $isDefaultMailer = false)
     {
-        if (isset($mailer['delivery_address']) && $mailer['delivery_address']) {
-            $container->setParameter(sprintf('swiftmailer.mailer.%s.single_address', $name), $mailer['delivery_address']);
+        if (count($mailer['delivery_addresses']) > 0) {
+            $container->setParameter(sprintf('swiftmailer.mailer.%s.single_address', $name), $mailer['delivery_addresses'][0]);
+            $container->setParameter(sprintf('swiftmailer.mailer.%s.delivery_addresses', $name), $mailer['delivery_addresses']);
             $container->setParameter(sprintf('swiftmailer.mailer.%s.delivery_whitelist', $name), $mailer['delivery_whitelist']);
             $definitionDecorator = new DefinitionDecorator('swiftmailer.plugin.redirecting.abstract');
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.plugin.redirecting', $name), $definitionDecorator)
                 ->setArguments(array(
-                    sprintf('%%swiftmailer.mailer.%s.single_address%%', $name),
+                    sprintf('%%swiftmailer.mailer.%s.delivery_addresses%%', $name),
                     sprintf('%%swiftmailer.mailer.%s.delivery_whitelist%%', $name),
                 ))
             ;

@@ -13,6 +13,7 @@
       <xsd:element name="antiflood" type="antiflood" minOccurs="0" maxOccurs="1" />
       <xsd:element name="spool" type="spool" minOccurs="0" maxOccurs="1" />
       <xsd:element name="delivery-whitelist-pattern" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="delivery-address" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
 
     <xsd:attribute name="default-mailer" type="xsd:string" />
