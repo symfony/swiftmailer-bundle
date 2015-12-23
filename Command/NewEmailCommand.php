@@ -58,7 +58,7 @@ EOF
     {
         $mailerServiceName = sprintf('swiftmailer.mailer.%s', $input->getOption('mailer'));
         if (!$this->getContainer()->has($mailerServiceName)) {
-            throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist', $this->getOption('mailer')));
+            throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist', $input->getOption('mailer')));
         }
         switch ($input->getOption('body-source')) {
             case 'file':
