@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 /**
  * A console command for creating and sending simple emails
@@ -85,11 +86,11 @@ EOF
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $dialog = $this->getHelper('dialog');
+        $dialog = $this->getHelper('question');
         foreach ($input->getOptions() as $option => $value) {
             if ($value === null) {
-                $input->setOption($option, $dialog->ask($output,
-                    sprintf('<question>%s</question>: ', ucfirst($option))
+                $input->setOption($option, $dialog->ask($input, $output,
+                    new Question(sprintf('<question>%s</question>: ', ucfirst($option)))
                 ));
             }
         }
