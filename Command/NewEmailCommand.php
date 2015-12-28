@@ -15,6 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Question\Question;
 
 /**
@@ -86,12 +88,19 @@ EOF
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $dialog = $this->getHelper('question');
+        // Symfony <2.5 BC
+        /** @var QuestionHelper|DialogHelper $questionHelper */
+        $questionHelper = $this->getHelperSet()->has('question') ? $this->getHelperSet()->get('question') : $this->getHelperSet()->get('dialog');
+
         foreach ($input->getOptions() as $option => $value) {
             if ($value === null) {
-                $input->setOption($option, $dialog->ask($input, $output,
-                    new Question(sprintf('<question>%s</question>: ', ucfirst($option)))
-                ));
+                // Symfony <2.5 BC
+                if ($questionHelper instanceof QuestionHelper) {
+                    $question = new Question(sprintf('<question>%s</question>: ', ucfirst($option)));
+                } else {
+                    $question = sprintf('<question>%s</question>: ', ucfirst($option));
+                }
+                $input->setOption($option, $questionHelper->ask($input, $output, $question));
             }
         }
     }
