@@ -89,6 +89,7 @@ class Configuration implements ConfigurationInterface
             ->useAttributeAsKey('name')
                 ->prototype('array')
             ->children()
+                ->scalarNode('url')->defaultNull()->end()
                 ->scalarNode('transport')->defaultValue('smtp')->end()
                 ->scalarNode('username')->defaultNull()->end()
                 ->scalarNode('password')->defaultNull()->end()

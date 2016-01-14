@@ -75,6 +75,37 @@ class SwiftmailerExtension extends Extension
             $transport = $mailer['transport'];
         }
 
+        if (null !== $mailer['url']) {
+            $parts = parse_url($mailer['url']);
+            if (!empty($parts['scheme'])) {
+                $transport = $parts['scheme'];
+            }
+
+            if (!empty($parts['user'])) {
+                $mailer['username'] = $parts['user'];
+            }
+            if (!empty($parts['pass'])) {
+                $mailer['password']= $parts['pass'];
+            }
+            if (!empty($parts['host'])) {
+                $mailer['host'] = $parts['host'];
+            }
+            if (!empty($parts['port'])) {
+                $mailer['port'] = $parts['port'];
+            }
+            if (!empty($parts['query'])) {
+                $query = array();
+                parse_str($parts['query'], $query);
+                if (!empty($query['encryption'])) {
+                    $mailer['encryption'] = $query['encryption'];
+                }
+                if (!empty($query['auth_mode'])) {
+                    $mailer['auth_mode'] = $query['auth_mode'];
+                }
+            }
+        }
+        unset($mailer['url']);
+
         $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name), $transport);
 
         if (isset($mailer['disable_delivery']) && $mailer['disable_delivery']) {
