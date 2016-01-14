@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by xabbuh at 2015-12-27T20:31:35Z
+
+This will break applications with Symfony 2.3 where the `Question` class does not exist.
+
+---------------------------------------------------------------------------
+
+by stof at 2015-12-28T08:46:08Z
+
+Indeed. Please write the code in a way supporting both APIs.
+
+---------------------------------------------------------------------------
+
+by sstok at 2015-12-28T11:49:06Z
+
+FYI. https://github.com/rollerworks/PasswordStrengthBundle/blob/master/src/Command/BlacklistPurgeCommand.php#L44-L53
+
+---------------------------------------------------------------------------
+
+by aarnaud at 2015-12-28T23:11:44Z
+
+thanks @sstok
+
+---------------------------------------------------------------------------
+
+by sstok at 2016-01-12T10:05:29Z
+
+:+1:
