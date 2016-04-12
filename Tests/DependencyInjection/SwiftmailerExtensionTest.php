@@ -44,6 +44,16 @@ class SwiftmailerExtensionTest extends TestCase
     /**
      * @dataProvider getConfigTypes
      */
+    public function testMailerNullConfig($type)
+    {
+        $container = $this->loadContainerFromFile('null_mailer', $type);
+        $this->assertEquals('swiftmailer.mailer.failover.transport', (string) $container->getAlias('swiftmailer.transport'));
+    }
+
+
+    /**
+     * @dataProvider getConfigTypes
+     */
     public function testSendmailConfig($type)
     {
         $container = $this->loadContainerFromFile('sendmail', $type);
@@ -151,7 +161,7 @@ class SwiftmailerExtensionTest extends TestCase
         $this->assertEquals('login', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.auth_mode'));
     }
 
-        /**
+    /**
      * @dataProvider getConfigTypes
      */
     public function testOneMailer($type)
