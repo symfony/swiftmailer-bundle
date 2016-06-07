@@ -167,7 +167,7 @@
                         <div class="card-block">
                             <span class="label">Alternative part ({{ messagePart.contentType }})</span>
                             <pre>
-                                {%- if messagePart.charset %}
+                                {%- if messagePart.charset is defined and messagePart.charset %}
                                     {{- messagePart.body|convert_encoding('UTF-8', messagePart.charset) }}
                                 {%- else %}
                                     {{- messagePart.body }}
