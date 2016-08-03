@@ -50,7 +50,7 @@ class EmailSenderListener implements EventSubscriberInterface
         }
         $mailers = array_keys($this->container->getParameter('swiftmailer.mailers'));
         foreach ($mailers as $name) {
-            if ($this->container instanceof IntrospectableContainerInterface ? $this->container->initialized(sprintf('swiftmailer.mailer.%s', $name)) : true) {
+            if (method_exists($this->container, 'initialized') ? $this->container->initialized(sprintf('swiftmailer.mailer.%s', $name)) : true) {
                 if ($this->container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name))) {
                     $mailer = $this->container->get(sprintf('swiftmailer.mailer.%s', $name));
                     $transport = $mailer->getTransport();
