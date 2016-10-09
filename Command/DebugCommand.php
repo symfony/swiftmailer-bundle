@@ -26,6 +26,13 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  */
 class DebugCommand extends ContainerAwareCommand
 {
+    /** @var SymfonyStyle */
+    private $io;
+
+    /**
+     * @see Command
+     */
+>>>>>>> Updated the Debug command
     protected function configure()
     {
         $this
@@ -49,19 +56,20 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $stdout = $output;
-        $output = new SymfonyStyle($input, $output);
+        $this->io = new SymfonyStyle($input, $output);
         $name = $input->getArgument('name');
 
         if ($name) {
-            $this->outputMailer($stdout, $name, $output);
+            $this->outputMailer($stdout, $name);
         } else {
-            $this->outputMailers($stdout, null, $output);
+            $this->outputMailers($stdout, null);
         }
     }
 
-    protected function outputMailers(OutputInterface $stdout, $routes = null, $output = null)
+    protected function outputMailers(OutputInterface $stdout, $routes = null)
     {
-        $output->title('Configured SwiftMailer Mailers');
+        $this->io->title('Configured SwiftMailer Mailers');
+
         $tableHeaders = array('Name', 'Transport', 'Spool', 'Delivery', 'Single Address');
         $tableRows = array();
 
@@ -80,13 +88,13 @@ EOF
             $tableRows[] = array($name, $transport, $spool, $delivery, $singleAddress);
         }
 
-        $output->table($tableHeaders, $tableRows);
+        $this->io->table($tableHeaders, $tableRows);
     }
 
     /**
      * @throws \InvalidArgumentException When route does not exist
      */
-    protected function outputMailer(OutputInterface $stdout, $name, $output = null)
+    protected function outputMailer(OutputInterface $stdout, $name)
     {
         try {
             $service = sprintf('swiftmailer.mailer.%s', $name);
@@ -103,9 +111,9 @@ EOF
         $delivery = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)) ? 'YES' : 'NO';
         $singleAddress = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name));
 
-        $output->title(sprintf('Configuration of the Mailer "%s"', $name));
+        $this->io->title(sprintf('Configuration of the Mailer "%s"', $name));
         if ($this->isDefaultMailer($name)) {
-            $output->comment('This is the default mailer');
+            $this->io->comment('This is the default mailer');
         }
 
         $tableRows[] = array('Name', $name);
@@ -119,7 +127,7 @@ EOF
         $tableRows[] = array('Delivery', $delivery);
         $tableRows[] = array('Single Address', $singleAddress);
 
-        $output->table($tableHeaders, $tableRows);
+        $this->io->table($tableHeaders, $tableRows);
     }
 
     private function isDefaultMailer($name)
