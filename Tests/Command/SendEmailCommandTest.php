@@ -8,16 +8,13 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * @covers Symfony\Bundle\SwiftmailerBundle\Command\SendEmailCommand
- */
 class SendEmailCommandTest extends \PHPUnit_Framework_TestCase
 {
     public function testRecoverSpoolTransport()
     {
-        $realTransport = $this->getMock('Swift_Transport');
+        $realTransport = $this->getMockBuilder('Swift_Transport')->getMock();
 
-        $spool = $this->getMock('Swift_Spool');
+        $spool = $this->getMockBuilder('Swift_Spool')->getMock();
         $spool
             ->expects($this->once())
             ->method('flushQueue')
@@ -35,9 +32,9 @@ class SendEmailCommandTest extends \PHPUnit_Framework_TestCase
 
     public function testRecoverLoadbalancedTransportWithSpool()
     {
-        $realTransport = $this->getMock('Swift_Transport');
+        $realTransport = $this->getMockBuilder('Swift_Transport')->getMock();
 
-        $spool = $this->getMock('Swift_Spool');
+        $spool = $this->getMockBuilder('Swift_Spool')->getMock();
         $spool
             ->expects($this->once())
             ->method('flushQueue')
