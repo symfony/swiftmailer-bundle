@@ -92,7 +92,7 @@ class Configuration implements ConfigurationInterface
             // BC layer for "delivery_address: null" (the case of a string goes through the XML normalization too)
             ->beforeNormalization()
                 ->ifTrue(function ($v) {
-                    return array_key_exists('delivery_address', $v) && null === $v['delivery_address'];
+                    return is_array($v) && array_key_exists('delivery_address', $v) && null === $v['delivery_address'];
                 })
                 ->then(function ($v) {
                     @trigger_error('The swiftmailer.delivery_address configuration key is deprecated since version 2.3.10 and will be removed in 3.0. Use the swiftmailer.delivery_addresses configuration key instead (or remove the empty setting)', E_USER_DEPRECATED);
