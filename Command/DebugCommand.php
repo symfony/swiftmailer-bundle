@@ -55,7 +55,6 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $stdout = $output;
         $this->io = new SymfonyStyle($input, $output);
         $name = $input->getArgument('name');
 
