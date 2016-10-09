@@ -86,11 +86,10 @@ class MessageDataCollector extends DataCollector
      *
      * @return array The data of the mailer.
      */
-
     public function getMailerData($name)
     {
         if (!isset($this->data['mailer'][$name])) {
-            throw new \LogicException(sprintf("Missing %s data in %s", $name, get_class()));
+            throw new \LogicException(sprintf('Missing %s data in %s', $name, get_class()));
         }
 
         return $this->data['mailer'][$name];
@@ -109,7 +108,7 @@ class MessageDataCollector extends DataCollector
             return $data['messageCount'];
         }
 
-        return null;
+        return;
     }
 
     /**
@@ -129,7 +128,7 @@ class MessageDataCollector extends DataCollector
     /**
      * Returns if the mailer has spool.
      *
-     * @return boolean
+     * @return bool
      */
     public function isSpool($name)
     {
@@ -137,13 +136,13 @@ class MessageDataCollector extends DataCollector
             return $data['isSpool'];
         }
 
-        return null;
+        return;
     }
 
     /**
      * Returns if the mailer is the default mailer.
      *
-     * @return boolean
+     * @return bool
      */
     public function isDefaultMailer($name)
     {

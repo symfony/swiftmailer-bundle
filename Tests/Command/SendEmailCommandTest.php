@@ -3,7 +3,6 @@
 namespace Symfony\Bundle\SwiftmailerBundle\Tests\Command;
 
 use Symfony\Bundle\SwiftmailerBundle\Command\SendEmailCommand;
-use Symfony\Bundle\SwiftmailerBundle\Tests\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;

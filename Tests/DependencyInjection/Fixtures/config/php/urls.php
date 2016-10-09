@@ -1,4 +1,5 @@
 <?php
+
 $container->loadFromExtension('swiftmailer', array(
     'default_mailer' => 'smtp_mailer',
     'mailers' => array(

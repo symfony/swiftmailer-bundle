@@ -20,7 +20,7 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Question\Question;
 
 /**
- * A console command for creating and sending simple emails
+ * A console command for creating and sending simple emails.
  *
  * @author Gusakov Nikita <dev@nkt.me>
  */
@@ -68,7 +68,7 @@ EOF
                 $filename = $input->getOption('body');
                 $content = file_get_contents($filename);
                 if ($content === false) {
-                    throw new \Exception('Could not get contents from ' . $filename);
+                    throw new \Exception('Could not get contents from '.$filename);
                 }
                 $input->setOption('body', $content);
                 break;

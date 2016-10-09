@@ -13,7 +13,6 @@ namespace Symfony\Bundle\SwiftmailerBundle\EventListener;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\IntrospectableContainerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -35,7 +34,7 @@ class EmailSenderListener implements EventSubscriberInterface
      * Constructor.
      *
      * @param ContainerInterface $container A ContainerInterface instance
-     * @param LoggerInterface $logger A LoggerInterface instance
+     * @param LoggerInterface    $logger    A LoggerInterface instance
      */
     public function __construct(ContainerInterface $container, LoggerInterface $logger = null)
     {

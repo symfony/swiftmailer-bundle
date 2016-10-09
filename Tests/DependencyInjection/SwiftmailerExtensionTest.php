@@ -11,7 +11,6 @@
 
 namespace Symfony\Bundle\SwiftmailerBundle\Tests\DependencyInjection;
 
-use Symfony\Bundle\SwiftmailerBundle\Tests\TestCase;
 use Symfony\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerExtension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -26,7 +25,7 @@ class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
         return array(
             array('xml'),
             array('php'),
-            array('yml')
+            array('yml'),
         );
     }
 
@@ -150,7 +149,6 @@ class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
     public function testUrls($type)
     {
         $container = $this->loadContainerFromFile('urls', $type);
-
 
         $this->assertEquals('example.com', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.host'));
         $this->assertEquals('12345', $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.port'));
@@ -310,8 +308,9 @@ class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param  string           $file
-     * @param  string           $type
+     * @param string $file
+     * @param string $type
+     *
      * @return ContainerBuilder
      */
     private function loadContainerFromFile($file, $type)
@@ -322,7 +321,7 @@ class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
         $container->setParameter('kernel.cache_dir', '/tmp');
 
         $container->registerExtension(new SwiftmailerExtension());
-        $locator = new FileLocator(__DIR__ . '/Fixtures/config/' . $type);
+        $locator = new FileLocator(__DIR__.'/Fixtures/config/'.$type);
 
         switch ($type) {
             case 'xml':
@@ -338,7 +337,7 @@ class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
                 break;
         }
 
-        $loader->load($file . '.' . $type);
+        $loader->load($file.'.'.$type);
 
         $container->getCompilerPassConfig()->setOptimizationPasses(array());
         $container->getCompilerPassConfig()->setRemovingPasses(array());

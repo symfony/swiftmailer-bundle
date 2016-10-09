@@ -85,7 +85,7 @@ class SwiftmailerExtension extends Extension
                 $mailer['username'] = $parts['user'];
             }
             if (!empty($parts['pass'])) {
-                $mailer['password']= $parts['pass'];
+                $mailer['password'] = $parts['pass'];
             }
             if (!empty($parts['host'])) {
                 $mailer['host'] = $parts['host'];
@@ -149,9 +149,9 @@ class SwiftmailerExtension extends Extension
             $authDecorator = new DefinitionDecorator('swiftmailer.transport.authhandler.abstract');
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.authhandler', $name), $authDecorator)
-                ->addMethodCall('setUsername', array('%swiftmailer.mailer.' . $name . '.transport.smtp.username%'))
-                ->addMethodCall('setPassword', array('%swiftmailer.mailer.' . $name . '.transport.smtp.password%'))
-                ->addMethodCall('setAuthMode', array('%swiftmailer.mailer.' . $name . '.transport.smtp.auth_mode%'));
+                ->addMethodCall('setUsername', array('%swiftmailer.mailer.'.$name.'.transport.smtp.username%'))
+                ->addMethodCall('setPassword', array('%swiftmailer.mailer.'.$name.'.transport.smtp.password%'))
+                ->addMethodCall('setAuthMode', array('%swiftmailer.mailer.'.$name.'.transport.smtp.auth_mode%'));
 
             $bufferDecorator = new DefinitionDecorator('swiftmailer.transport.buffer.abstract');
             $container
@@ -165,11 +165,11 @@ class SwiftmailerExtension extends Extension
                     array(new Reference(sprintf('swiftmailer.mailer.%s.transport.authhandler', $name))),
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
                 ))
-                ->addMethodCall('setHost', array('%swiftmailer.mailer.' . $name . '.transport.smtp.host%'))
-                ->addMethodCall('setPort', array('%swiftmailer.mailer.' . $name . '.transport.smtp.port%'))
-                ->addMethodCall('setEncryption', array('%swiftmailer.mailer.' . $name . '.transport.smtp.encryption%'))
-                ->addMethodCall('setTimeout', array('%swiftmailer.mailer.' . $name . '.transport.smtp.timeout%'))
-                ->addMethodCall('setSourceIp', array('%swiftmailer.mailer.' . $name . '.transport.smtp.source_ip%'))
+                ->addMethodCall('setHost', array('%swiftmailer.mailer.'.$name.'.transport.smtp.host%'))
+                ->addMethodCall('setPort', array('%swiftmailer.mailer.'.$name.'.transport.smtp.port%'))
+                ->addMethodCall('setEncryption', array('%swiftmailer.mailer.'.$name.'.transport.smtp.encryption%'))
+                ->addMethodCall('setTimeout', array('%swiftmailer.mailer.'.$name.'.transport.smtp.timeout%'))
+                ->addMethodCall('setSourceIp', array('%swiftmailer.mailer.'.$name.'.transport.smtp.source_ip%'))
             ;
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
         } elseif ('sendmail' === $transport) {
@@ -182,7 +182,7 @@ class SwiftmailerExtension extends Extension
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport), $definitionDecorator)
                 ->setArguments(array(
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.buffer', $name)),
-                    new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name))
+                    new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
                 ))
             ;
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
@@ -221,7 +221,7 @@ class SwiftmailerExtension extends Extension
                 $container->setAlias(sprintf('swiftmailer.mailer.%s.spool.service', $name), $mailer['spool']['id']);
             } else {
                 foreach (array('path') as $key) {
-                    $container->setParameter(sprintf('swiftmailer.spool.%s.%s.%s', $name, $type, $key), $mailer['spool'][$key] . '/' . $name);
+                    $container->setParameter(sprintf('swiftmailer.spool.%s.%s.%s', $name, $type, $key), $mailer['spool'][$key].'/'.$name);
                 }
             }
 

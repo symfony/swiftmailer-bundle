@@ -16,7 +16,7 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * This class contains the configuration information for the bundle
+ * This class contains the configuration information for the bundle.
  *
  * This information is solely responsible for how the different configuration
  * sections are normalized, and merged.
@@ -30,7 +30,7 @@ class Configuration implements ConfigurationInterface
     /**
      * Constructor.
      *
-     * @param Boolean $debug The kernel.debug value
+     * @param bool $debug The kernel.debug value
      */
     public function __construct($debug)
     {
@@ -76,7 +76,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Return the mailers node
+     * Return the mailers node.
      *
      * @return ArrayNodeDefinition
      */
