@@ -80,7 +80,7 @@ EOF
             );
         }
 
-        if(class_exists('Table')) {
+        if (class_exists('Symfony\Component\Console\Helper\Table')) {
             $table = new Table($output);
         } else {
             $table = $this->getHelper('table');
