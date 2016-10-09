@@ -12,13 +12,14 @@
 namespace Symfony\Bundle\SwiftmailerBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
- * A console command for retrieving information about mailers
+ * A console command for retrieving information about mailers.
  *
  * @author Jérémy Romey <jeremy@free-agent.fr>
  */
@@ -65,44 +66,31 @@ EOF
     {
         $output->writeln($this->getHelper('formatter')->formatSection('swiftmailer', 'Current mailers'));
 
-        $maxName = strlen('name');
-        $maxTransport = strlen('transport');
-        $maxSpool = strlen('spool');
-        $maxDelivery = strlen('delivery');
-        $maxSingleAddress = strlen('single address');
-
+        $rows = array();
         $mailers = $this->getContainer()->getParameter('swiftmailer.mailers');
         foreach ($mailers as $name => $mailer) {
             $mailer = $this->getContainer()->get($mailer);
-            $transport = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name));
-            $spool = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)) ? 'YES' : 'NO';
-            $delivery = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)) ? 'YES' : 'NO';
-            $singleAddress = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name));
 
-            if ($this->isDefaultMailer($name)) {
-                $name = sprintf('%s (default mailer)', $name);
-            }
-            $maxName = max($maxName, strlen($name));
-            $maxTransport = max($maxTransport, strlen($transport));
-            $maxSpool = max($maxSpool, strlen($spool));
-            $maxDelivery = max($maxDelivery, strlen($delivery));
-            $maxSingleAddress = max($maxSingleAddress, strlen($singleAddress));
+            $rows[] = array(
+                $this->isDefaultMailer($name) ? sprintf('%s (default mailer)', $name) : $name,
+                $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name)),
+                $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)) ? 'YES' : 'NO',
+                $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)) ? 'YES' : 'NO',
+                $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name)),
+            );
         }
-        $format  = '%-'.$maxName.'s %-'.$maxTransport.'s %-'.$maxSpool.'s %-'.$maxDelivery.'s %-'.$maxSingleAddress.'s';
 
-        $format1  = '%-'.($maxName + 19).'s %-'.($maxTransport + 19).'s %-'.($maxSpool + 19).'s %-'.($maxDelivery + 19).'s %-'.($maxSingleAddress + 19).'s';
-        $output->writeln(sprintf($format1, '<comment>Name</comment>', '<comment>Transport</comment>', '<comment>Spool</comment>', '<comment>Delivery</comment>', '<comment>Single Address</comment>'));
-        foreach ($mailers as $name => $mailer) {
-            $mailer = $this->getContainer()->get($mailer);
-            $transport = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name));
-            $spool = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)) ? 'YES' : 'NO';
-            $delivery = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)) ? 'YES' : 'NO';
-            $singleAddress = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name));
-            if ($this->isDefaultMailer($name)) {
-                $name = sprintf('%s (default mailer)', $name);
-            }
-            $output->writeln(sprintf($format, $name, $transport, $spool, $delivery, $singleAddress));
+        if(class_exists('Table')) {
+            $table = new Table($output);
+        } else {
+            $table = $this->getHelper('table');
         }
+
+        $table
+            ->setHeaders(array('Name', 'Transport', 'Spool', 'Delivery', 'Single Address'))
+            ->setRows($rows)
+            ->render($output)
+        ;
     }
 
     /**
@@ -117,7 +105,7 @@ EOF
             throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist.', $name));
         }
 
-        $transport  = $mailer->getTransport();
+        $transport = $mailer->getTransport();
         $spool = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)) ? 'YES' : 'NO';
         $delivery = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)) ? 'YES' : 'NO';
         $singleAddress = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name));
