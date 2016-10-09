@@ -24,6 +24,12 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class NewEmailCommand extends ContainerAwareCommand
 {
+    /** @var SymfonyStyle */
+    private $io;
+
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -54,8 +60,8 @@ EOF
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $output = new SymfonyStyle($input, $output);
-        $output->title('SwiftMailer\'s Interactive Email Sender');
+        $this->io = new SymfonyStyle($input, $output);
+        $this->io->title('SwiftMailer\'s Interactive Email Sender');
     }
 
     /**
@@ -64,12 +70,11 @@ EOF
 >>>>>>> Updated the styles of the SwiftMailer commands
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output = new SymfonyStyle($input, $output);
-
         $mailerServiceName = sprintf('swiftmailer.mailer.%s', $input->getOption('mailer'));
         if (!$this->getContainer()->has($mailerServiceName)) {
             throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist.', $input->getOption('mailer')));
         }
+
         switch ($input->getOption('body-source')) {
             case 'file':
                 $filename = $input->getOption('body');
@@ -89,7 +94,7 @@ EOF
         $mailer = $this->getContainer()->get($mailerServiceName);
         $sentMessages = $mailer->send($message);
 
-        $output->success(sprintf('%s emails were successfully sent.', $sentMessages));
+        $this->io->success(sprintf('%s emails were successfully sent.', $sentMessages));
     }
 
     /**
@@ -97,10 +102,9 @@ EOF
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $output = new SymfonyStyle($input, $output);
         foreach ($input->getOptions() as $option => $value) {
             if ($value === null) {
-                $input->setOption($option, $output->ask(sprintf('%s', ucfirst($option))));
+                $input->setOption($option, $this->io->ask(sprintf('%s', ucfirst($option))));
             }
         }
     }
