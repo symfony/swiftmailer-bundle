@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\Config\FileLocator;
 
-class SwiftmailerExtensionTest extends TestCase
+class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
 {
     public function getConfigTypes()
     {
