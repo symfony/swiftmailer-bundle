@@ -28,8 +28,6 @@ class Configuration implements ConfigurationInterface
     private $debug;
 
     /**
-     * Constructor.
-     *
      * @param bool $debug The kernel.debug value
      */
     public function __construct($debug)
@@ -38,9 +36,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Generates the configuration tree builder.
-     *
-     * @return \Symfony\Component\Config\Definition\Builder\TreeBuilder The tree builder
+     * {@inheritdoc}
      */
     public function getConfigTreeBuilder()
     {
@@ -76,8 +72,6 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Return the mailers node.
-     *
      * @return ArrayNodeDefinition
      */
     private function getMailersNode()

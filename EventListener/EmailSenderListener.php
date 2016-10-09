@@ -30,12 +30,6 @@ class EmailSenderListener implements EventSubscriberInterface
 
     private $logger;
 
-    /**
-     * Constructor.
-     *
-     * @param ContainerInterface $container A ContainerInterface instance
-     * @param LoggerInterface    $logger    A LoggerInterface instance
-     */
     public function __construct(ContainerInterface $container, LoggerInterface $logger = null)
     {
         $this->container = $container;

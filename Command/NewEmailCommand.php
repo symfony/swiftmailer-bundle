@@ -26,9 +26,6 @@ use Symfony\Component\Console\Question\Question;
  */
 class NewEmailCommand extends ContainerAwareCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $this
@@ -54,14 +51,11 @@ EOF
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $mailerServiceName = sprintf('swiftmailer.mailer.%s', $input->getOption('mailer'));
         if (!$this->getContainer()->has($mailerServiceName)) {
-            throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist', $input->getOption('mailer')));
+            throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist.', $input->getOption('mailer')));
         }
         switch ($input->getOption('body-source')) {
             case 'file':
@@ -75,7 +69,7 @@ EOF
             case 'stdin':
                 break;
             default:
-                throw new \InvalidArgumentException('Body-input option should be "stdin" or "file"');
+                throw new \InvalidArgumentException('Body-input option should be "stdin" or "file".');
         }
 
         $message = $this->createMessage($input);

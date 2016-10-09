@@ -25,9 +25,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SendEmailCommand extends ContainerAwareCommand
 {
-    /**
-     * @see Command
-     */
     protected function configure()
     {
         $this
@@ -48,9 +45,6 @@ EOF
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getOption('mailer');

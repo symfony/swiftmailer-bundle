@@ -25,9 +25,6 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  */
 class DebugCommand extends ContainerAwareCommand
 {
-    /**
-     * @see Command
-     */
     protected function configure()
     {
         $this
@@ -48,9 +45,6 @@ EOF
         ;
     }
 
-    /**
-     * @see Command
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getArgument('name');

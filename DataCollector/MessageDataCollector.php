@@ -28,12 +28,8 @@ class MessageDataCollector extends DataCollector
     private $container;
 
     /**
-     * Constructor.
-     *
      * We don't inject the message logger and mailer here
      * to avoid the creation of these objects when no emails are sent.
-     *
-     * @param ContainerInterface $container A ContainerInterface instance
      */
     public function __construct(ContainerInterface $container)
     {
