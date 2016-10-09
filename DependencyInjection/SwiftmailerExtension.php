@@ -149,9 +149,9 @@ class SwiftmailerExtension extends Extension
             $authDecorator = new DefinitionDecorator('swiftmailer.transport.authhandler.abstract');
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.authhandler', $name), $authDecorator)
-                ->addMethodCall('setUsername', array('%swiftmailer.mailer.'.$name.'.transport.smtp.username%'))
-                ->addMethodCall('setPassword', array('%swiftmailer.mailer.'.$name.'.transport.smtp.password%'))
-                ->addMethodCall('setAuthMode', array('%swiftmailer.mailer.'.$name.'.transport.smtp.auth_mode%'));
+                ->addMethodCall('setUsername', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.username%%', $name)))
+                ->addMethodCall('setPassword', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.password%%', $name)))
+                ->addMethodCall('setAuthMode', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.auth_mode%%', $name)));
 
             $bufferDecorator = new DefinitionDecorator('swiftmailer.transport.buffer.abstract');
             $container
@@ -165,11 +165,11 @@ class SwiftmailerExtension extends Extension
                     array(new Reference(sprintf('swiftmailer.mailer.%s.transport.authhandler', $name))),
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
                 ))
-                ->addMethodCall('setHost', array('%swiftmailer.mailer.'.$name.'.transport.smtp.host%'))
-                ->addMethodCall('setPort', array('%swiftmailer.mailer.'.$name.'.transport.smtp.port%'))
-                ->addMethodCall('setEncryption', array('%swiftmailer.mailer.'.$name.'.transport.smtp.encryption%'))
-                ->addMethodCall('setTimeout', array('%swiftmailer.mailer.'.$name.'.transport.smtp.timeout%'))
-                ->addMethodCall('setSourceIp', array('%swiftmailer.mailer.'.$name.'.transport.smtp.source_ip%'))
+                ->addMethodCall('setHost', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.host%%', $name)))
+                ->addMethodCall('setPort', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.port%%', $name)))
+                ->addMethodCall('setEncryption', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.encryption%%', $name)))
+                ->addMethodCall('setTimeout', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.timeout%%', $name)))
+                ->addMethodCall('setSourceIp', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.source_ip%%', $name)))
             ;
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
         } elseif ('sendmail' === $transport) {
