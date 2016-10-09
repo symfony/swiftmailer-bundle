@@ -50,7 +50,6 @@ class SwiftmailerExtensionTest extends TestCase
         $this->assertEquals('swiftmailer.mailer.failover.transport', (string) $container->getAlias('swiftmailer.transport'));
     }
 
-
     /**
      * @dataProvider getConfigTypes
      */
