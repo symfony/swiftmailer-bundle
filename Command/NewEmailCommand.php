@@ -68,7 +68,7 @@ EOF
                 $filename = $input->getOption('body');
                 $content = file_get_contents($filename);
                 if ($content === false) {
-                    throw new \Exception('Could not get contents from '.$filename);
+                    throw new \Exception(sprintf('Could not get contents from "%s".', $filename));
                 }
                 $input->setOption('body', $content);
                 break;
