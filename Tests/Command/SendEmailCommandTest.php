@@ -54,15 +54,9 @@ class SendEmailCommandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Builds a container with a named mailer.
-     *
-     * @param \Swift_Transport $transport
-     * @param \Swift_Transport $realTransport
-     * @param string           $name
-     *
      * @return Container
      */
-    private function buildContainer($transport, $realTransport, $name = 'default')
+    private function buildContainer(\Swift_Transport $transport, \Swift_Transport $realTransport, $name = 'default')
     {
         $mailer = new \Swift_Mailer($transport);
 
@@ -76,12 +70,6 @@ class SendEmailCommandTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Executes the command with the given container.
-     *
-     * @param ContainerInterface $container
-     * @param array              $input
-     * @param array              $options
-     *
      * @return CommandTester
      */
     private function executeCommand(ContainerInterface $container, $input = array(), $options = array())

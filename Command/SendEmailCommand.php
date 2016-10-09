@@ -79,9 +79,9 @@ EOF
                 foreach ($transport->getTransports() as $eachTransport) {
                     $this->recoverSpool($name, $eachTransport, $input, $output);
                 }
+            } else {
+                $this->recoverSpool($name, $transport, $input, $output);
             }
-
-            $this->recoverSpool($name, $transport, $input, $output);
         } else {
             $output->writeln('No email to send as the spool is disabled.');
         }
