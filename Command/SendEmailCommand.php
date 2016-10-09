@@ -61,12 +61,12 @@ EOF
 
     private function processMailer($name, InputInterface $input, OutputInterface $output)
     {
-        $output = new SymfonyStyle($input, $output);
+        $io = new SymfonyStyle($input, $output);
         if (!$this->getContainer()->has(sprintf('swiftmailer.mailer.%s', $name))) {
             throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist.', $name));
         }
 
-        $output->text(sprintf('<info>[%s]</info> Processing <info>%s</info> mailer spool... ', date('Y-m-d H:i:s'), $name));
+        $io->text(sprintf('<info>[%s]</info> Processing <info>%s</info> mailer spool... ', date('Y-m-d H:i:s'), $name));
         if ($this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name))) {
             $mailer = $this->getContainer()->get(sprintf('swiftmailer.mailer.%s', $name));
             $transport = $mailer->getTransport();
@@ -77,10 +77,10 @@ EOF
                 }
             } else {
                 $this->recoverSpool($name, $transport, $input, $output);
-                $output->text(sprintf('<info>[%s]</info> <comment>%d</comment> emails sent', date('Y-m-d H:i:s'), $sent));
+                $io->text(sprintf('<info>[%s]</info> <comment>%d</comment> emails sent', date('Y-m-d H:i:s'), $sent));
             }
         } else {
-            $output->warning('There are no emails to send because the spool is disabled.');
+            $io->warning('There are no emails to send because the spool is disabled.');
         }
     }
 
