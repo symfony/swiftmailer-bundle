@@ -11,4 +11,5 @@ $container->loadFromExtension('swiftmailer', array(
     'timeout' => '1000',
     'source_ip' => '127.0.0.1',
     'logging' => true,
+    'local_domain' => 'local.example.org',
 ));

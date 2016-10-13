@@ -13,6 +13,7 @@ $container->loadFromExtension('swiftmailer', array(
             'auth-mode' => 'login',
             'timeout' => '1000',
             'source_ip' => '127.0.0.1',
+            'local_domain' => 'first.example.org',
             'logging' => true,
             'sender_address' => 'first-sender@example.org',
             'delivery_address' => 'first@example.org',
@@ -31,6 +32,7 @@ $container->loadFromExtension('swiftmailer', array(
             'auth-mode' => 'login',
             'timeout' => '1000',
             'source_ip' => '127.0.0.1',
+            'local_domain' => 'second.example.org',
             'logging' => true,
             'spool' => array(
                 'type' => 'memory',
@@ -51,6 +53,7 @@ $container->loadFromExtension('swiftmailer', array(
             'auth-mode' => 'login',
             'timeout' => '1000',
             'source_ip' => '127.0.0.1',
+            'local_domain' => 'third.example.org',
             'logging' => true,
             'spool' => array(
                 'type' => 'file',

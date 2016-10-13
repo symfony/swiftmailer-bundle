@@ -12,6 +12,7 @@
 namespace Symfony\Bundle\SwiftmailerBundle\DependencyInjection;
 
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -138,13 +139,15 @@ class SwiftmailerExtension extends Extension
 
     protected function configureMailerTransport($name, array $mailer, ContainerBuilder $container, $transport, $isDefaultMailer = false)
     {
-        foreach (array('encryption', 'port', 'host', 'username', 'password', 'auth_mode', 'timeout', 'source_ip') as $key) {
+        foreach (array('encryption', 'port', 'host', 'username', 'password', 'auth_mode', 'timeout', 'source_ip', 'local_domain') as $key) {
             $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.smtp.%s', $name, $key), $mailer[$key]);
         }
+
         $definitionDecorator = new DefinitionDecorator('swiftmailer.transport.eventdispatcher.abstract');
         $container
             ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name), $definitionDecorator)
         ;
+
         if ('smtp' === $transport) {
             $authDecorator = new DefinitionDecorator('swiftmailer.transport.authhandler.abstract');
             $container
@@ -156,6 +159,15 @@ class SwiftmailerExtension extends Extension
             $bufferDecorator = new DefinitionDecorator('swiftmailer.transport.buffer.abstract');
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.buffer', $name), $bufferDecorator);
+
+            $configuratorDecorator = new DefinitionDecorator('swiftmailer.transport.smtp.configurator.abstract');
+            $container
+                ->setDefinition(sprintf('swiftmailer.transport.configurator.%s', $name), $configuratorDecorator)
+                ->setArguments(array(
+                    sprintf('%%swiftmailer.mailer.%s.transport.smtp.local_domain%%', $name),
+                    new Reference('router.request_context', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                ))
+            ;
 
             $definitionDecorator = new DefinitionDecorator('swiftmailer.transport.smtp.abstract');
             $container
@@ -170,12 +182,28 @@ class SwiftmailerExtension extends Extension
                 ->addMethodCall('setEncryption', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.encryption%%', $name)))
                 ->addMethodCall('setTimeout', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.timeout%%', $name)))
                 ->addMethodCall('setSourceIp', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.source_ip%%', $name)))
+                ->setConfigurator(array(new Reference(sprintf('swiftmailer.transport.configurator.%s', $name)), 'configure'))
             ;
+
+            if (isset($mailer['stream_options'])) {
+                $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.smtp.stream_options', $name), $mailer['stream_options']);
+                $definitionDecorator->addMethodCall('setStreamOptions', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.stream_options%%', $name)));
+            }
+
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
         } elseif ('sendmail' === $transport) {
             $bufferDecorator = new DefinitionDecorator('swiftmailer.transport.buffer.abstract');
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.buffer', $name), $bufferDecorator);
+
+            $configuratorDecorator = new DefinitionDecorator('swiftmailer.transport.smtp.configurator.abstract');
+            $container
+                ->setDefinition(sprintf('swiftmailer.transport.configurator.%s', $name), $configuratorDecorator)
+                ->setArguments(array(
+                    sprintf('%%swiftmailer.mailer.%s.transport.smtp.local_domain%%', $name),
+                    new Reference('router.request_context', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                ))
+            ;
 
             $definitionDecorator = new DefinitionDecorator(sprintf('swiftmailer.transport.%s.abstract', $transport));
             $container
@@ -184,7 +212,9 @@ class SwiftmailerExtension extends Extension
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.buffer', $name)),
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
                 ))
+                ->setConfigurator(array(new Reference(sprintf('swiftmailer.transport.configurator.%s', $name)), 'configure'))
             ;
+
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
         } elseif ('mail' === $transport) {
             $definitionDecorator = new DefinitionDecorator(sprintf('swiftmailer.transport.%s.abstract', $transport));
