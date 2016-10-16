@@ -59,13 +59,13 @@ EOF
         $name = $input->getArgument('name');
 
         if ($name) {
-            $this->outputMailer($stdout, $name);
+            $this->outputMailer($name);
         } else {
-            $this->outputMailers($stdout, null);
+            $this->outputMailers();
         }
     }
 
-    protected function outputMailers(OutputInterface $stdout, $routes = null)
+    protected function outputMailers($routes = null)
     {
         $this->io->title('Configured SwiftMailer Mailers');
 
