@@ -32,7 +32,6 @@ class DebugCommand extends ContainerAwareCommand
     /**
      * @see Command
      */
->>>>>>> Updated the Debug command
     protected function configure()
     {
         $this
@@ -93,7 +92,7 @@ EOF
     /**
      * @throws \InvalidArgumentException When route does not exist
      */
-    protected function outputMailer(OutputInterface $stdout, $name)
+    protected function outputMailer($name)
     {
         try {
             $service = sprintf('swiftmailer.mailer.%s', $name);

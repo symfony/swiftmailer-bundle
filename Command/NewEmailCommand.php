@@ -67,7 +67,6 @@ EOF
     /**
      * {@inheritdoc}
      */
->>>>>>> Updated the styles of the SwiftMailer commands
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $mailerServiceName = sprintf('swiftmailer.mailer.%s', $input->getOption('mailer'));
