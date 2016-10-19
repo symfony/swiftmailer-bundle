@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-09-29T10:26:12Z
+
+Dropping support for Symfony 2.3 seems a bad idea. Core bundles need to keep support for the LTS. And it would be great to avoid having to maintain 2 versions of the bundle in parallel.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2015-09-29T11:00:06Z
+
+@stof I agree with you. Let's block this pull request for now and let's merge it on May 2016 when Symfony 2.3 will die.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-09T14:15:46Z
+
+@javiereguiluz Can you update this PR? I'd like to drop support for 2.3 now that it's not maintained anymore. Thanks.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-09T15:36:37Z
+
+@javiereguiluz You were faster than I expected :) I've just bumped version to 2.4 which drops support for 2.3. I've also added a CHANGELOG. Can you rebase to again and add an entry in the new CHANGELOG?
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-19T01:01:32Z
+
+@javiereguiluz Can you have a look at the broken tests? Apparently, there is one var `$sent` that is used but not defined. Thanks.
