@@ -1,5 +1,6 @@
 * 2.4.0 (2016-10-09)
 
+ * updated the styles of the SwiftMailer commands
  * removed support for deprecated versions of Symfony
  * added support for LoadBalancedTransport in SendEmailCommand
  * fixed messagePart.charset not defined in the web profiler
