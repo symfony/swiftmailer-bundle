@@ -26,6 +26,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class SendEmailCommand extends ContainerAwareCommand
 {
+    /** @var SymfonyStyle */
+    private $io;
+
     protected function configure()
     {
         $this
@@ -48,6 +51,8 @@ EOF
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->io = new SymfonyStyle($input, $output);
+
         $name = $input->getOption('mailer');
         if ($name) {
             $this->processMailer($name, $input, $output);
@@ -61,12 +66,11 @@ EOF
 
     private function processMailer($name, InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
         if (!$this->getContainer()->has(sprintf('swiftmailer.mailer.%s', $name))) {
             throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist.', $name));
         }
 
-        $io->text(sprintf('<info>[%s]</info> Processing <info>%s</info> mailer spool... ', date('Y-m-d H:i:s'), $name));
+        $this->io->text(sprintf('<info>[%s]</info> Processing <info>%s</info> mailer spool... ', date('Y-m-d H:i:s'), $name));
         if ($this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name))) {
             $mailer = $this->getContainer()->get(sprintf('swiftmailer.mailer.%s', $name));
             $transport = $mailer->getTransport();
@@ -77,10 +81,9 @@ EOF
                 }
             } else {
                 $this->recoverSpool($name, $transport, $input, $output);
-                $io->text(sprintf('<info>[%s]</info> <comment>%d</comment> emails sent', date('Y-m-d H:i:s'), $sent));
             }
         } else {
-            $io->warning('There are no emails to send because the spool is disabled.');
+            $this->io->warning('There are no emails to send because the spool is disabled.');
         }
     }
 
@@ -104,7 +107,7 @@ EOF
             $transportService = $input->getOption('transport') ?: sprintf('swiftmailer.mailer.%s.transport.real', $name);
             $sent = $spool->flushQueue($this->getContainer()->get($transportService));
 
-            $output->writeln(sprintf('<comment>%d</comment> emails sent', $sent));
+            $this->io->text(sprintf('<comment>%d</comment> emails sent', $sent));
         }
     }
 }
