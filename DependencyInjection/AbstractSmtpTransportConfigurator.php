@@ -16,7 +16,7 @@ use Symfony\Component\Routing\RequestContext;
 /**
  * Service configurator.
  */
-class Configurator
+class AbstractSmtpTransportConfigurator
 {
     /**
      * @var string
@@ -40,7 +40,7 @@ class Configurator
         $this->requestContext = $requestContext;
     }
 
-    public function configureLocalDomain(\Swift_Transport_AbstractSmtpTransport $transport)
+    public function configure(\Swift_Transport_AbstractSmtpTransport $transport)
     {
         if ($this->localDomain) {
             $transport->setLocalDomain($this->localDomain);

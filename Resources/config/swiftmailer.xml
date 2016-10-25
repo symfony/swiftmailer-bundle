@@ -27,7 +27,6 @@
         <parameter key="swiftmailer.email_sender.listener.class">Symfony\Bundle\SwiftmailerBundle\EventListener\EmailSenderListener</parameter>
 
         <parameter key="swiftmailer.data_collector.class">Symfony\Bundle\SwiftmailerBundle\DataCollector\MessageDataCollector</parameter>
-        <parameter key="swiftmailer.configurator.class">Symfony\Bundle\SwiftmailerBundle\DependencyInjection\Configurator</parameter>
     </parameters>
 
     <services>
@@ -35,9 +34,9 @@
             <argument type="service" id="swiftmailer.transport" />
         </service>
 
-        <service id="swiftmailer.transport.sendmail.abstract" class="%swiftmailer.transport.sendmail.class%" abstract="true" public="false" />
+        <service id="swiftmailer.transport.smtp.configurator.abstract" class="Symfony\Bundle\SwiftmailerBundle\DependencyInjection\AbstractSmtpTransportConfigurator" abstract="true" public="false" />
 
-        <service id="swiftmailer.configurator.abstract" class="%swiftmailer.configurator.class%" abstract="true" public="false" />
+        <service id="swiftmailer.transport.sendmail.abstract" class="%swiftmailer.transport.sendmail.class%" abstract="true" public="false" />
 
         <service id="swiftmailer.transport.mail.abstract" class="%swiftmailer.transport.mail.class%" abstract="true" public="false">
             <argument type="service" id="swiftmailer.transport.mailinvoker" />

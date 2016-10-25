@@ -160,9 +160,9 @@ class SwiftmailerExtension extends Extension
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.buffer', $name), $bufferDecorator);
 
-            $configuratorDecorator = new DefinitionDecorator('swiftmailer.configurator.abstract');
+            $configuratorDecorator = new DefinitionDecorator('swiftmailer.transport.smtp.configurator.abstract');
             $container
-                ->setDefinition(sprintf('swiftmailer.configurator.transport.%s', $name), $configuratorDecorator)
+                ->setDefinition(sprintf('swiftmailer.transport.configurator.%s', $name), $configuratorDecorator)
                 ->setArguments(array(
                     sprintf('%%swiftmailer.mailer.%s.transport.smtp.local_domain%%', $name),
                     new Reference('router.request_context', ContainerInterface::NULL_ON_INVALID_REFERENCE),
@@ -182,7 +182,7 @@ class SwiftmailerExtension extends Extension
                 ->addMethodCall('setEncryption', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.encryption%%', $name)))
                 ->addMethodCall('setTimeout', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.timeout%%', $name)))
                 ->addMethodCall('setSourceIp', array(sprintf('%%swiftmailer.mailer.%s.transport.smtp.source_ip%%', $name)))
-                ->setConfigurator(array(new Reference(sprintf('swiftmailer.configurator.transport.%s', $name)), 'configureLocalDomain'))
+                ->setConfigurator(array(new Reference(sprintf('swiftmailer.transport.configurator.%s', $name)), 'configure'))
             ;
 
             if (isset($mailer['stream_options'])) {
@@ -196,9 +196,9 @@ class SwiftmailerExtension extends Extension
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.buffer', $name), $bufferDecorator);
 
-            $configuratorDecorator = new DefinitionDecorator('swiftmailer.configurator.abstract');
+            $configuratorDecorator = new DefinitionDecorator('swiftmailer.transport.smtp.configurator.abstract');
             $container
-                ->setDefinition(sprintf('swiftmailer.configurator.transport.%s', $name), $configuratorDecorator)
+                ->setDefinition(sprintf('swiftmailer.transport.configurator.%s', $name), $configuratorDecorator)
                 ->setArguments(array(
                     sprintf('%%swiftmailer.mailer.%s.transport.smtp.local_domain%%', $name),
                     new Reference('router.request_context', ContainerInterface::NULL_ON_INVALID_REFERENCE),
@@ -212,7 +212,7 @@ class SwiftmailerExtension extends Extension
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.buffer', $name)),
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
                 ))
-                ->setConfigurator(array(new Reference(sprintf('swiftmailer.configurator.transport.%s', $name)), 'configureLocalDomain'))
+                ->setConfigurator(array(new Reference(sprintf('swiftmailer.transport.configurator.%s', $name)), 'configure'))
             ;
 
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport));
