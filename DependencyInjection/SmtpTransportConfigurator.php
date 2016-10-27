@@ -13,33 +13,21 @@ namespace Symfony\Bundle\SwiftmailerBundle\DependencyInjection;
 
 use Symfony\Component\Routing\RequestContext;
 
-/**
- * Service configurator.
- */
-class AbstractSmtpTransportConfigurator
+class SmtpTransportConfigurator
 {
-    /**
-     * @var string
-     */
-    protected $localDomain;
+    private $localDomain;
 
-    /**
-     * @var RequestContext
-     */
-    protected $requestContext;
+    private $requestContext;
 
-    /**
-     * Sets the local domain based on the current request context.
-     *
-     * @param string         $localDomain    Fallback value if there is no request context.
-     * @param RequestContext $requestContext
-     */
     public function __construct($localDomain, RequestContext $requestContext = null)
     {
         $this->localDomain = $localDomain;
         $this->requestContext = $requestContext;
     }
 
+    /**
+     * Sets the local domain based on the current request context.
+     */
     public function configure(\Swift_Transport_AbstractSmtpTransport $transport)
     {
         if ($this->localDomain) {
