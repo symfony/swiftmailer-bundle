@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by c960657 at 2016-09-11T17:17:26Z
+
+The PHP 7 build fails on Travis because phpunit/phpunit-mock-objects versions 3.2.4 and 3.2.5 are broken. I don't know how to upgrade this package on Travis.
+
+---------------------------------------------------------------------------
+
+by fabpot at 2016-10-19T21:03:40Z
+
+👍 (when my 2 small comments are adressed)
