@@ -1,5 +1,6 @@
 * 2.4.0 (2016-10-09)
 
+ * added support for setLocalDomain() and setStreamOptions()
  * updated the styles of the SwiftMailer commands
  * removed support for deprecated versions of Symfony
  * added support for LoadBalancedTransport in SendEmailCommand
