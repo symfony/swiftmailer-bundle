@@ -35,7 +35,7 @@ class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
      */
     public function testDefaultConfig($type)
     {
-        $requestContext = $this->getMock('Symfony\Component\Routing\RequestContext', array('getHost'));
+        $requestContext = $this->getMockBuilder('Symfony\Component\Routing\RequestContext')->setMethods(array('getHost'))->getMock();
         $requestContext->expects($this->once())->method('getHost')->will($this->returnValue('example.org'));
         $services = array('router.request_context' => $requestContext);
 
@@ -66,7 +66,7 @@ class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
     public function testSendmailConfig($type)
     {
         // Local domain is specified explicitly, so the request context host is ignored.
-        $requestContext = $this->getMock('Symfony\Component\Routing\RequestContext', array('getHost'));
+        $requestContext = $this->getMockBuilder('Symfony\Component\Routing\RequestContext')->setMethods(array('getHost'))->getMock();
         $requestContext->expects($this->any())->method('getHost')->will($this->returnValue('example.org'));
         $services = array('router.request_context' => $requestContext);
 
