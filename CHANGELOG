@@ -1,3 +1,7 @@
+* 2.4.1 (2016-12-20)
+
+ * added missing attachments in the web profiler
+
 * 2.4.0 (2016-10-09)
 
  * added support for setLocalDomain() and setStreamOptions()
