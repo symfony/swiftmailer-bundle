@@ -145,6 +145,19 @@ class MessageDataCollector extends DataCollector
         return $this->data['defaultMailer'] == $name;
     }
 
+    public function extractAttachments(\Swift_Message $message)
+    {
+        $attachments = array();
+
+        foreach ($message->getChildren() as $child) {
+            if ($child instanceof \Swift_Attachment) {
+                $attachments[] = $child;
+            }
+        }
+
+        return $attachments;
+    }
+
     /**
      * {@inheritdoc}
      */
