@@ -1,3 +1,7 @@
+* 2.4.2 (2016-12-20)
+
+ * fixed compatibility with Symfony 3.3
+
 * 2.4.1 (2016-12-20)
 
  * added missing attachments in the web profiler
