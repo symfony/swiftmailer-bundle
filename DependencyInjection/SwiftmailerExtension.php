@@ -14,6 +14,7 @@ namespace Symfony\Bundle\SwiftmailerBundle\DependencyInjection;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ChildDefinition;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -66,67 +67,59 @@ class SwiftmailerExtension extends Extension
 
     protected function configureMailer($name, array $mailer, ContainerBuilder $container, $isDefaultMailer = false)
     {
-        if (null === $mailer['transport']) {
-            $transport = 'null';
-        } elseif ('gmail' === $mailer['transport']) {
-            $mailer['encryption'] = 'ssl';
-            $mailer['auth_mode'] = 'login';
-            $mailer['host'] = 'smtp.gmail.com';
-            $transport = 'smtp';
+        $definitionDecorator = $this->createChildDefinition('swiftmailer.transport.eventdispatcher.abstract');
+        $container
+            ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name), $definitionDecorator)
+        ;
+
+        if (method_exists($container, 'resolveEnvPlaceholders')) {
+            $options = array();
+            $envVariablesAllowed = array('transport', 'url', 'username', 'password', 'host', 'port', 'timeout', 'source_ip', 'local_domain', 'encryption', 'auth_mode');
+            foreach ($envVariablesAllowed as $key) {
+                $container->resolveEnvPlaceholders($mailer[$key], null, $usedEnvs);
+                $options[$key] = $mailer[$key];
+            }
         } else {
+            $usedEnvs = false;
+        }
+        if ($usedEnvs) {
+            $transportId = sprintf('swiftmailer.mailer.%s.transport.dynamic', $name);
+            $definitionDecorator = new Definition('\Swift_Transport');
+            $definitionDecorator->setFactory(array('Symfony\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerTransportFactory', 'createTransport'));
+            $definitionDecorator->setArguments(array(
+                $options,
+                new Reference('router.request_context'),
+                new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
+            ));
+            $container->setDefinition(sprintf('swiftmailer.mailer.%s.transport.dynamic', $name), $definitionDecorator);
+            $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), $transportId);
+
+            $definitionDecorator = $this->createChildDefinition('swiftmailer.mailer.abstract');
+            $container
+                ->setDefinition(sprintf('swiftmailer.mailer.%s', $name), $definitionDecorator)
+                ->replaceArgument(0, new Reference(sprintf('swiftmailer.mailer.%s.transport', $name)))
+            ;
+
+            $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name), 'dynamic');
+        } else {
+            $mailer = SwiftmailerTransportFactory::resolveOptions($mailer);
             $transport = $mailer['transport'];
+
+            $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name), $transport);
+
+            $transportId = in_array($transport, array('smtp', 'sendmail', 'null'))
+                ? sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport)
+                : $transport;
+
+            $this->configureMailerTransport($name, $mailer, $container, $transport, $isDefaultMailer);
         }
-
-        if (null !== $mailer['url']) {
-            $parts = parse_url($mailer['url']);
-            if (!empty($parts['scheme'])) {
-                $transport = $parts['scheme'];
-            }
-
-            if (!empty($parts['user'])) {
-                $mailer['username'] = $parts['user'];
-            }
-            if (!empty($parts['pass'])) {
-                $mailer['password'] = $parts['pass'];
-            }
-            if (!empty($parts['host'])) {
-                $mailer['host'] = $parts['host'];
-            }
-            if (!empty($parts['port'])) {
-                $mailer['port'] = $parts['port'];
-            }
-            if (!empty($parts['query'])) {
-                $query = array();
-                parse_str($parts['query'], $query);
-                if (!empty($query['encryption'])) {
-                    $mailer['encryption'] = $query['encryption'];
-                }
-                if (!empty($query['auth_mode'])) {
-                    $mailer['auth_mode'] = $query['auth_mode'];
-                }
-            }
-        }
-        unset($mailer['url']);
-
-        $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name), $transport);
-
-        if (isset($mailer['disable_delivery']) && $mailer['disable_delivery']) {
-            $transport = 'null';
-            $container->setParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name), false);
-        } else {
-            $container->setParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name), true);
-        }
-
-        if (empty($mailer['port'])) {
-            $mailer['port'] = 'ssl' === $mailer['encryption'] ? 465 : 25;
-        }
-
-        $this->configureMailerTransport($name, $mailer, $container, $transport, $isDefaultMailer);
-        $this->configureMailerSpool($name, $mailer, $container, $transport, $isDefaultMailer);
+        $this->configureMailerSpool($name, $mailer, $container, $transportId, $isDefaultMailer);
         $this->configureMailerSenderAddress($name, $mailer, $container, $isDefaultMailer);
         $this->configureMailerAntiFlood($name, $mailer, $container, $isDefaultMailer);
         $this->configureMailerDeliveryAddress($name, $mailer, $container, $isDefaultMailer);
         $this->configureMailerLogging($name, $mailer, $container, $isDefaultMailer);
+
+        $container->setParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name), empty($mailer['disable_delivery']));
 
         // alias
         if ($isDefaultMailer) {
@@ -143,11 +136,6 @@ class SwiftmailerExtension extends Extension
         foreach (array('encryption', 'port', 'host', 'username', 'password', 'auth_mode', 'timeout', 'source_ip', 'local_domain') as $key) {
             $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.smtp.%s', $name, $key), $mailer[$key]);
         }
-
-        $definitionDecorator = $this->createChildDefinition('swiftmailer.transport.eventdispatcher.abstract');
-        $container
-            ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name), $definitionDecorator)
-        ;
 
         if ('smtp' === $transport) {
             $authDecorator = $this->createChildDefinition('swiftmailer.transport.authhandler.abstract');
@@ -278,10 +266,6 @@ class SwiftmailerExtension extends Extension
                 ))
             ;
 
-            if (in_array($transport, array('smtp', 'mail', 'sendmail', 'null'))) {
-                // built-in transport
-                $transport = sprintf('swiftmailer.mailer.%s.transport.%s', $name, $transport);
-            }
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport.real', $name), $transport);
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.spool', $name));
             $container->setParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name), true);
