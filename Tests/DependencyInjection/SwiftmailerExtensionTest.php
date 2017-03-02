@@ -24,27 +24,7 @@ class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
 {
     public function testLoadWithEnvVariables()
     {
-        $container = new ContainerBuilder();
-        if (!method_exists($container, 'resolveEnvPlaceholders')) {
-            $this->markTestSkipped('Runtime environment variables has been introduced in the Dependency Injection version 3.2.');
-        }
-
-        $container->setParameter('kernel.debug', false);
-        $container->setParameter('kernel.cache_dir', '/tmp');
-
-        $container->set('swiftmailer.mailer.default.transport.eventdispatcher', new \Swift_Events_SimpleEventDispatcher());
-        $container->set('router.request_context', new RequestContext());
-
-        $container->registerExtension(new SwiftmailerExtension());
-        $locator = new FileLocator(__DIR__.'/Fixtures/config/yml');
-        $loader = new YamlFileLoader($container, $locator);
-        $loader->load('env_variable.yml');
-
-        $container->getCompilerPassConfig()->setOptimizationPasses(array(
-            new ResolveDefinitionTemplatesPass(),
-        ));
-        $container->getCompilerPassConfig()->setRemovingPasses(array());
-        $container->compile();
+        $container = $this->loadContainerFromFile('env_variable', 'yml', array(), true);
 
         $this->assertEquals(
             array('Symfony\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerTransportFactory', 'createTransport'),
@@ -384,15 +364,45 @@ class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider getConfigTypes
+     */
+    public function testDisableDelivery($type)
+    {
+        $container = $this->loadContainerFromFile('disable_delivery', $type);
+
+        $this->assertTrue($container->getParameter('swiftmailer.mailer.mailer_on.delivery.enabled'));
+        $this->assertSame('smtp', $container->getParameter('swiftmailer.mailer.mailer_on.transport.name'));
+
+        $this->assertFalse($container->getParameter('swiftmailer.mailer.mailer_off.delivery.enabled'));
+        $this->assertSame('null', $container->getParameter('swiftmailer.mailer.mailer_off.transport.name'));
+    }
+
+    public function testDisableDeliveryWithEnvVars()
+    {
+        $container = $this->loadContainerFromFile('disable_delivery_env', 'yml', array(), true);
+
+        $this->assertTrue($container->getParameter('swiftmailer.mailer.mailer_on.delivery.enabled'));
+        $this->assertSame('smtp', $container->getParameter('swiftmailer.mailer.mailer_on.transport.name'));
+
+        $this->assertFalse($container->getParameter('swiftmailer.mailer.mailer_off.delivery.enabled'));
+        $this->assertSame('null', $container->getParameter('swiftmailer.mailer.mailer_off.transport.name'));
+    }
+
+    /**
      * @param string $file
      * @param string $type
      * @param array  $services
+     * @param bool   $skipEnvVars
      *
      * @return ContainerBuilder
      */
-    private function loadContainerFromFile($file, $type, array $services = array())
+    private function loadContainerFromFile($file, $type, array $services = array(), $skipEnvVars = false)
     {
         $container = new ContainerBuilder();
+
+        if ($skipEnvVars && !method_exists($container, 'resolveEnvPlaceholders')) {
+            $this->markTestSkipped('Runtime environment variables has been introduced in the Dependency Injection version 3.2.');
+        }
 
         $container->setParameter('kernel.debug', false);
         $container->setParameter('kernel.cache_dir', '/tmp');

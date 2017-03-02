@@ -72,6 +72,9 @@ class SwiftmailerExtension extends Extension
             ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name), $definitionDecorator)
         ;
 
+        $usedEnvs = null;
+        $disableDelivery = isset($mailer['disable_delivery']) && $mailer['disable_delivery'];
+
         if (method_exists($container, 'resolveEnvPlaceholders')) {
             $options = array();
             $envVariablesAllowed = array('transport', 'url', 'username', 'password', 'host', 'port', 'timeout', 'source_ip', 'local_domain', 'encryption', 'auth_mode');
@@ -79,10 +82,8 @@ class SwiftmailerExtension extends Extension
                 $container->resolveEnvPlaceholders($mailer[$key], null, $usedEnvs);
                 $options[$key] = $mailer[$key];
             }
-        } else {
-            $usedEnvs = false;
         }
-        if ($usedEnvs) {
+        if ($usedEnvs && !$disableDelivery) {
             $transportId = sprintf('swiftmailer.mailer.%s.transport.dynamic', $name);
             $definitionDecorator = new Definition('\Swift_Transport');
             $definitionDecorator->setFactory(array('Symfony\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerTransportFactory', 'createTransport'));
@@ -103,7 +104,7 @@ class SwiftmailerExtension extends Extension
             $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name), 'dynamic');
         } else {
             $mailer = SwiftmailerTransportFactory::resolveOptions($mailer);
-            $transport = $mailer['transport'];
+            $transport = $disableDelivery ? 'null' : $mailer['transport'];
 
             $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name), $transport);
 
@@ -119,7 +120,7 @@ class SwiftmailerExtension extends Extension
         $this->configureMailerDeliveryAddress($name, $mailer, $container, $isDefaultMailer);
         $this->configureMailerLogging($name, $mailer, $container, $isDefaultMailer);
 
-        $container->setParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name), empty($mailer['disable_delivery']));
+        $container->setParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name), !$disableDelivery);
 
         // alias
         if ($isDefaultMailer) {
