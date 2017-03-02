@@ -63,6 +63,23 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Swift_Transport_SendmailTransport', $transport);
     }
 
+    /**
+     * @group legacy
+     */
+    public function testCreateTransportWithMail()
+    {
+        $options = array(
+            'transport' => 'mail',
+        );
+
+        $transport = SwiftmailerTransportFactory::createTransport(
+            $options,
+            new RequestContext(),
+            new \Swift_Events_SimpleEventDispatcher()
+        );
+        $this->assertInstanceOf('Swift_Transport_MailTransport', $transport);
+    }
+
     public function testCreateTransportWithNull()
     {
         $options = array(
