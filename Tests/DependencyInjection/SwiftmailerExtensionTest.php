@@ -26,7 +26,7 @@ class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
     {
         $container = $this->loadContainerFromFile('env_variable', 'yml', array(
             'swiftmailer.mailer.default.transport.eventdispatcher' => new \Swift_Events_SimpleEventDispatcher(),
-            'router.request_context', new RequestContext(),
+            'router.request_context' => new RequestContext(),
         ), true);
 
         $this->assertEquals(
