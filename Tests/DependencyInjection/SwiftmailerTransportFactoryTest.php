@@ -94,6 +94,39 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Swift_Transport_NullTransport', $transport);
     }
 
+    public function testCreateTransportWithSmtpAndWithoutRequestContext()
+    {
+        $options = array(
+            'transport' => 'smtp',
+            'username' => 'user',
+            'password' => 'pass',
+            'host' => 'host',
+            'port' => 1234,
+            'timeout' => 42,
+            'source_ip' => 'source_ip',
+            'local_domain' => 'local_domain',
+            'encryption' => 'encryption',
+            'auth_mode' => 'auth_mode',
+        );
+
+        $transport = SwiftmailerTransportFactory::createTransport(
+            $options,
+            null,
+            new \Swift_Events_SimpleEventDispatcher()
+        );
+        $this->assertInstanceOf('Swift_Transport_EsmtpTransport', $transport);
+        $this->assertSame($transport->getHost(), $options['host']);
+        $this->assertSame($transport->getPort(), $options['port']);
+        $this->assertSame($transport->getEncryption(), $options['encryption']);
+        $this->assertSame($transport->getTimeout(), $options['timeout']);
+        $this->assertSame($transport->getSourceIp(), $options['source_ip']);
+
+        $authHandler = current($transport->getExtensionHandlers());
+        $this->assertSame($authHandler->getUsername(), $options['username']);
+        $this->assertSame($authHandler->getPassword(), $options['password']);
+        $this->assertSame($authHandler->getAuthMode(), $options['auth_mode']);
+    }
+
     /**
      * @dataProvider optionsAndResultExpected
      */

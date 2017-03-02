@@ -22,14 +22,14 @@ class SwiftmailerTransportFactory
 {
     /**
      * @param array                         $options
-     * @param RequestContext                $requestContext
+     * @param RequestContext|null           $requestContext
      * @param \Swift_Events_EventDispatcher $eventDispatcher
      *
      * @return \Swift_Transport
      *
      * @throws \InvalidArgumentException if the scheme is not a built-in Swiftmailer transport
      */
-    public static function createTransport(array $options, RequestContext $requestContext, \Swift_Events_EventDispatcher $eventDispatcher)
+    public static function createTransport(array $options, RequestContext $requestContext = null, \Swift_Events_EventDispatcher $eventDispatcher)
     {
         $options = static::resolveOptions($options);
 
