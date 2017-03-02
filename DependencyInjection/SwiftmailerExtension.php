@@ -89,7 +89,7 @@ class SwiftmailerExtension extends Extension
             $definitionDecorator->setFactory(array('Symfony\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerTransportFactory', 'createTransport'));
             $definitionDecorator->setArguments(array(
                 $options,
-                new Reference('router.request_context'),
+                new Reference('router.request_context', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
             ));
             $container->setDefinition(sprintf('swiftmailer.mailer.%s.transport.dynamic', $name), $definitionDecorator);
