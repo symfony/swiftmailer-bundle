@@ -12,6 +12,7 @@
 namespace Symfony\Bundle\SwiftmailerBundle\DependencyInjection;
 
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Definition;
@@ -129,6 +130,8 @@ class SwiftmailerExtension extends Extension
             $container->setParameter('swiftmailer.spool.enabled', $container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)));
             $container->setParameter('swiftmailer.delivery.enabled', $container->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)));
             $container->setParameter('swiftmailer.single_address', $container->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name)));
+            $container->setAlias('Swift_Mailer', new Alias('swiftmailer.mailer', false));
+            $container->setAlias('Swift_Transport', new Alias('swiftmailer.transport', false));
         }
     }
 
@@ -274,6 +277,7 @@ class SwiftmailerExtension extends Extension
             if (true === $isDefaultMailer) {
                 $container->setAlias('swiftmailer.spool', sprintf('swiftmailer.mailer.%s.spool', $name));
                 $container->setAlias('swiftmailer.transport.real', sprintf('swiftmailer.mailer.%s.transport.real', $name));
+                $container->setAlias('Swift_Spool', new Alias('swiftmailer.spool', false));
             }
         } else {
             $container->setParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name), false);
