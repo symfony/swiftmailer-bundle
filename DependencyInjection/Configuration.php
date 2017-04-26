@@ -157,7 +157,7 @@ class Configuration implements ConfigurationInterface
                     ->performNoDeepMerging()
                     ->beforeNormalization()
                         ->ifArray()
-                        ->then(function ($v) { return array_values($v); })
+                        ->then(function ($v) { return array_filter(array_values($v)); })
                     ->end()
                     ->prototype('scalar')
                     ->end()
