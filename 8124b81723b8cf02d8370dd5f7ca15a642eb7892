@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by stof at 2015-07-30T15:58:52Z
+
+The versionning of this bundle is independent of the Symfony versionning.
+
+Given the size of the bundle, I don't want to maintain several branches in parallel. And the removal of a single command alias is not worth a major version bump by itself IMO, so I suggest cleaning this alias only when we have a real need for a new major version
+
+---------------------------------------------------------------------------
+
+by matthieuauger at 2015-07-31T15:21:41Z
+
+All right, feel free to add a tag for later or close the PR if you want
