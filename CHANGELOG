@@ -1,6 +1,10 @@
+* 3.0.1 (2017-05-19)
+
+ * removed class parameters in the container configuration
+ * removed obsolete support for the mail transport
+
 * 3.0.0 (2017-05-19)
 
- * removed obsolete support for the mail transport
  * removed the swiftmailer:debug command alias
  * added compatibility with Swiftmailer 6.0
 
