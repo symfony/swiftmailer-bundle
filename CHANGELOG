@@ -1,5 +1,6 @@
 * 3.0.1 (2017-05-19)
 
+ * removed deprecated delivery_address configuration setting
  * removed class parameters in the container configuration
  * removed obsolete support for the mail transport
 
