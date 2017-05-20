@@ -1,4 +1,9 @@
-* 2.6.1 (2017-XX-XX)
+* 2.7.0 (2017-05-19)
+
+ * removed the swiftmailer:debug command alias
+ * added compatibility with Swiftmailer 6.0
+
+* 2.6.1 (2017-05-19)
 
  * reverted support for Swiftmailer 6.0
 
