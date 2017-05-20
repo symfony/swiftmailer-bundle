@@ -64,8 +64,6 @@ class SwiftmailerTransportFactory
 
             $smtpTransportConfigurator = new SmtpTransportConfigurator(null, $requestContext);
             $smtpTransportConfigurator->configure($transport);
-        } elseif ('mail' === $options['transport']) {
-            $transport = new \Swift_Transport_MailTransport(new \Swift_Transport_SimpleMailInvoker(), $eventDispatcher);
         } elseif ('null' === $options['transport']) {
             $transport = new \Swift_Transport_NullTransport($eventDispatcher);
         } else {

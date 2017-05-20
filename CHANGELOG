@@ -1,5 +1,6 @@
 * 3.0.0 (2017-05-19)
 
+ * removed obsolete support for the mail transport
  * removed the swiftmailer:debug command alias
  * added compatibility with Swiftmailer 6.0
 
