@@ -1,6 +1,6 @@
 * 2.6.1 (2017-XX-XX)
 
- * n/a
+ * reverted support for Swiftmailer 6.0
 
 * 2.6.0 (2017-05-19)
 
@@ -8,7 +8,7 @@
 
 * 2.5.4 (2017-03-21)
 
- * fixed for "Swiftmailer still sends email if exception is thrown" 
+ * fixed for "Swiftmailer still sends email if exception is thrown"
  * added autowiring aliases
 
 * 2.5.3 (2017-03-02)
