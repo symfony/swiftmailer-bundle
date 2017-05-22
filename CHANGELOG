@@ -1,4 +1,8 @@
-* 2.6.1 (2017-XX-XX)
+* 2.6.2 (2017-05-22)
+
+ * fixed Swiftmailer dependency
+
+* 2.6.1 (2017-05-20)
 
  * reverted support for Swiftmailer 6.0
 
