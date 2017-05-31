@@ -84,6 +84,9 @@ class SwiftmailerExtension extends Extension
                 $options[$key] = $mailer[$key];
             }
         }
+        if (!$usedEnvs) {
+            SwiftmailerTransportFactory::validateEncryption($mailer['encryption']);
+        }
         if ($usedEnvs && !$disableDelivery) {
             $transportId = sprintf('swiftmailer.mailer.%s.transport.dynamic', $name);
             $definitionDecorator = new Definition('\Swift_Transport');

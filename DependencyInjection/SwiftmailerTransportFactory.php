@@ -33,6 +33,7 @@ class SwiftmailerTransportFactory
     {
         $options = static::resolveOptions($options);
 
+        self::validateEncryption($options['encryption']);
         if ('smtp' === $options['transport']) {
             $smtpAuthHandler = new \Swift_Transport_Esmtp_AuthHandler(array(
                 new \Swift_Transport_Esmtp_Auth_CramMd5Authenticator(),
@@ -134,5 +135,15 @@ class SwiftmailerTransportFactory
         }
 
         return $options;
+    }
+
+    /**
+     * @throws \InvalidArgumentException if the encryption is not valid
+     */
+    public static function validateEncryption($encryption)
+    {
+        if (!in_array(array('tls', 'ssl', null), $encryption, true)) {
+            throw new \InvalidArgumentException(sprintf('The %s encryption is not supported', $encryption));
+        }
     }
 }
