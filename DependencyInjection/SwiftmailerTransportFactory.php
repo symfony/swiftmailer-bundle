@@ -142,7 +142,7 @@ class SwiftmailerTransportFactory
      */
     public static function validateEncryption($encryption)
     {
-        if (!in_array(array('tls', 'ssl', null), $encryption, true)) {
+        if (!in_array($encryption, array('tls', 'ssl', null), true)) {
             throw new \InvalidArgumentException(sprintf('The %s encryption is not supported', $encryption));
         }
     }
