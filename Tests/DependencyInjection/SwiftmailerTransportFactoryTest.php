@@ -27,7 +27,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
             'timeout' => 42,
             'source_ip' => 'source_ip',
             'local_domain' => 'local_domain',
-            'encryption' => 'encryption',
+            'encryption' => 'tls',
             'auth_mode' => 'auth_mode',
         );
 
@@ -77,6 +77,30 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Swift_Transport_NullTransport', $transport);
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage The fake_encryption encryption is not supported
+     */
+    public function testCreateTransportWithWrongEncryption()
+    {
+        SwiftmailerTransportFactory::createTransport(
+            array(
+                'transport' => 'smtp',
+                'username' => 'user',
+                'password' => 'pass',
+                'host' => 'host',
+                'port' => 1234,
+                'timeout' => 42,
+                'source_ip' => 'source_ip',
+                'local_domain' => 'local_domain',
+                'encryption' => 'fake_encryption',
+                'auth_mode' => 'auth_mode',
+            ),
+            new RequestContext(),
+            new \Swift_Events_SimpleEventDispatcher()
+        );
+    }
+
     public function testCreateTransportWithSmtpAndWithoutRequestContext()
     {
         $options = array(
@@ -88,7 +112,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
             'timeout' => 42,
             'source_ip' => 'source_ip',
             'local_domain' => 'local_domain',
-            'encryption' => 'encryption',
+            'encryption' => 'tls',
             'auth_mode' => 'auth_mode',
         );
 
