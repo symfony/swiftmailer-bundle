@@ -10,6 +10,8 @@ cache:
 matrix:
   fast_finish: true
   include:
+    - php: 7.1
+      env: COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 7.0
       env: COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER=weak
     - php: 7.0
