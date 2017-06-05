@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by stof at 2017-04-26T14:33:05Z
+
+you can have an array in the parameter (as long as you don't try to use `%env(...)%` for that, as env variables are strings)
+
+---------------------------------------------------------------------------
+
+by tonynelson19 at 2017-04-26T14:34:09Z
+
+With the shift towards environment variables and away from a parameters file, does this pull request make more sense?
+
+---------------------------------------------------------------------------
+
+by nekuz0r at 2017-04-26T15:13:50Z
+
+We just upgraded swiftmailer-bundle and we are facing the same issue, we are loading parameters like `delivery_address` from env vars (dockerized applications), so the key is always defined in `config.yml` but the value of the env var is empty when not needed.
+
+So the sending of the email is failing when the env var is empty because it sets the recipient email to an empty string.
+
+Here are the relevant parts of the `config.yml`
+
+```
+parameters:
+    delivery_address: %env.mailer.delivery_address%
+
+swiftmailer:
+    delivery_addresses: [ %delivery_address% ]
+```
+
+The env var is named `SYMFONY__ENV__MAILER__DELIVERY_ADDRESS`
