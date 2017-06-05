@@ -1,3 +1,9 @@
+* 3.0.2 (2017-06-05)
+
+ * removed empty delivery_addresses
+ * removed usage of deprecated ConsoleExceptionEvent for 3.3+
+ * fixed encryption option when using env variable
+
 * 3.0.1 (2017-05-19)
 
  * removed deprecated delivery_address configuration setting
