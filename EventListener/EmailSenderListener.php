@@ -57,11 +57,18 @@ class EmailSenderListener implements EventSubscriberInterface
                     if ($transport instanceof \Swift_Transport_SpoolTransport) {
                         $spool = $transport->getSpool();
                         if ($spool instanceof \Swift_MemorySpool) {
-                            try {
-                                $spool->flushQueue($this->container->get(sprintf('swiftmailer.mailer.%s.transport.real', $name)));
-                            } catch (\Swift_TransportException $exception) {
-                                if (null !== $this->logger) {
-                                    $this->logger->error(sprintf('Exception occurred while flushing email queue: %s', $exception->getMessage()));
+                            $retries = 3;
+                            while ($retries--) {
+                                try {
+                                    $spool->flushQueue($this->container->get(sprintf('swiftmailer.mailer.%s.transport.real', $name)));
+                                } catch (\Swift_TransportException $exception) {
+                                    if ($retries) {
+                                        // wait half a second before we try again
+                                        usleep(500000);
+                                    } elseif (null !== $this->logger) {
+                                        // tried 3 times, failure must be real so we log it and abort
+                                        $this->logger->error(sprintf('Exception occurred while flushing email queue: %s', $exception->getMessage()));
+                                    }
                                 }
                             }
                         }
