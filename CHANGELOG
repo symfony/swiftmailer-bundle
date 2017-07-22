@@ -1,3 +1,7 @@
+* 3.0.3 (2017-XX-XX)
+
+ * bumped min PHP version to 7.0 (as this is PHP min version for Swiftmailer 6.0)
+
 * 3.0.2 (2017-06-05)
 
  * removed empty delivery_addresses
