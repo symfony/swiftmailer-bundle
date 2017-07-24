@@ -53,6 +53,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $options = array(
             'transport' => 'sendmail',
+            'command' => '/usr/sbin/sendmail -bs'
         );
 
         $transport = SwiftmailerTransportFactory::createTransport(
@@ -178,6 +179,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'transport' => 'null',
                     'username' => null,
                     'password' => null,
+                    'command' => null,
                     'host' => null,
                     'port' => 25,
                     'timeout' => null,
@@ -196,6 +198,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'transport' => 'smtp',
                     'username' => 'user',
                     'password' => 'pass',
+                    'command' => null,
                     'host' => 'host',
                     'port' => 1234,
                     'timeout' => null,
@@ -214,6 +217,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'transport' => 'sendmail',
                     'username' => 'username',
                     'password' => 'password',
+                    'command' => null,
                     'host' => 'example.com',
                     'port' => 5678,
                     'timeout' => null,
@@ -232,6 +236,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'transport' => 'smtp',
                     'username' => 'user',
                     'password' => 'pass',
+                    'command' => null,
                     'host' => 'host',
                     'port' => 1234,
                     'timeout' => 42,
@@ -248,6 +253,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'transport' => 'null',
                     'username' => null,
                     'password' => null,
+                    'command' => null,
                     'host' => null,
                     'port' => 25,
                     'timeout' => null,
@@ -265,6 +271,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'transport' => 'smtp',
                     'username' => null,
                     'password' => null,
+                    'command' => null,
                     'host' => null,
                     'port' => 25,
                     'timeout' => null,
@@ -282,6 +289,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'transport' => 'smtp',
                     'username' => null,
                     'password' => null,
+                    'command' => null,
                     'host' => 'smtp.gmail.com',
                     'port' => 465,
                     'timeout' => null,
@@ -299,6 +307,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'transport' => 'sendmail',
                     'username' => null,
                     'password' => null,
+                    'command' => null,
                     'host' => null,
                     'port' => 25,
                     'timeout' => null,
@@ -316,6 +325,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'transport' => 'null',
                     'username' => null,
                     'password' => null,
+                    'command' => null,
                     'host' => null,
                     'port' => 465,
                     'timeout' => null,
@@ -333,6 +343,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'transport' => 'null',
                     'username' => null,
                     'password' => null,
+                    'command' => null,
                     'host' => null,
                     'port' => 42,
                     'timeout' => null,

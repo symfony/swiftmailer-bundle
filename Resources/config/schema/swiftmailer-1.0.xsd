@@ -52,6 +52,7 @@
       <xsd:attribute name="disable-delivery" type="xsd:boolean" />
       <xsd:attribute name="sender-address" type="xsd:boolean" />
       <xsd:attribute name="url" type="xsd:string" />
+      <xsd:attribute name="command" type="xsd:string" />
   </xsd:attributeGroup>
 
   <xsd:complexType name="mailer">

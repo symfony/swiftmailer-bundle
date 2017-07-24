@@ -63,6 +63,8 @@ class SwiftmailerTransportFactory
                 $eventDispatcher
             );
 
+            $transport->setCommand($options['command']);
+
             $smtpTransportConfigurator = new SmtpTransportConfigurator(null, $requestContext);
             $smtpTransportConfigurator->configure($transport);
         } elseif ('null' === $options['transport']) {
@@ -92,6 +94,7 @@ class SwiftmailerTransportFactory
             'local_domain' => null,
             'encryption' => null,
             'auth_mode' => null,
+            'command' => null
         );
 
         if (isset($options['url'])) {
