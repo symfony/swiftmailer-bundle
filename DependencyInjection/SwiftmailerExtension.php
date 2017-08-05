@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\SwiftmailerBundle\DependencyInjection;
 
+use Symfony\Component\Console\Application;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -47,6 +48,10 @@ class SwiftmailerExtension extends Extension
     {
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('swiftmailer.xml');
+
+        if (class_exists(Application::class)) {
+            $loader->load('console.xml');
+        }
 
         $configuration = $this->getConfiguration($configs, $container);
         $config = $this->processConfiguration($configuration, $configs);
