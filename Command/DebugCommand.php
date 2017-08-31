@@ -26,6 +26,8 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  */
 class DebugCommand extends ContainerAwareCommand
 {
+    protected static $defaultName = 'debug:swiftmailer';
+
     /** @var SymfonyStyle */
     private $io;
 
@@ -35,7 +37,6 @@ class DebugCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('debug:swiftmailer')
             ->setDefinition(array(
                 new InputArgument('name', InputArgument::OPTIONAL, 'A mailer name'),
             ))
