@@ -90,6 +90,7 @@
       <xsd:enumeration value="plain" />
       <xsd:enumeration value="login" />
       <xsd:enumeration value="cram-md5" />
+      <xsd:enumeration value="ntlm" />
     </xsd:restriction>
   </xsd:simpleType>
 

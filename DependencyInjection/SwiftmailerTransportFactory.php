@@ -39,6 +39,7 @@ class SwiftmailerTransportFactory
                 new \Swift_Transport_Esmtp_Auth_CramMd5Authenticator(),
                 new \Swift_Transport_Esmtp_Auth_LoginAuthenticator(),
                 new \Swift_Transport_Esmtp_Auth_PlainAuthenticator(),
+                new \Swift_Transport_Esmtp_Auth_NTLMAuthenticator()
             ));
             $smtpAuthHandler->setUsername($options['username']);
             $smtpAuthHandler->setPassword($options['password']);
@@ -146,7 +147,7 @@ class SwiftmailerTransportFactory
             throw new \InvalidArgumentException(sprintf('The %s encryption is not supported', $options['encryption']));
         }
 
-        if (!in_array($options['auth_mode'], array('plain', 'login', 'cram-md5', null), true)) {
+        if (!in_array($options['auth_mode'], array('plain', 'login', 'cram-md5', 'ntlm', null), true)) {
             throw new \InvalidArgumentException(sprintf('The %s authentication mode is not supported', $options['auth_mode']));
         }
     }
