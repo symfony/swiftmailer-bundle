@@ -1,6 +1,13 @@
-* 3.0.3 (2017-XX-XX)
+* 3.0.4 (2017-09-10)
 
+ * fixed encryption and auth_mode empty usage when empty in MAILER_URL
+ * added support for ntlm auth_mode
+ * made sendmail command customizable
  * bumped min PHP version to 7.0 (as this is PHP min version for Swiftmailer 6.0)
+
+* 3.0.3 (2017-06-08)
+
+ * allowed env values for auth_mode
 
 * 3.0.2 (2017-06-05)
 
