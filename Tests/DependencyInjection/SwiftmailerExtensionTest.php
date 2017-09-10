@@ -190,6 +190,19 @@ class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider getConfigTypes
      */
+    public function testUrlWithEmptyOptions($type)
+    {
+        $container = $this->loadContainerFromFile('url_with_empty_options', $type);
+
+        $this->assertSame(null, $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.encryption'));
+        $this->assertSame(null, $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.username'));
+        $this->assertSame(null, $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.password'));
+        $this->assertSame(null, $container->getParameter('swiftmailer.mailer.smtp_mailer.transport.smtp.auth_mode'));
+    }
+
+    /**
+     * @dataProvider getConfigTypes
+     */
     public function testOneMailer($type)
     {
         $container = $this->loadContainerFromFile('one_mailer', $type);

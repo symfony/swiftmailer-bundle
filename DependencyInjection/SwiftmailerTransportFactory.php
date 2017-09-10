@@ -118,7 +118,7 @@ class SwiftmailerTransportFactory
             if (isset($parts['query'])) {
                 parse_str($parts['query'], $query);
                 foreach ($options as $key => $value) {
-                    if (isset($query[$key])) {
+                    if (isset($query[$key]) && $query[$key] != "") {
                         $options[$key] = $query[$key];
                     }
                 }
