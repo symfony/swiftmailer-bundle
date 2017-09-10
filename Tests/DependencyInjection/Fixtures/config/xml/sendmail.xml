@@ -9,5 +9,6 @@
     <swiftmailer:config
         transport="sendmail"
         local-domain="local.example.org"
+        command="/usr/sbin/sendmail -bs"
     />
 </container>
