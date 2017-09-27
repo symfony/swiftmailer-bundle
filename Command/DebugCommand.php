@@ -37,6 +37,7 @@ class DebugCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
+            ->setName('debug:swiftmailer') // BC with 2.7
             ->setDefinition(array(
                 new InputArgument('name', InputArgument::OPTIONAL, 'A mailer name'),
             ))
