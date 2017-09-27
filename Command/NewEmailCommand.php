@@ -35,7 +35,7 @@ class NewEmailCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('swiftmailer:email:send') // BC with 2.7
+            ->setName(static::$defaultName) // BC with 2.7
             ->setDescription('Send simple email message')
             ->addOption('from', null, InputOption::VALUE_REQUIRED, 'The from address of the message')
             ->addOption('to', null, InputOption::VALUE_REQUIRED, 'The to address of the message')
