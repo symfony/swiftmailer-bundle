@@ -1,0 +1,57 @@
+---------------------------------------------------------------------------
+
+by chalasr at 2017-08-12T15:12:46Z
+
+LGTM but we need to fix the low deps build... dunno why it fails for `3.4@dev` but not for `3.3@dev`
+
+---------------------------------------------------------------------------
+
+by chalasr at 2017-08-30T10:16:48Z
+
+@ro0NL could you add the static `$defaultName` to these commands? hope tests turn green magically
+
+---------------------------------------------------------------------------
+
+by ro0NL at 2017-08-31T13:57:09Z
+
+Lets see :)
+
+---------------------------------------------------------------------------
+
+by chalasr at 2017-08-31T18:05:20Z
+
+Seems like it did not... dunno :/
+
+---------------------------------------------------------------------------
+
+by ro0NL at 2017-08-31T19:07:36Z
+
+@chalasr `3.3@dev` also doesnt work, currently the constraint has a lower bound on 2.7. So deps=low happily installs symfony/symfony 2.8.*@dev.
+
+Not sure what to do :)  perhaps in master `SYMFONY_VERSION` needs an update =/
+
+---------------------------------------------------------------------------
+
+by chalasr at 2017-09-03T16:09:52Z
+
+@fabpot do you have any idea about what to do regarding the test suite? It can't checkout console 3.4 in `deps=low` as it conflicts with `symfony/symfony:2.8.*`.
+
+---------------------------------------------------------------------------
+
+by ro0NL at 2017-09-27T10:02:36Z
+
+@chalasr looks like composer is passing :)
+
+I believe this is compatible with 2.7 + dev-3.4. Ill let @fabpot decide if we want to keep the lower bounds in composer ;-)
+
+Failures related to upper bounds;
+
+```
+Fetching the "swiftmailer.mailer.default.transport" private alias is deprecated and will fail in Symfony 4.0. Make the alias public instead: 6x
+```
+
+---------------------------------------------------------------------------
+
+by ro0NL at 2017-09-27T18:00:11Z
+
+@fabpot i used `static::$defaultName` BTW. Due protected/non final state.
