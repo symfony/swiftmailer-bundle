@@ -18,12 +18,12 @@
     "require": {
         "php": ">=7.0.0",
         "swiftmailer/swiftmailer": "^6.0.1",
-        "symfony/dependency-injection": "~2.7|~3.0",
+        "symfony/dependency-injection": "~2.7|~3.4@dev",
         "symfony/http-kernel": "~2.7|~3.0",
         "symfony/config": "~2.8|~3.0"
     },
     "require-dev": {
-        "symfony/console": "~3.4@dev",
+        "symfony/console": "~2.7|~3.4@dev",
         "symfony/framework-bundle": "~2.7|~3.0",
         "symfony/phpunit-bridge": "~3.3@dev",
         "symfony/yaml": "~2.7|~3.0"
