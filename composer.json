@@ -32,7 +32,10 @@
         "psr/log": "Allows logging"
     },
     "autoload": {
-        "psr-4": { "Symfony\\Bundle\\SwiftmailerBundle\\": "" }
+        "psr-4": { "Symfony\\Bundle\\SwiftmailerBundle\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
     "minimum-stability": "dev",
     "extra": {
