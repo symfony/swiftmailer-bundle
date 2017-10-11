@@ -48,8 +48,8 @@ class RegisterPluginsPass implements CompilerPassInterface
         uasort(
             $taggedServices,
             function ($tagA, $tagB) {
-                $priorityTagA = isset($tagA[0]['priority']) ? $tagA[0]['priority'] : 0;
-                $priorityTagB = isset($tagB[0]['priority']) ? $tagB[0]['priority'] : 0;
+                $priorityTagA = $tagA[0]['priority'] ?? 0;
+                $priorityTagB = $tagB[0]['priority'] ?? 0;
 
                 return $priorityTagA - $priorityTagB;
             }
