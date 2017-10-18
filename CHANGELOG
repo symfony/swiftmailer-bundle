@@ -26,7 +26,15 @@
  * removed the swiftmailer:debug command alias
  * added compatibility with Swiftmailer 6.0
 
-* 2.6.1 (2017-05-19)
+* 2.6.3 (2017-07-22)
+
+ * fixed compat with Symfony 3.3+
+
+* 2.6.2 (2017-05-22)
+
+ * fixed Swiftmailer dependency
+
+* 2.6.1 (2017-05-20)
 
  * reverted support for Swiftmailer 6.0
 
