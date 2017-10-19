@@ -277,6 +277,7 @@ class SwiftmailerExtension extends Extension
             ;
 
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport.real', $name), $transport);
+            $container->getAlias(sprintf('swiftmailer.mailer.%s.transport.real', $name))->setPublic(true);
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.%s.transport.spool', $name));
             $container->setParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name), true);
             if (true === $isDefaultMailer) {
@@ -361,7 +362,9 @@ class SwiftmailerExtension extends Extension
             $container
                 ->setDefinition(sprintf('swiftmailer.mailer.%s.plugin.messagelogger', $name), $definitionDecorator)
             ;
-            $container->getDefinition(sprintf('swiftmailer.mailer.%s.plugin.messagelogger', $name))->addTag(sprintf('swiftmailer.%s.plugin', $name));
+            $container->getDefinition(sprintf('swiftmailer.mailer.%s.plugin.messagelogger', $name))
+                ->setPublic(true)
+                ->addTag(sprintf('swiftmailer.%s.plugin', $name));
             if (true === $isDefaultMailer) {
                 $container->setAlias('swiftmailer.plugin.messagelogger', sprintf('swiftmailer.mailer.%s.plugin.messagelogger', $name));
             }
