@@ -438,7 +438,7 @@ class SwiftmailerExtensionTest extends \PHPUnit_Framework_TestCase
         $loader->load($file.'.'.$type);
 
         $container->getCompilerPassConfig()->setOptimizationPasses(array(
-            class_exists(ResolveChildDefinitionsPass::class) ? new ResolveChildDefinitionsPass() : new ResolveDefinitionTemplatesPass(),
+            class_exists('Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass') ? new ResolveChildDefinitionsPass() : new ResolveDefinitionTemplatesPass(),
         ));
         $container->getCompilerPassConfig()->setRemovingPasses(array());
         $container->compile();
