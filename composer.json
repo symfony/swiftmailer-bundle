@@ -19,14 +19,14 @@
         "php": ">=7.0.0",
         "swiftmailer/swiftmailer": "^6.0.1",
         "symfony/dependency-injection": "~2.7|~3.3|~4.0",
-        "symfony/http-kernel": "~2.7|~3.0|~4.0",
-        "symfony/config": "~2.8|~3.0|~4.0"
+        "symfony/http-kernel": "~2.7|~3.3|~4.0",
+        "symfony/config": "~2.8|~3.3|~4.0"
     },
     "require-dev": {
         "symfony/console": "~2.7|~3.3|~4.0",
-        "symfony/framework-bundle": "~2.7|~3.0|~4.0",
+        "symfony/framework-bundle": "~2.7|~3.3|~4.0",
         "symfony/phpunit-bridge": "~3.3|~4.0",
-        "symfony/yaml": "~2.7|~3.0|~4.0"
+        "symfony/yaml": "~2.7|~3.3|~4.0"
     },
     "suggest": {
         "psr/log": "Allows logging"
