@@ -231,7 +231,7 @@ class SwiftmailerExtension extends Extension
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.transport.%s', $transport));
         }
 
-        if (method_exists(Alias::class, 'setPrivate')) {
+        if (method_exists('Symfony\Component\DependencyInjection\Alias', 'setPrivate')) {
             $container->getAlias(sprintf('swiftmailer.mailer.%s.transport', $name))->setPrivate(false);
         }
 
