@@ -16,6 +16,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\LockHandler;
 
 /**
  * Send Emails from the spool.
@@ -68,6 +69,13 @@ EOF
     {
         if (!$this->getContainer()->has(sprintf('swiftmailer.mailer.%s', $name))) {
             throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist.', $name));
+        }
+
+        // create & check the lock
+        $lock = new LockHandler('swiftmailer.mailer'.$name);
+        if (!$lock->lock()) {
+            $this->io->text(sprintf('<info>[%s]</info> The SendEmailCommand for <info>%s</info> mailer is locked. It appears to be running in an other process.', date('Y-m-d H:i:s'), $name));
+            return 0;
         }
 
         $this->io->text(sprintf('<info>[%s]</info> Processing <info>%s</info> mailer spool... ', date('Y-m-d H:i:s'), $name));
