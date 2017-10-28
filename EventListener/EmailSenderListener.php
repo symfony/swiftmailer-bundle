@@ -50,19 +50,17 @@ class EmailSenderListener implements EventSubscriberInterface
         }
         $mailers = array_keys($this->container->getParameter('swiftmailer.mailers'));
         foreach ($mailers as $name) {
-            if (method_exists($this->container, 'initialized') ? $this->container->initialized(sprintf('swiftmailer.mailer.%s', $name)) : true) {
-                if ($this->container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name))) {
-                    $mailer = $this->container->get(sprintf('swiftmailer.mailer.%s', $name));
-                    $transport = $mailer->getTransport();
-                    if ($transport instanceof \Swift_Transport_SpoolTransport) {
-                        $spool = $transport->getSpool();
-                        if ($spool instanceof \Swift_MemorySpool) {
-                            try {
-                                $spool->flushQueue($this->container->get(sprintf('swiftmailer.mailer.%s.transport.real', $name)));
-                            } catch (\Swift_TransportException $exception) {
-                                if (null !== $this->logger) {
-                                    $this->logger->error(sprintf('Exception occurred while flushing email queue: %s', $exception->getMessage()));
-                                }
+            if ($this->container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name))) {
+                $mailer = $this->container->get(sprintf('swiftmailer.mailer.%s', $name));
+                $transport = $mailer->getTransport();
+                if ($transport instanceof \Swift_Transport_SpoolTransport) {
+                    $spool = $transport->getSpool();
+                    if ($spool instanceof \Swift_MemorySpool) {
+                        try {
+                            $spool->flushQueue($this->container->get(sprintf('swiftmailer.mailer.%s.transport.real', $name)));
+                        } catch (\Swift_TransportException $exception) {
+                            if (null !== $this->logger) {
+                                $this->logger->error(sprintf('Exception occurred while flushing email queue: %s', $exception->getMessage()));
                             }
                         }
                     }
