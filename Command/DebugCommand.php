@@ -12,7 +12,6 @@
 namespace Symfony\Bundle\SwiftmailerBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -37,10 +36,8 @@ class DebugCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName(static::$defaultName) // BC with 2.7
-            ->setDefinition(array(
-                new InputArgument('name', InputArgument::OPTIONAL, 'A mailer name'),
-            ))
+            ->setName(static::$defaultName)// BC with 2.7
+            ->addArgument('name', InputArgument::OPTIONAL, 'A mailer name')
             ->setDescription('Displays current mailers for an application')
             ->setHelp(<<<EOF
 The <info>%command.name%</info> displays the configured mailers:
@@ -63,26 +60,27 @@ EOF
         }
     }
 
-    protected function outputMailers($routes = null)
+    protected function outputMailers()
     {
         $this->io->title('Configured SwiftMailer Mailers');
 
-        $tableHeaders = array('Name', 'Transport', 'Spool', 'Delivery', 'Single Address');
-        $tableRows = array();
+        $tableHeaders = ['Name', 'Transport', 'Spool', 'Delivery', 'Single Address'];
+        $tableRows = [];
 
-        $mailers = $this->getContainer()->getParameter('swiftmailer.mailers');
+        $container = $this->getContainer();
+
+        $mailers = $container->getParameter('swiftmailer.mailers');
         foreach ($mailers as $name => $mailer) {
-            $mailer = $this->getContainer()->get($mailer);
-            $transport = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name));
-            $spool = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)) ? 'YES' : 'NO';
-            $delivery = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)) ? 'YES' : 'NO';
-            $singleAddress = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name));
+            $transport = $container->getParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name));
+            $spool = $container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)) ? 'YES' : 'NO';
+            $delivery = $container->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)) ? 'YES' : 'NO';
+            $singleAddress = $container->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name));
 
             if ($this->isDefaultMailer($name)) {
                 $name = sprintf('%s (default mailer)', $name);
             }
 
-            $tableRows[] = array($name, $transport, $spool, $delivery, $singleAddress);
+            $tableRows[] = [$name, $transport, $spool, $delivery, $singleAddress];
         }
 
         $this->io->table($tableHeaders, $tableRows);
@@ -91,7 +89,7 @@ EOF
     /**
      * @throws \InvalidArgumentException When route does not exist
      */
-    protected function outputMailer($name)
+    protected function outputMailer(string $name)
     {
         try {
             $service = sprintf('swiftmailer.mailer.%s', $name);
@@ -100,10 +98,10 @@ EOF
             throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist.', $name));
         }
 
-        $tableHeaders = array('Property', 'Value');
-        $tableRows = array();
+        $tableHeaders = ['Property', 'Value'];
+        $tableRows = [];
 
-        $transport  = $mailer->getTransport();
+        $transport = $mailer->getTransport();
         $spool = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)) ? 'YES' : 'NO';
         $delivery = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)) ? 'YES' : 'NO';
         $singleAddress = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.single_address', $name));
@@ -113,21 +111,21 @@ EOF
             $this->io->comment('This is the default mailer');
         }
 
-        $tableRows[] = array('Name', $name);
-        $tableRows[] = array('Service', $service);
-        $tableRows[] = array('Class', get_class($mailer));
-        $tableRows[] = array('Transport', sprintf('%s (%s)', sprintf('swiftmailer.mailer.%s.transport.name', $name), get_class($transport)));
-        $tableRows[] = array('Spool', $spool);
+        $tableRows[] = ['Name', $name];
+        $tableRows[] = ['Service', $service];
+        $tableRows[] = ['Class', get_class($mailer)];
+        $tableRows[] = ['Transport', sprintf('%s (%s)', sprintf('swiftmailer.mailer.%s.transport.name', $name), get_class($transport))];
+        $tableRows[] = ['Spool', $spool];
         if ($this->getContainer()->hasParameter(sprintf('swiftmailer.spool.%s.file.path', $name))) {
-            $tableRows[] = array('Spool file', $this->getContainer()->getParameter(sprintf('swiftmailer.spool.%s.file.path', $name)));
+            $tableRows[] = ['Spool file', $this->getContainer()->getParameter(sprintf('swiftmailer.spool.%s.file.path', $name))];
         }
-        $tableRows[] = array('Delivery', $delivery);
-        $tableRows[] = array('Single Address', $singleAddress);
+        $tableRows[] = ['Delivery', $delivery];
+        $tableRows[] = ['Single Address', $singleAddress];
 
         $this->io->table($tableHeaders, $tableRows);
     }
 
-    private function isDefaultMailer($name)
+    private function isDefaultMailer(string $name): bool
     {
         return $this->getContainer()->getParameter('swiftmailer.default_mailer') === $name || 'default' === $name;
     }
