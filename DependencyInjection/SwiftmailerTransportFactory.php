@@ -56,7 +56,7 @@ class SwiftmailerTransportFactory
             $transport->setTimeout($options['timeout']);
             $transport->setSourceIp($options['source_ip']);
 
-            $smtpTransportConfigurator = new SmtpTransportConfigurator(null, $requestContext);
+            $smtpTransportConfigurator = new SmtpTransportConfigurator($options['local_domain'], $requestContext);
             $smtpTransportConfigurator->configure($transport);
         } elseif ('sendmail' === $options['transport']) {
             $transport = new \Swift_Transport_SendmailTransport(
@@ -66,7 +66,7 @@ class SwiftmailerTransportFactory
 
             $transport->setCommand($options['command']);
 
-            $smtpTransportConfigurator = new SmtpTransportConfigurator(null, $requestContext);
+            $smtpTransportConfigurator = new SmtpTransportConfigurator($options['local_domain'], $requestContext);
             $smtpTransportConfigurator->configure($transport);
         } elseif ('null' === $options['transport']) {
             $transport = new \Swift_Transport_NullTransport($eventDispatcher);

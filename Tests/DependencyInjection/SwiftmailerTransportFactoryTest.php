@@ -42,6 +42,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($transport->getEncryption(), $options['encryption']);
         $this->assertSame($transport->getTimeout(), $options['timeout']);
         $this->assertSame($transport->getSourceIp(), $options['source_ip']);
+        $this->assertSame($transport->getLocalDomain(), $options['local_domain']);
 
         $authHandler = current($transport->getExtensionHandlers());
         $this->assertSame($authHandler->getUsername(), $options['username']);
@@ -152,6 +153,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($transport->getEncryption(), $options['encryption']);
         $this->assertSame($transport->getTimeout(), $options['timeout']);
         $this->assertSame($transport->getSourceIp(), $options['source_ip']);
+        $this->assertSame($transport->getLocalDomain(), $options['local_domain']);
 
         $authHandler = current($transport->getExtensionHandlers());
         $this->assertSame($authHandler->getUsername(), $options['username']);
