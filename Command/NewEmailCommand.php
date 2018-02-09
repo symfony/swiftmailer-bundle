@@ -45,7 +45,8 @@ class NewEmailCommand extends ContainerAwareCommand
             ->addOption('content-type', null, InputOption::VALUE_REQUIRED, 'The body content type of the message', 'text/html')
             ->addOption('charset', null, InputOption::VALUE_REQUIRED, 'The body charset of the message', 'UTF8')
             ->addOption('body-source', null, InputOption::VALUE_REQUIRED, 'The source where body come from [stdin|file]', 'stdin')
-            ->setHelp(<<<EOF
+            ->setHelp(
+                <<<EOF
 The <info>%command.name%</info> command creates and sends a simple email message.
 
 <info>php %command.full_name% --mailer=custom_mailer --content-type=text/xml</info>
@@ -80,7 +81,7 @@ EOF
             case 'file':
                 $filename = $input->getOption('body');
                 $content = file_get_contents($filename);
-                if ($content === false) {
+                if (false === $content) {
                     throw new \Exception(sprintf('Could not get contents from "%s".', $filename));
                 }
                 $input->setOption('body', $content);
@@ -104,7 +105,7 @@ EOF
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         foreach ($input->getOptions() as $option => $value) {
-            if ($value === null) {
+            if (null === $value) {
                 $input->setOption($option, $this->io->ask(sprintf('%s', ucfirst($option))));
             }
         }

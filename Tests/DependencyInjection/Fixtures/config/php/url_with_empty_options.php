@@ -1,10 +1,10 @@
 <?php
 
-$container->loadFromExtension('swiftmailer', array(
+$container->loadFromExtension('swiftmailer', [
     'default_mailer' => 'smtp_mailer',
-    'mailers' => array(
-        'smtp_mailer' => array(
+    'mailers' => [
+        'smtp_mailer' => [
             'url' => 'smtp://example.com:12345?username=&password=&encryption=&auth_mode=',
-        ),
-    ),
-));
+        ],
+    ],
+]);

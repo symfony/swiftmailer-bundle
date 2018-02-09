@@ -1,9 +1,9 @@
 <?php
 
-$container->loadFromExtension('swiftmailer', array(
+$container->loadFromExtension('swiftmailer', [
     'default_mailer' => 'mailer_on',
-    'mailers' => array(
+    'mailers' => [
         'mailer_on' => null,
-        'mailer_off' => array('disable_delivery' => true),
-    ),
-));
+        'mailer_off' => ['disable_delivery' => true],
+    ],
+]);

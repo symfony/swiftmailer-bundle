@@ -7,7 +7,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class SendEmailCommandTest extends \PHPUnit_Framework_TestCase
+class SendEmailCommandTest extends \PHPUnit\Framework\TestCase
 {
     public function testRecoverSpoolTransport()
     {
@@ -44,7 +44,7 @@ class SendEmailCommandTest extends \PHPUnit_Framework_TestCase
         $spoolTransport = new \Swift_Transport_SpoolTransport(new \Swift_Events_SimpleEventDispatcher(), $spool);
 
         $loadBalancedTransport = new \Swift_Transport_LoadBalancedTransport();
-        $loadBalancedTransport->setTransports(array($spoolTransport));
+        $loadBalancedTransport->setTransports([$spoolTransport]);
 
         $container = $this->buildContainer($loadBalancedTransport, $realTransport);
         $tester = $this->executeCommand($container);
@@ -62,7 +62,7 @@ class SendEmailCommandTest extends \PHPUnit_Framework_TestCase
         $container = new Container();
         $container->set(sprintf('swiftmailer.mailer.%s', $name), $mailer);
         $container->set(sprintf('swiftmailer.mailer.%s.transport.real', $name), $realTransport);
-        $container->setParameter('swiftmailer.mailers', array($name => $mailer));
+        $container->setParameter('swiftmailer.mailers', [$name => $mailer]);
         $container->setParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name), true);
 
         return $container;
@@ -71,7 +71,7 @@ class SendEmailCommandTest extends \PHPUnit_Framework_TestCase
     /**
      * @return CommandTester
      */
-    private function executeCommand(ContainerInterface $container, $input = array(), $options = array())
+    private function executeCommand(ContainerInterface $container, $input = [], $options = [])
     {
         $command = new SendEmailCommand();
         $command->setContainer($container);

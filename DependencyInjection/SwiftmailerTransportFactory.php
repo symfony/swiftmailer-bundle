@@ -35,19 +35,19 @@ class SwiftmailerTransportFactory
 
         self::validateConfig($options);
         if ('smtp' === $options['transport']) {
-            $smtpAuthHandler = new \Swift_Transport_Esmtp_AuthHandler(array(
+            $smtpAuthHandler = new \Swift_Transport_Esmtp_AuthHandler([
                 new \Swift_Transport_Esmtp_Auth_CramMd5Authenticator(),
                 new \Swift_Transport_Esmtp_Auth_LoginAuthenticator(),
                 new \Swift_Transport_Esmtp_Auth_PlainAuthenticator(),
-                new \Swift_Transport_Esmtp_Auth_NTLMAuthenticator()
-            ));
+                new \Swift_Transport_Esmtp_Auth_NTLMAuthenticator(),
+            ]);
             $smtpAuthHandler->setUsername($options['username']);
             $smtpAuthHandler->setPassword($options['password']);
             $smtpAuthHandler->setAuthMode($options['auth_mode']);
 
             $transport = new \Swift_Transport_EsmtpTransport(
                 new \Swift_Transport_StreamBuffer(new \Swift_StreamFilters_StringReplacementFilterFactory()),
-                array($smtpAuthHandler),
+                [$smtpAuthHandler],
                 $eventDispatcher
             );
             $transport->setHost($options['host']);
@@ -84,7 +84,7 @@ class SwiftmailerTransportFactory
      */
     public static function resolveOptions(array $options)
     {
-        $options += array(
+        $options += [
             'transport' => null,
             'username' => null,
             'password' => null,
@@ -95,8 +95,8 @@ class SwiftmailerTransportFactory
             'local_domain' => null,
             'encryption' => null,
             'auth_mode' => null,
-            'command' => null
-        );
+            'command' => null,
+        ];
 
         if (isset($options['url'])) {
             $parts = parse_url($options['url']);
@@ -118,7 +118,7 @@ class SwiftmailerTransportFactory
             if (isset($parts['query'])) {
                 parse_str($parts['query'], $query);
                 foreach ($options as $key => $value) {
-                    if (isset($query[$key]) && $query[$key] != "") {
+                    if (isset($query[$key]) && '' != $query[$key]) {
                         $options[$key] = $query[$key];
                     }
                 }
@@ -146,11 +146,11 @@ class SwiftmailerTransportFactory
      */
     public static function validateConfig($options)
     {
-        if (!in_array($options['encryption'], array('tls', 'ssl', null), true)) {
+        if (!in_array($options['encryption'], ['tls', 'ssl', null], true)) {
             throw new \InvalidArgumentException(sprintf('The %s encryption is not supported', $options['encryption']));
         }
 
-        if (!in_array($options['auth_mode'], array('plain', 'login', 'cram-md5', 'ntlm', null), true)) {
+        if (!in_array($options['auth_mode'], ['plain', 'login', 'cram-md5', 'ntlm', null], true)) {
             throw new \InvalidArgumentException(sprintf('The %s authentication mode is not supported', $options['auth_mode']));
         }
     }

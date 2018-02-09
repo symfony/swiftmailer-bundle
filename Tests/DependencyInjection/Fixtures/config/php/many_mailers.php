@@ -1,9 +1,9 @@
 <?php
 
-$container->loadFromExtension('swiftmailer', array(
+$container->loadFromExtension('swiftmailer', [
     'default_mailer' => 'secondary_mailer',
-    'mailers' => array(
-        'first_mailer' => array(
+    'mailers' => [
+        'first_mailer' => [
             'transport' => 'smtp',
             'username' => 'user_first',
             'password' => 'pass_first',
@@ -17,12 +17,12 @@ $container->loadFromExtension('swiftmailer', array(
             'logging' => true,
             'sender_address' => 'first-sender@example.org',
             'delivery_addresses' => ['first@example.org'],
-            'delivery_whitelist' => array(
+            'delivery_whitelist' => [
                 '/firstfoo@.*/',
                 '/.*@firstbar.com$/',
-            ),
-        ),
-        'secondary_mailer' => array(
+            ],
+        ],
+        'secondary_mailer' => [
             'transport' => 'smtp',
             'username' => 'user_secondary',
             'password' => 'pass_secondary',
@@ -34,16 +34,16 @@ $container->loadFromExtension('swiftmailer', array(
             'source_ip' => '127.0.0.1',
             'local_domain' => 'second.example.org',
             'logging' => true,
-            'spool' => array(
+            'spool' => [
                 'type' => 'memory',
-                ),
+                ],
             'delivery_addresses' => ['secondary@example.org'],
-            'delivery_whitelist' => array(
+            'delivery_whitelist' => [
                 '/secondaryfoo@.*/',
                 '/.*@secondarybar.com$/',
-            ),
-        ),
-        'third_mailer' => array(
+            ],
+        ],
+        'third_mailer' => [
             'transport' => 'smtp',
             'username' => 'user_third',
             'password' => 'pass_third',
@@ -55,15 +55,15 @@ $container->loadFromExtension('swiftmailer', array(
             'source_ip' => '127.0.0.1',
             'local_domain' => 'third.example.org',
             'logging' => true,
-            'spool' => array(
+            'spool' => [
                 'type' => 'file',
-                ),
+                ],
             'sender_address' => 'third-sender@example.org',
             'delivery_addresses' => ['third@example.org'],
-            'delivery_whitelist' => array(
+            'delivery_whitelist' => [
                 '/thirdfoo@.*/',
                 '/.*@thirdbar.com$/',
-            ),
-        ),
-    ),
-));
+            ],
+        ],
+    ],
+]);

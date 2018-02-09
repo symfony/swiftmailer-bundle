@@ -14,11 +14,11 @@ namespace Symfony\Bundle\SwiftmailerBundle\Tests\DependencyInjection;
 use Symfony\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerTransportFactory;
 use Symfony\Component\Routing\RequestContext;
 
-class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
+class SwiftmailerTransportFactoryTest extends \PHPUnit\Framework\TestCase
 {
     public function testCreateTransportWithSmtp()
     {
-        $options = array(
+        $options = [
             'transport' => 'smtp',
             'username' => 'user',
             'password' => 'pass',
@@ -29,7 +29,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
             'local_domain' => 'local_domain',
             'encryption' => 'tls',
             'auth_mode' => 'plain',
-        );
+        ];
 
         $transport = SwiftmailerTransportFactory::createTransport(
             $options,
@@ -52,10 +52,10 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateTransportWithSendmail()
     {
-        $options = array(
+        $options = [
             'transport' => 'sendmail',
-            'command' => '/usr/sbin/sendmail -bs'
-        );
+            'command' => '/usr/sbin/sendmail -bs',
+        ];
 
         $transport = SwiftmailerTransportFactory::createTransport(
             $options,
@@ -67,9 +67,9 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateTransportWithNull()
     {
-        $options = array(
+        $options = [
             'transport' => 'null',
-        );
+        ];
 
         $transport = SwiftmailerTransportFactory::createTransport(
             $options,
@@ -86,7 +86,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateTransportWithWrongEncryption()
     {
         SwiftmailerTransportFactory::createTransport(
-            array(
+            [
                 'transport' => 'smtp',
                 'username' => 'user',
                 'password' => 'pass',
@@ -97,7 +97,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                 'local_domain' => 'local_domain',
                 'encryption' => 'fake_encryption',
                 'auth_mode' => 'auth_mode',
-            ),
+            ],
             new RequestContext(),
             new \Swift_Events_SimpleEventDispatcher()
         );
@@ -110,7 +110,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreateTransportWithWrongAuthMode()
     {
         SwiftmailerTransportFactory::createTransport(
-            array(
+            [
                 'transport' => 'smtp',
                 'username' => 'user',
                 'password' => 'pass',
@@ -121,7 +121,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                 'local_domain' => 'local_domain',
                 'encryption' => 'tls',
                 'auth_mode' => 'fake_auth',
-            ),
+            ],
             new RequestContext(),
             new \Swift_Events_SimpleEventDispatcher()
         );
@@ -129,7 +129,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function testCreateTransportWithSmtpAndWithoutRequestContext()
     {
-        $options = array(
+        $options = [
             'transport' => 'smtp',
             'username' => 'user',
             'password' => 'pass',
@@ -140,7 +140,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
             'local_domain' => 'local_domain',
             'encryption' => 'tls',
             'auth_mode' => 'plain',
-        );
+        ];
 
         $transport = SwiftmailerTransportFactory::createTransport(
             $options,
@@ -172,12 +172,12 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function optionsAndResultExpected()
     {
-        return array(
-            array(
-                array(
+        return [
+            [
+                [
                     'url' => '',
-                ),
-                array(
+                ],
+                [
                     'transport' => 'null',
                     'username' => null,
                     'password' => null,
@@ -190,13 +190,13 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'encryption' => null,
                     'auth_mode' => null,
                     'url' => '',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'url' => 'smtp://user:pass@host:1234',
-                ),
-                array(
+                ],
+                [
                     'transport' => 'smtp',
                     'username' => 'user',
                     'password' => 'pass',
@@ -209,13 +209,13 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'encryption' => null,
                     'auth_mode' => null,
                     'url' => 'smtp://user:pass@host:1234',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'url' => 'smtp://user:pass@host:1234?transport=sendmail&username=username&password=password&host=example.com&port=5678',
-                ),
-                array(
+                ],
+                [
                     'transport' => 'sendmail',
                     'username' => 'username',
                     'password' => 'password',
@@ -228,13 +228,13 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'encryption' => null,
                     'auth_mode' => null,
                     'url' => 'smtp://user:pass@host:1234?transport=sendmail&username=username&password=password&host=example.com&port=5678',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'url' => 'smtp://user:pass@host:1234?timeout=42&source_ip=source_ip&local_domain=local_domain&encryption=encryption&auth_mode=auth_mode',
-                ),
-                array(
+                ],
+                [
                     'transport' => 'smtp',
                     'username' => 'user',
                     'password' => 'pass',
@@ -247,11 +247,11 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'encryption' => 'encryption',
                     'auth_mode' => 'auth_mode',
                     'url' => 'smtp://user:pass@host:1234?timeout=42&source_ip=source_ip&local_domain=local_domain&encryption=encryption&auth_mode=auth_mode',
-                ),
-            ),
-            array(
-                array(),
-                array(
+                ],
+            ],
+            [
+                [],
+                [
                     'transport' => 'null',
                     'username' => null,
                     'password' => null,
@@ -263,13 +263,13 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'local_domain' => null,
                     'encryption' => null,
                     'auth_mode' => null,
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'transport' => 'smtp',
-                ),
-                array(
+                ],
+                [
                     'transport' => 'smtp',
                     'username' => null,
                     'password' => null,
@@ -281,13 +281,13 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'local_domain' => null,
                     'encryption' => null,
                     'auth_mode' => null,
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'transport' => 'gmail',
-                ),
-                array(
+                ],
+                [
                     'transport' => 'smtp',
                     'username' => null,
                     'password' => null,
@@ -299,13 +299,13 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'local_domain' => null,
                     'encryption' => 'ssl',
                     'auth_mode' => 'login',
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'transport' => 'sendmail',
-                ),
-                array(
+                ],
+                [
                     'transport' => 'sendmail',
                     'username' => null,
                     'password' => null,
@@ -317,13 +317,13 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'local_domain' => null,
                     'encryption' => null,
                     'auth_mode' => null,
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'encryption' => 'ssl',
-                ),
-                array(
+                ],
+                [
                     'transport' => 'null',
                     'username' => null,
                     'password' => null,
@@ -335,13 +335,13 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'local_domain' => null,
                     'encryption' => 'ssl',
                     'auth_mode' => null,
-                ),
-            ),
-            array(
-                array(
+                ],
+            ],
+            [
+                [
                     'port' => 42,
-                ),
-                array(
+                ],
+                [
                     'transport' => 'null',
                     'username' => null,
                     'password' => null,
@@ -353,8 +353,8 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit_Framework_TestCase
                     'local_domain' => null,
                     'encryption' => null,
                     'auth_mode' => null,
-                ),
-            ),
-        );
+                ],
+            ],
+        ];
     }
 }

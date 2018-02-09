@@ -1,8 +1,8 @@
 <?php
 
-$container->loadFromExtension('swiftmailer', array(
+$container->loadFromExtension('swiftmailer', [
     'default_mailer' => 'failover',
-    'mailers' => array(
+    'mailers' => [
         'failover' => null,
-    ),
-));
+    ],
+]);

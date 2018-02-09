@@ -1,6 +1,6 @@
 <?php
 
-$container->loadFromExtension('swiftmailer', array(
+$container->loadFromExtension('swiftmailer', [
     'transport' => 'smtp',
     'username' => 'user',
     'password' => 'pass',
@@ -12,7 +12,7 @@ $container->loadFromExtension('swiftmailer', array(
     'source_ip' => '127.0.0.1',
     'local_domain' => 'local.example.com',
     'logging' => true,
-    'spool' => array('type' => 'memory'),
+    'spool' => ['type' => 'memory'],
     'delivery_addresses' => ['single@host.com'],
-    'delivery_whitelist' => array('/foo@.*/', '/.*@bar.com$/'),
-));
+    'delivery_whitelist' => ['/foo@.*/', '/.*@bar.com$/'],
+]);

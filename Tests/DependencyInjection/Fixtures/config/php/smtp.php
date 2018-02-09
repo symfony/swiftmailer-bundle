@@ -1,6 +1,6 @@
 <?php
 
-$container->loadFromExtension('swiftmailer', array(
+$container->loadFromExtension('swiftmailer', [
     'transport' => 'smtp',
     'username' => 'user',
     'password' => 'pass',
@@ -12,4 +12,4 @@ $container->loadFromExtension('swiftmailer', array(
     'source_ip' => '127.0.0.1',
     'logging' => true,
     'local_domain' => 'local.example.org',
-));
+]);

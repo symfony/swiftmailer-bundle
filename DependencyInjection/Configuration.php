@@ -32,7 +32,7 @@ class Configuration implements ConfigurationInterface
      */
     public function __construct($debug)
     {
-        $this->debug = (Boolean) $debug;
+        $this->debug = (bool) $debug;
     }
 
     /**
@@ -45,9 +45,11 @@ class Configuration implements ConfigurationInterface
 
         $rootNode
             ->beforeNormalization()
-                ->ifTrue(function ($v) { return is_array($v) && !array_key_exists('mailers', $v) && !array_key_exists('mailer', $v); })
+                ->ifTrue(function ($v) {
+                    return is_array($v) && !array_key_exists('mailers', $v) && !array_key_exists('mailer', $v);
+                })
                 ->then(function ($v) {
-                    $mailer = array();
+                    $mailer = [];
                     foreach ($v as $key => $value) {
                         if ('default_mailer' == $key) {
                             continue;
@@ -56,7 +58,7 @@ class Configuration implements ConfigurationInterface
                         unset($v[$key]);
                     }
                     $v['default_mailer'] = isset($v['default_mailer']) ? (string) $v['default_mailer'] : 'default';
-                    $v['mailers'] = array($v['default_mailer'] => $mailer);
+                    $v['mailers'] = [$v['default_mailer'] => $mailer];
 
                     return $v;
                 })
@@ -98,13 +100,15 @@ class Configuration implements ConfigurationInterface
                     ->ignoreExtraKeys(false)
                     ->normalizeKeys(false)
                     ->beforeNormalization()
-                        ->ifTrue(function ($v) { return isset($v['stream-option']); })
+                        ->ifTrue(function ($v) {
+                            return isset($v['stream-option']);
+                        })
                         ->then(function ($v) {
-                             $recurse = function ($array) use (&$recurse) {
+                            $recurse = function ($array) use (&$recurse) {
                                 if (isset($array['name'])) {
-                                    $array = array($array);
+                                    $array = [$array];
                                 }
-                                $n = array();
+                                $n = [];
                                 foreach ($array as $v) {
                                     $k = $v['name'];
                                     if (isset($v['value'])) {
@@ -113,13 +117,17 @@ class Configuration implements ConfigurationInterface
                                         $n[$k] = $recurse($v['stream-option']);
                                     }
                                 }
+
                                 return $n;
                             };
+
                             return $recurse($v['stream-option']);
                         })
                     ->end()
                     ->validate()
-                        ->ifTrue(function ($v) { return !method_exists('Swift_Transport_EsmtpTransport', 'setStreamOptions'); })
+                        ->ifTrue(function ($v) {
+                            return !method_exists('Swift_Transport_EsmtpTransport', 'setStreamOptions');
+                        })
                         ->thenInvalid('stream_options is only available in Swiftmailer 5.4.2 or later.')
                     ->end()
                 ->end()
@@ -134,7 +142,9 @@ class Configuration implements ConfigurationInterface
                     ->performNoDeepMerging()
                     ->beforeNormalization()
                         ->ifArray()
-                        ->then(function ($v) { return array_filter(array_values($v)); })
+                        ->then(function ($v) {
+                            return array_filter(array_values($v));
+                        })
                     ->end()
                     ->prototype('scalar')
                     ->end()
@@ -153,7 +163,9 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('id')->defaultNull()->info('Used by "service" type')->end()
                     ->end()
                     ->validate()
-                        ->ifTrue(function ($v) { return 'service' === $v['type'] && empty($v['id']); })
+                        ->ifTrue(function ($v) {
+                            return 'service' === $v['type'] && empty($v['id']);
+                        })
                         ->thenInvalid('You have to configure the service id')
                     ->end()
                 ->end()

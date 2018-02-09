@@ -1,5 +1,5 @@
 <?php
 
-$container->loadFromExtension('swiftmailer', array(
-    'delivery_addresses' => array('first@host.com', 'second@host.com'),
-));
+$container->loadFromExtension('swiftmailer', [
+    'delivery_addresses' => ['first@host.com', 'second@host.com'],
+]);

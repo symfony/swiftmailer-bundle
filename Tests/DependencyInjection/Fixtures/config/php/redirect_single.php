@@ -1,6 +1,6 @@
 <?php
 
-$container->loadFromExtension('swiftmailer', array(
+$container->loadFromExtension('swiftmailer', [
     'delivery_addresses' => ['single@host.com'],
-    'delivery_whitelist' => array('/foo@.*/'),
-));
+    'delivery_whitelist' => ['/foo@.*/'],
+]);

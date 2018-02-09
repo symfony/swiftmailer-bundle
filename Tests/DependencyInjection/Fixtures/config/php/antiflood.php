@@ -1,5 +1,5 @@
 <?php
 
-$container->loadFromExtension('swiftmailer', array(
+$container->loadFromExtension('swiftmailer', [
     'antiflood' => true,
-));
+]);

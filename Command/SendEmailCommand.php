@@ -41,7 +41,8 @@ class SendEmailCommand extends ContainerAwareCommand
             ->addOption('recover-timeout', null, InputOption::VALUE_REQUIRED, 'The timeout for recovering messages that have taken too long to send (in seconds).')
             ->addOption('mailer', null, InputOption::VALUE_REQUIRED, 'The mailer name.')
             ->addOption('transport', null, InputOption::VALUE_REQUIRED, 'The service of the transport to use to send the messages.')
-            ->setHelp(<<<EOF
+            ->setHelp(
+                <<<EOF
 The <info>%command.name%</info> command sends all emails from the spool.
 
 <info>php %command.full_name% --message-limit=10 --time-limit=10 --recover-timeout=900 --mailer=default</info>

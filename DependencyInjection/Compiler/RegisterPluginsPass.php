@@ -34,7 +34,7 @@ class RegisterPluginsPass implements CompilerPassInterface
             $transport = sprintf('swiftmailer.mailer.%s.transport', $name);
             $definition = $container->findDefinition($transport);
             foreach ($plugins as $id => $args) {
-                $definition->addMethodCall('registerPlugin', array(new Reference($id)));
+                $definition->addMethodCall('registerPlugin', [new Reference($id)]);
             }
         }
     }
