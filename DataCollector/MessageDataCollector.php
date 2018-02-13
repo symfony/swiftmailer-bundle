@@ -54,10 +54,16 @@ class MessageDataCollector extends DataCollector
                 if ($this->container->has($loggerName)) {
                     $logger = $this->container->get($loggerName);
                     $this->data['mailer'][$name] = [
-                        'messages' => $logger->getMessages(),
+                        'messages' => [],
                         'messageCount' => $logger->countMessages(),
                         'isSpool' => $this->container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)),
                     ];
+
+                    foreach ($logger->getMessages() as $message) {
+                        $message->__base64EncodedBody = base64_encode($message->getBody());
+                        $this->data['mailer'][$name]['messages'][] = $message;
+                    }
+
                     $this->data['messageCount'] += $logger->countMessages();
                 }
             }
