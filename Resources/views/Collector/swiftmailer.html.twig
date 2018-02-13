@@ -70,6 +70,53 @@
 {% endblock %}
 
 {% block panel %}
+    <style>
+        .message-preview {
+            width: 100%;
+            margin: 1em 0px;
+            border: 1px dashed #E0E0E0;
+        }
+        .message-preview:hover {
+            background-image: linear-gradient(45deg, #F3F3F3 25%, transparent 25%), linear-gradient(-45deg, #f5f5f5 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #F3F3F3 75%), linear-gradient(-45deg, transparent 75%, #F3F3F3 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .message-preview-opener {
+            font-style: italic;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            //Handling for (open in window) links
+            const openers = document.querySelectorAll('.message-preview-opener');
+            for (var o = 0; o < openers.length; ++o) {
+                openers[o].addEventListener('click', function (event) {
+                    const contentSource = document.getElementById(event.target.dataset.contentSource);
+                    const decodedContent = window.decodeURIComponent(contentSource.dataset.encodedSrc);
+                    window.open('about:blank').document.body.innerHTML = decodedContent;
+                });
+            }
+
+            //Handling for previews rednering
+            const previews = document.querySelectorAll('iframe[data-encoded-src]');
+            var decodedContent, innerDocument;
+            for (var i = 0; i < previews.length; ++i) {
+                previews[i].addEventListener('load', function (event) {
+                    //Resize iframe after full load
+                    event.target.height = event.target.contentWindow.document.body.scrollHeight;
+                });
+
+                decodedContent = window.decodeURIComponent(previews[i].dataset.encodedSrc);
+                innerDocument = previews[i].contentWindow.document;
+                innerDocument.open();
+                innerDocument.write(decodedContent);
+                innerDocument.close();
+                previews[i].height = innerDocument.body.scrollHeight; //Initialy resize
+            }
+        });
+    </script>
+
     {% set profiler_markup_version = profiler_markup_version|default(1) %}
 
     {% if profiler_markup_version == 1 %}
@@ -138,6 +185,8 @@
             </div>
         {% else %}
             {% for message in collector.messages(name) %}
+                {% set messagePreviewPrefix = 'messaage-preview-' ~ loop.index %}
+
                 {% if loop.length > 1 %}
                     <h4>E-mail #{{ loop.index }} details</h4>
                 {% else %}
@@ -163,6 +212,20 @@
                         </pre>
                     </div>
 
+                    {%- if message.contentType != 'text/plain' %}
+                        <div class="card-block">
+                            <span class="label">Message body preview</span>
+                            <a href="#" class="message-preview-opener" data-content-source="{{ messagePreviewPrefix }}-body">(show in window)</a>
+
+                            <iframe
+                                    id="{{ messagePreviewPrefix }}-body"
+                                    class="message-preview"
+                                    sandbox="allow-same-origin"
+                                    data-encoded-src="{{ message.body|convert_encoding('UTF-8', message.charset)|url_encode }}"
+                            ></iframe>
+                        </div>
+                    {% endif %}
+
                     {% for messagePart in message.children if messagePart.contentType in ['text/plain', 'text/html'] %}
                         <div class="card-block">
                             <span class="label">Alternative part ({{ messagePart.contentType }})</span>
@@ -174,6 +237,20 @@
                                 {%- endif -%}
                             </pre>
                         </div>
+
+                        {%- if messagePart.contentType == 'text/html' %}
+                            <div class="card-block">
+                                <span class="label">Alternative part preview</span>
+                                <a href="#" class="message-preview-opener" data-content-source="{{ messagePreviewPrefix }}-part-{{ loop.index }}">(show in window)</a>
+
+                                <iframe
+                                        id="{{ messagePreviewPrefix }}-part-{{ loop.index }}"
+                                        class="message-preview"
+                                        sandbox="allow-same-origin"
+                                        data-encoded-src="{{ message.bodyPart|convert_encoding('UTF-8', messagePart.charset)|url_encode }}"
+                                ></iframe>
+                            </div>
+                        {% endif %}
                     {% endfor %}
 
                     {% set attachments = collector.extractAttachments(message) %}
