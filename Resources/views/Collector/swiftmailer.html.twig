@@ -50,6 +50,43 @@
     {% endif %}
 {% endblock %}
 
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+        /* utility classes */
+        .m-t-0 { margin-top: 0 !important; }
+        .m-t-10 { margin-top: 10px !important; }
+
+        /* basic grid */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+        .col {
+            flex-basis: 0;
+            flex-grow: 1;
+            max-width: 100%;
+            position: relative;
+            width: 100%;
+            min-height: 1px;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        .col-4 {
+            flex: 0 0 33.333333%;
+            max-width: 33.333333%;
+        }
+
+        /* small tabs */
+        .sf-tabs-sm .tab-navigation li {
+            font-size: 14px;
+            padding: .3em .5em;
+        }
+    </style>
+{% endblock %}
+
 {% block menu %}
     {% set profiler_markup_version = profiler_markup_version|default(1) %}
 
@@ -146,27 +183,57 @@
 
                 <div class="card">
                     <div class="card-block">
-                        <span class="label">Message headers</span>
-                        <pre>{% for header in message.headers.all %}
-                            {{- header -}}
-                        {% endfor %}</pre>
+                        <span class="label">Subject</span>
+                        <h2 class="m-t-10">{{ message.headers.get('subject').value ?? '(empty)' }}</h2>
+                    </div>
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col col-4">
+                                <span class="label">From</span>
+                                <pre class="prewrap">{{ message.headers.get('from').toString|replace({'From:': ''}) }}</pre>
+
+                                <span class="label">To</span>
+                                <pre class="prewrap">{{ message.headers.get('to').toString|replace({'To:': ''}) }}</pre>
+                            </div>
+                            <div class="col">
+                                <span class="label">Headers</span>
+                                <pre class="prewrap">{% for header in message.headers.all if (header.fieldName ?? '') not in ['Subject', 'From', 'To'] %}
+                                    {{- header -}}
+                                {% endfor %}</pre>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="card-block">
-                        <span class="label">Message body</span>
-                        <pre>
-                            {%- if messagePart.charset is defined and message.charset %}
-                                {{- message.body|convert_encoding('UTF-8', message.charset) }}
-                            {%- else %}
-                                {{- message.body }}
-                            {%- endif -%}
-                        </pre>
+                        <div class="sf-tabs sf-tabs-sm">
+                            <div class="tab">
+                                <h3 class="tab-title">Raw content</h3>
+
+                                <div class="tab-content">
+                                    <pre class="prewrap" style="max-height: 600px">
+                                        {%- if messagePart.charset is defined and message.charset %}
+                                            {{- message.body|convert_encoding('UTF-8', message.charset) }}
+                                        {%- else %}
+                                            {{- message.body }}
+                                        {%- endif -%}
+                                    </pre>
+                                </div>
+                            </div>
+
+                            <div class="tab">
+                                <h3 class="tab-title">Rendered content</h3>
+
+                                <div class="tab-content">
+                                    <iframe class="full-width" style="min-height: 600px" src="data:text/html;base64,{{ message.__base64EncodedBody }}"></iframe>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     {% for messagePart in message.children if messagePart.contentType in ['text/plain', 'text/html'] %}
                         <div class="card-block">
                             <span class="label">Alternative part ({{ messagePart.contentType }})</span>
-                            <pre>
+                            <pre class="prewrap">
                                 {%- if messagePart.charset is defined and messagePart.charset %}
                                     {{- messagePart.body|convert_encoding('UTF-8', messagePart.charset) }}
                                 {%- else %}
