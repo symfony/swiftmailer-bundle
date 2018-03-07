@@ -190,10 +190,10 @@
                         <div class="row">
                             <div class="col col-4">
                                 <span class="label">From</span>
-                                <pre class="prewrap">{{ message.headers.get('from').toString|replace({'From:': ''}) }}</pre>
+                                <pre class="prewrap">{{ (message.headers.get('from').toString ?? '(empty)')|replace({'From:': ''}) }}</pre>
 
                                 <span class="label">To</span>
-                                <pre class="prewrap">{{ message.headers.get('to').toString|replace({'To:': ''}) }}</pre>
+                                <pre class="prewrap">{{ (message.headers.get('to').toString ?? '(empty)')|replace({'To:': ''}) }}</pre>
                             </div>
                             <div class="col">
                                 <span class="label">Headers</span>
