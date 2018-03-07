@@ -224,7 +224,7 @@
                                 <h3 class="tab-title">Rendered content</h3>
 
                                 <div class="tab-content">
-                                    <iframe class="full-width" style="min-height: 600px" src="data:text/html;base64,{{ message.__base64EncodedBody }}"></iframe>
+                                    <iframe class="full-width" style="min-height: 600px" src="data:{{ message.__contentType }};base64,{{ message.__base64EncodedBody }}"></iframe>
                                 </div>
                             </div>
                         </div>

@@ -60,6 +60,8 @@ class MessageDataCollector extends DataCollector
                     ];
 
                     foreach ($logger->getMessages() as $message) {
+                        ($userContentTypeProp = new \ReflectionProperty(\Swift_Message::class, 'userContentType'))->setAccessible(true);
+                        $message->__contentType = $userContentTypeProp->getValue($message);
                         $message->__base64EncodedBody = base64_encode($message->getBody());
                         $this->data['mailer'][$name]['messages'][] = $message;
                     }
