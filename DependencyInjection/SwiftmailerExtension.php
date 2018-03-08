@@ -84,7 +84,7 @@ class SwiftmailerExtension extends Extension
 
         if (method_exists($container, 'resolveEnvPlaceholders')) {
             $options = [];
-            $envVariablesAllowed = ['transport', 'url', 'username', 'password', 'host', 'port', 'timeout', 'source_ip', 'local_domain', 'encryption', 'auth_mode'];
+            $envVariablesAllowed = ['transport', 'url', 'username', 'password', 'host', 'port', 'timeout', 'source_ip', 'local_domain', 'encryption', 'auth_mode', 'command'];
             foreach ($envVariablesAllowed as $key) {
                 $container->resolveEnvPlaceholders($mailer[$key], null, $usedEnvs);
                 $options[$key] = $mailer[$key];

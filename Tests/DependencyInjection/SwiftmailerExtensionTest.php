@@ -97,6 +97,20 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider getConfigTypes
      */
+    public function testSendmailDynamicConfigWithoutCommand($type)
+    {
+        $container = $this->loadContainerFromFile('sendmail_no_command', $type, array(), true);
+        $container->getAlias('swiftmailer.transport')->setPublic(true);
+
+        /** @var \Swift_SendmailTransport $transport */
+        $transport = $container->get('swiftmailer.transport');
+
+        $this->assertEquals('/usr/sbin/sendmail -bs', $transport->getCommand());
+    }
+
+    /**
+     * @dataProvider getConfigTypes
+     */
     public function testNullTransport($type)
     {
         $container = $this->loadContainerFromFile('null', $type);
