@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by zerkms at 2017-10-01T21:25:30Z
+
+PS: when this is merged, any chance it's also backported (it's 100% compatible) to the `3.0.x` "branch" as well? It's a huge problem here, and 3.1.x is not compatible with the latest stable symfony & flex.
+
+---------------------------------------------------------------------------
+
+by mkrauser at 2018-03-06T15:27:09Z
+
+I also have an issue with this. The fix works fine.
+
+---------------------------------------------------------------------------
+
+by DavidBadura at 2018-03-08T14:32:08Z
+
+We have the same problem.
+
+If you use enviroment vars for configuration then you get following exception:
+
+```
+Swift_TransportException: Unsupported sendmail command flags []. Must be one of "-bs" or "-t" but can include additional flags. in /srv/share/api/vendor/swiftmailer/swiftmailer/lib/classes/Swift/Transport/SendmailTransport.php:149
+```
