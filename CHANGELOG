@@ -1,3 +1,16 @@
+* 3.2.2 (2018-04-03)
+
+ * fixed the profiler panel when To: or From: headers are empty
+ * fixed rendered content in the web profiler
+ * do not set time/message limit on Configurable Spool if null
+
+* 3.2.1 (2018-03-08)
+
+ * fixed the handling of null as top-level extension config
+ * fixed compatibility with the inline_class_loader optimization of the container dumper
+ * fixed template variable reference
+ * added `command` to the list of parameters that can be set from environment variables and default config values
+
 * 3.2.0 (2018-02-14)
 
  * improved the Symfony profiler panel
