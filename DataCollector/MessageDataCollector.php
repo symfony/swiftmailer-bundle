@@ -60,7 +60,8 @@ class MessageDataCollector extends DataCollector
                     ];
 
                     foreach ($logger->getMessages() as $message) {
-                        $message->__base64EncodedBody = base64_encode($message->getBody());
+                        $bodyContents = 'text/plain' === $message->getContentType() ? str_replace("\n", '<br>', $message->getBody()): $message->getBody();
+                        $message->__base64EncodedBody = base64_encode($bodyContents);
                         $this->data['mailer'][$name]['messages'][] = $message;
                     }
 
