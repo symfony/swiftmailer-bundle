@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by ro0NL at 2018-03-07T16:35:16Z
+
+still in my case the feature is defeated. as text/html is an alternative part. Previewing text/plain is now the same as raw content (both preserve newlines).
+
+So ideally we just always have these tabs maybe? also for the child parts.
+
+---------------------------------------------------------------------------
+
+by ro0NL at 2018-03-07T16:39:55Z
+
+if we merge message body + parts into 1 list, and then only render tabs for text/html, i think that's best. Previewing text/plain really doesnt make sense IMHO.
