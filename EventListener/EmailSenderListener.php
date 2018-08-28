@@ -85,4 +85,9 @@ class EmailSenderListener implements EventSubscriberInterface
 
         return $listeners;
     }
+
+    public function reset()
+    {
+        $this->wasExceptionThrown = false;
+    }
 }
