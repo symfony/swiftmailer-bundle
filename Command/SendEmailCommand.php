@@ -73,6 +73,22 @@ EOF
             throw new \InvalidArgumentException(sprintf('The mailer "%s" does not exist.', $name));
         }
 
+        // make sure only once instance of this command running for a mailer at a time
+        $mailerName = sprintf('swiftmailer.mailer.%s', $name);
+        if (\Symfony\Component\HttpKernel\Kernel::VERSION_ID < 30400) {
+            $lock = new \Symfony\Component\Filesystem\LockHandler($mailerName);
+            $unlockedCommand = $lock->lock();
+        } else {
+            $store = new \Symfony\Component\Lock\Store\SemaphoreStore();
+            $factory = new \Symfony\Component\Lock\Factory($store);
+            $lock = $factory->createLock($mailerName);
+            $unlockedCommand = $lock->acquire();
+        }
+        if (!$unlockedCommand) {
+            $output->writeln(sprintf('The command is already running for "%s" in another process.', $mailerName));
+            return 0;
+        }
+
         $this->io->text(sprintf('<info>[%s]</info> Processing <info>%s</info> mailer spool... ', date('Y-m-d H:i:s'), $name));
         if ($this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name))) {
             $mailer = $this->getContainer()->get(sprintf('swiftmailer.mailer.%s', $name));
