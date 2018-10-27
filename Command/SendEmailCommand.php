@@ -24,7 +24,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @author Clément JOBEILI <clement.jobeili@gmail.com>
  * @author Toni Uebernickel <tuebernickel@gmail.com>
  */
-class SendEmailCommand extends ContainerAwareCommand
+class SendEmailCommand extends AbstractSwiftMailerCommand
 {
     protected static $defaultName = 'swiftmailer:spool:send';
 

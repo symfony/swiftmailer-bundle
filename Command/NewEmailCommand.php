@@ -22,7 +22,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  *
  * @author Gusakov Nikita <dev@nkt.me>
  */
-class NewEmailCommand extends ContainerAwareCommand
+class NewEmailCommand extends AbstractSwiftMailerCommand
 {
     protected static $defaultName = 'swiftmailer:email:send';
 
