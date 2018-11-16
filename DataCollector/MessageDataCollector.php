@@ -127,7 +127,7 @@ class MessageDataCollector extends DataCollector
     /**
      * Returns the messages of a mailer.
      *
-     * @return array the messages
+     * @return \Swift_Message[] the messages
      */
     public function getMessages($name = 'default')
     {
