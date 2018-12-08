@@ -45,7 +45,9 @@
 
         <service id="swiftmailer.transport.smtp.abstract" class="Swift_Transport_EsmtpTransport" public="false" abstract="true" />
 
-        <service id="swiftmailer.transport.spool.abstract" class="Swift_Transport_SpoolTransport" public="false" abstract="true" />
+        <service id="swiftmailer.transport.spool.abstract" class="Symfony\Bundle\SwiftmailerBundle\Transport\FlushingSpoolTransport" public="false" abstract="true">
+            <tag name="kernel.reset" method="disableInstantFlush" />
+        </service>
 
         <service id="swiftmailer.spool.file.abstract" class="Swift_FileSpool" public="false" abstract="true">
             <argument>%kernel.root_dir%/../data/swiftmailer/spool</argument>

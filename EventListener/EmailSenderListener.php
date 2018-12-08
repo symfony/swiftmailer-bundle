@@ -12,6 +12,7 @@
 namespace Symfony\Bundle\SwiftmailerBundle\EventListener;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Bundle\SwiftmailerBundle\Transport\FlushingSpoolTransport;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Console\ConsoleEvents;
@@ -54,16 +55,18 @@ class EmailSenderListener implements EventSubscriberInterface
                 if ($this->container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name))) {
                     $mailer = $this->container->get(sprintf('swiftmailer.mailer.%s', $name));
                     $transport = $mailer->getTransport();
-                    if ($transport instanceof \Swift_Transport_SpoolTransport) {
+                    if ($transport instanceof FlushingSpoolTransport) {
                         $spool = $transport->getSpool();
                         if ($spool instanceof \Swift_MemorySpool) {
                             try {
-                                $spool->flushQueue($this->container->get(sprintf('swiftmailer.mailer.%s.transport.real', $name)));
+                                $transport->flushSpool();
                             } catch (\Swift_TransportException $exception) {
                                 if (null !== $this->logger) {
                                     $this->logger->error(sprintf('Exception occurred while flushing email queue: %s', $exception->getMessage()));
                                 }
                             }
+
+                            $transport->enableInstantFlush();
                         }
                     }
                 }

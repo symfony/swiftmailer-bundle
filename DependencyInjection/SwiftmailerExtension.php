@@ -273,6 +273,7 @@ class SwiftmailerExtension extends Extension
                 ->setArguments([
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
                     new Reference(sprintf('swiftmailer.mailer.%s.spool', $name)),
+                    new Reference(sprintf('swiftmailer.mailer.%s.transport.real', $name)),
                 ])
             ;
 
