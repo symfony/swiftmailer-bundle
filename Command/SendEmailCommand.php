@@ -89,7 +89,7 @@ EOF
         }
     }
 
-    private function recoverSpool($name, \Swift_Transport $transport, InputInterface $input, OutputInterface $output)
+    private function recoverSpool($name, \Swift_Transport $transport, InputInterface $input)
     {
         if ($transport instanceof \Swift_Transport_SpoolTransport) {
             $spool = $transport->getSpool();
