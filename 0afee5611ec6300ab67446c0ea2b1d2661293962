@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by ro0NL at 2019-01-05T10:43:01Z
+
+now fixes https://github.com/symfony/swiftmailer-bundle/pull/238#issuecomment-371198429
+
+If raw content is type text/plain, but there's an alternative type text/html part, then we use it for the rendered tab instead. Preferring rendering HTML by default :)
+
+cc @fabpot
