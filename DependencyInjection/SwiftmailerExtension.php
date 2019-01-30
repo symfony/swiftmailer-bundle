@@ -221,7 +221,7 @@ class SwiftmailerExtension extends Extension
         } elseif ('null' === $transport) {
             $definitionDecorator = $this->createChildDefinition('swiftmailer.transport.null.abstract');
             $container
-                ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.null', $name, $transport), $definitionDecorator)
+                ->setDefinition(sprintf('swiftmailer.mailer.%s.transport.null', $name), $definitionDecorator)
                 ->setArguments([
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
                 ])
