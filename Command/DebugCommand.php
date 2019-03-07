@@ -11,7 +11,6 @@
 
 namespace Symfony\Bundle\SwiftmailerBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -72,7 +71,6 @@ EOF
 
         $mailers = $this->getContainer()->getParameter('swiftmailer.mailers');
         foreach ($mailers as $name => $mailer) {
-            $mailer = $this->getContainer()->get($mailer);
             $transport = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.transport.name', $name));
             $spool = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name)) ? 'YES' : 'NO';
             $delivery = $this->getContainer()->getParameter(sprintf('swiftmailer.mailer.%s.delivery.enabled', $name)) ? 'YES' : 'NO';

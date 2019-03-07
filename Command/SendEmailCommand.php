@@ -11,7 +11,6 @@
 
 namespace Symfony\Bundle\SwiftmailerBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -106,7 +105,7 @@ EOF
         }
     }
 
-    private function recoverSpool($name, \Swift_Transport $transport, InputInterface $input, OutputInterface $output)
+    private function recoverSpool($name, \Swift_Transport $transport, InputInterface $input)
     {
         if ($transport instanceof \Swift_Transport_SpoolTransport) {
             $spool = $transport->getSpool();

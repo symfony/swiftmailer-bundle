@@ -60,9 +60,17 @@ class MessageDataCollector extends DataCollector
                     ];
 
                     foreach ($logger->getMessages() as $message) {
-                        ($userContentTypeProp = new \ReflectionProperty(\Swift_Message::class, 'userContentType'))->setAccessible(true);
-                        $message->__contentType = $userContentTypeProp->getValue($message);
+                        $message->__contentType = $message->getBodyContentType();
                         $message->__base64EncodedBody = base64_encode($message->getBody());
+                        if ('text/plain' === $message->__contentType) {
+                            foreach ($message->getChildren() as $child) {
+                                if ('text/html' === $child->getContentType()) {
+                                    $message->__contentType = 'text/html';
+                                    $message->__base64EncodedBody = base64_encode($child->getBody());
+                                    break;
+                                }
+                            }
+                        }
                         $this->data['mailer'][$name]['messages'][] = $message;
                     }
 
@@ -127,7 +135,7 @@ class MessageDataCollector extends DataCollector
     /**
      * Returns the messages of a mailer.
      *
-     * @return array the messages
+     * @return \Swift_Message[] the messages
      */
     public function getMessages($name = 'default')
     {
