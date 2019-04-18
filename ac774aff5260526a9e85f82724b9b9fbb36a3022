@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+
+by naderman at 2019-04-16T20:57:36Z
+
+@eeemarv stof suggested you do this instead: https://github.com/symfony/swiftmailer-bundle/issues/270#issuecomment-448266067
+
+---------------------------------------------------------------------------
+
+by eeemarv at 2019-04-18T05:40:16Z
+
+Now using rawurldecode() and including host.
+
+---------------------------------------------------------------------------
+
+by naderman at 2019-04-18T13:26:41Z
+
+In summary, this PR fixes https://github.com/symfony/swiftmailer-bundle/issues/234 https://github.com/symfony/swiftmailer-bundle/issues/270 and https://github.com/symfony/swiftmailer-bundle/issues/276
+
+---------------------------------------------------------------------------
+
+by eeemarv at 2019-04-18T13:32:09Z
+
+Sorry, I just noticed the naming of [the commit](https://github.com/symfony/swiftmailer-bundle/pull/263/commits/5daf79b9e331b45c1d03564f83a1a3a015b7ab8e) is wrong. It should be "rawurlDECode() host, username and password" instead of "rawurlencode". In the code the right function is used though.
+
+---------------------------------------------------------------------------
+
+by eeemarv at 2019-04-18T13:43:15Z
+
+Note the [query part is already urldecoded](https://github.com/symfony/swiftmailer-bundle/blob/5daf79b9e331b45c1d03564f83a1a3a015b7ab8e/DependencyInjection/SwiftmailerTransportFactory.php#L119) as the [parse_str() function](https://www.php.net/manual/en/function.parse-str.php) does this.
+
+---------------------------------------------------------------------------
+
+by naderman at 2019-04-18T14:28:25Z
+
+@fabpot I know you're focused on Mailer these days, but mind merging this? I think it's a somewhat common problem to run into on a current Symfony4 project, e.g. when following the docs on sending email with GMail https://symfony.com/doc/current/email.html#using-gmail-to-send-emails This will not currently work if a password contains non-ascii characters, even if they get encoded.
