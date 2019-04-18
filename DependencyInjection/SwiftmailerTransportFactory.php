@@ -99,8 +99,8 @@ class SwiftmailerTransportFactory
         ];
 
         if (isset($options['url'])) {
-            if (false === ($parts = parse_url($options['url']))) {
-                throw new \InvalidArgumentException(sprintf('Supplied url [%s] is not a valid format.', $options['url']));
+            if (false === $parts = parse_url($options['url'])) {
+                throw new \InvalidArgumentException(sprintf('The Swiftmailer URL "%s" is not a valid.', $options['url']));
             }
             if (isset($parts['scheme'])) {
                 $options['transport'] = $parts['scheme'];
