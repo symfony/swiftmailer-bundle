@@ -148,11 +148,11 @@ class SwiftmailerTransportFactory
      */
     public static function validateConfig($options)
     {
-        if (!in_array($options['encryption'], ['tls', 'ssl', null], true)) {
+        if (!\in_array($options['encryption'], ['tls', 'ssl', null], true)) {
             throw new \InvalidArgumentException(sprintf('The %s encryption is not supported', $options['encryption']));
         }
 
-        if (!in_array($options['auth_mode'], ['plain', 'login', 'cram-md5', 'ntlm', null], true)) {
+        if (!\in_array($options['auth_mode'], ['plain', 'login', 'cram-md5', 'ntlm', null], true)) {
             throw new \InvalidArgumentException(sprintf('The %s authentication mode is not supported', $options['auth_mode']));
         }
     }

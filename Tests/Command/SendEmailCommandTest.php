@@ -56,7 +56,7 @@ class SendEmailCommandTest extends \PHPUnit\Framework\TestCase
         $container = $this->buildContainer($spoolTransport, $realTransport);
         $this->executeCommand($container);
 
-        $this->assertSame(null, $spool->getTimeLimit());
+        $this->assertNull($spool->getTimeLimit());
     }
 
     public function testMessageLimitInteger()
@@ -84,7 +84,7 @@ class SendEmailCommandTest extends \PHPUnit\Framework\TestCase
         $container = $this->buildContainer($spoolTransport, $realTransport);
         $this->executeCommand($container);
 
-        $this->assertSame(null, $spool->getMessageLimit());
+        $this->assertNull($spool->getMessageLimit());
     }
 
     public function testRecoverLoadbalancedTransportWithSpool()
@@ -129,11 +129,11 @@ class SendEmailCommandTest extends \PHPUnit\Framework\TestCase
     /**
      * @return CommandTester
      */
-    private function executeCommand(ContainerInterface $container, $input = array(), $options = array())
+    private function executeCommand(ContainerInterface $container, $input = [], $options = [])
     {
         $kernel = $this->getMockBuilder(KernelInterface::class)->getMock();
         $kernel->expects($this->any())->method('getContainer')->willReturn($container);
-        $kernel->expects($this->any())->method('getBundles')->willReturn(array());
+        $kernel->expects($this->any())->method('getBundles')->willReturn([]);
 
         $application = new Application($kernel);
         $application->add(new SendEmailCommand());
@@ -149,12 +149,26 @@ class SendEmailCommandTest extends \PHPUnit\Framework\TestCase
      */
     private function configurableSpool(): \Swift_ConfigurableSpool
     {
-        return new class extends \Swift_ConfigurableSpool {
-            public function start() {}
-            public function stop() {}
-            public function isStarted() {}
-            public function queueMessage(\Swift_Mime_SimpleMessage $message) {}
-            public function flushQueue(\Swift_Transport $transport, &$failedRecipients = null) {}
+        return new class() extends \Swift_ConfigurableSpool {
+            public function start()
+            {
+            }
+
+            public function stop()
+            {
+            }
+
+            public function isStarted()
+            {
+            }
+
+            public function queueMessage(\Swift_Mime_SimpleMessage $message)
+            {
+            }
+
+            public function flushQueue(\Swift_Transport $transport, &$failedRecipients = null)
+            {
+            }
         };
     }
 }

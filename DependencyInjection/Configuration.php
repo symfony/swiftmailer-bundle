@@ -50,7 +50,7 @@ class Configuration implements ConfigurationInterface
             ->end()
             ->beforeNormalization()
                 ->ifTrue(function ($v) {
-                    return is_array($v) && !array_key_exists('mailers', $v) && !array_key_exists('mailer', $v);
+                    return \is_array($v) && !\array_key_exists('mailers', $v) && !\array_key_exists('mailer', $v);
                 })
                 ->then(function ($v) {
                     $mailer = [];

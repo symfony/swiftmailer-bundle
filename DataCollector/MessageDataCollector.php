@@ -110,7 +110,7 @@ class MessageDataCollector extends DataCollector
     public function getMailerData($name)
     {
         if (!isset($this->data['mailer'][$name])) {
-            throw new \LogicException(sprintf('Missing "%s" data in "%s".', $name, get_class($this)));
+            throw new \LogicException(sprintf('Missing "%s" data in "%s".', $name, \get_class($this)));
         }
 
         return $this->data['mailer'][$name];

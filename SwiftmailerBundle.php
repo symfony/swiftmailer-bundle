@@ -31,7 +31,7 @@ class SwiftmailerBundle extends Bundle
 
         // Older supported versions of Symfony don't have the parent class that EnsureNoHotPathPass extends from.
         // But they don't have the hot_path optimization either, so not being able to register our pass is not an issue.
-        if (\class_exists('Symfony\Component\DependencyInjection\Compiler\AbstractRecursivePass')) {
+        if (class_exists('Symfony\Component\DependencyInjection\Compiler\AbstractRecursivePass')) {
             $container->addCompilerPass(new EnsureNoHotPathPass(), PassConfig::TYPE_AFTER_REMOVING);
         }
     }
