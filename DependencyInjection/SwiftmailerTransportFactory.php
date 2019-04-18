@@ -104,13 +104,13 @@ class SwiftmailerTransportFactory
                 $options['transport'] = $parts['scheme'];
             }
             if (isset($parts['user'])) {
-                $options['username'] = $parts['user'];
+                $options['username'] = rawurldecode($parts['user']);
             }
             if (isset($parts['pass'])) {
-                $options['password'] = $parts['pass'];
+                $options['password'] = rawurldecode($parts['pass']);
             }
             if (isset($parts['host'])) {
-                $options['host'] = $parts['host'];
+                $options['host'] = rawurldecode($parts['host']);
             }
             if (isset($parts['port'])) {
                 $options['port'] = $parts['port'];
