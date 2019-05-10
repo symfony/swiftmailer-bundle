@@ -197,7 +197,7 @@
                             </div>
                             <div class="col">
                                 <span class="label">Headers</span>
-                                <pre class="prewrap">{% for header in message.headers.all if (header.fieldName ?? '') not in ['Subject', 'From', 'To'] %}
+                                <pre class="prewrap">{% for header in message.headers.all|filter(header => (header.fieldName ?? '') not in ['Subject', 'From', 'To']) %}
                                     {{- header -}}
                                 {% endfor %}</pre>
                             </div>
@@ -230,7 +230,7 @@
                         </div>
                     </div>
 
-                    {% for messagePart in message.children if messagePart.contentType in ['text/plain', 'text/html'] %}
+                    {% for messagePart in message.children|filter(messagePart => messagePart.contentType in ['text/plain', 'text/html']) %}
                         <div class="card-block">
                             <span class="label">Alternative part ({{ messagePart.contentType }})</span>
                             <pre class="prewrap">
