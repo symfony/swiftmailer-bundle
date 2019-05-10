@@ -197,9 +197,13 @@
                             </div>
                             <div class="col">
                                 <span class="label">Headers</span>
-                                <pre class="prewrap">{% for header in message.headers.all if (header.fieldName ?? '') not in ['Subject', 'From', 'To'] %}
-                                    {{- header -}}
-                                {% endfor %}</pre>
+                                <pre class="prewrap">
+                                    {%- for header in message.headers.all %}
+                                        {%- if (header.fieldName ?? '') not in ['Subject', 'From', 'To'] %}
+                                            {{- header -}}
+                                        {% endif -%}
+                                    {% endfor -%}
+                                </pre>
                             </div>
                         </div>
                     </div>
@@ -230,17 +234,19 @@
                         </div>
                     </div>
 
-                    {% for messagePart in message.children if messagePart.contentType in ['text/plain', 'text/html'] %}
-                        <div class="card-block">
-                            <span class="label">Alternative part ({{ messagePart.contentType }})</span>
-                            <pre class="prewrap">
-                                {%- if messagePart.charset is defined and messagePart.charset %}
-                                    {{- messagePart.body|convert_encoding('UTF-8', messagePart.charset) }}
-                                {%- else %}
-                                    {{- messagePart.body }}
-                                {%- endif -%}
-                            </pre>
-                        </div>
+                    {% for messagePart in message.children %}
+                        {% if messagePart.contentType in ['text/plain', 'text/html'] %}
+                            <div class="card-block">
+                                <span class="label">Alternative part ({{ messagePart.contentType }})</span>
+                                <pre class="prewrap">
+                                    {%- if messagePart.charset is defined and messagePart.charset %}
+                                        {{- messagePart.body|convert_encoding('UTF-8', messagePart.charset) }}
+                                    {%- else %}
+                                        {{- messagePart.body }}
+                                    {%- endif -%}
+                                </pre>
+                            </div>
+                        {% endif %}
                     {% endfor %}
 
                     {% set attachments = collector.extractAttachments(message) %}
