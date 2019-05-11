@@ -28,6 +28,9 @@
         "symfony/phpunit-bridge": "~3.3|~4.0",
         "symfony/yaml": "~2.7|~3.3|~4.0"
     },
+    "conflict": {
+        "twig/twig": "<1.41|<2.10"
+    },
     "suggest": {
         "psr/log": "Allows logging"
     },
