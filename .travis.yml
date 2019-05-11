@@ -16,8 +16,6 @@ matrix:
   include:
     - php: 7.1
       env: COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER=weak
-    - php: 7.0
-      env: SYMFONY_LTS=^2
     - php: 7.1
       env: SYMFONY_LTS=^3
     - php: 7.2
