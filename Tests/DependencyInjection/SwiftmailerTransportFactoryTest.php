@@ -163,7 +163,7 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The Swiftmailer URL "smtp://localhost:25&auth_mode=cra-md5" is not a valid.
+     * @expectedExceptionMessage The Swiftmailer URL "smtp://localhost:25&auth_mode=cra-md5" is not valid.
      */
     public function testCreateTransportWithBadURLFormat()
     {
