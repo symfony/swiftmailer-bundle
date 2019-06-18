@@ -92,6 +92,11 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('swiftmailer.mailer.default.transport.sendmail', (string) $container->getAlias('swiftmailer.mailer.default.transport'));
 
         $this->assertEquals('local.example.org', $container->get('swiftmailer.mailer.default.transport')->getLocalDomain());
+
+        /** @var \Swift_SendmailTransport $transport */
+        $transport = $container->get('swiftmailer.transport');
+
+        $this->assertEquals('/usr/sbin/sendmail -t -i', $transport->getCommand());
     }
 
     /**
