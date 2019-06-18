@@ -214,6 +214,7 @@ class SwiftmailerExtension extends Extension
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.buffer', $name)),
                     new Reference(sprintf('swiftmailer.mailer.%s.transport.eventdispatcher', $name)),
                 ])
+                ->addMethodCall('setCommand', [$mailer['command']])
                 ->setConfigurator([new Reference(sprintf('swiftmailer.transport.configurator.%s', $name)), 'configure'])
             ;
 
