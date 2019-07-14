@@ -21,6 +21,7 @@ matrix:
     - php: 7.2
     - php: 7.3
       env: DEPENDENCIES=dev
+    - php: 7.4snapshot
 
 before_install:
     - phpenv config-rm xdebug.ini
