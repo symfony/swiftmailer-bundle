@@ -84,7 +84,7 @@ class SwiftmailerExtension extends Extension
 
         if (method_exists($container, 'resolveEnvPlaceholders')) {
             $options = [];
-            $envVariablesAllowed = ['transport', 'url', 'username', 'password', 'host', 'port', 'timeout', 'source_ip', 'local_domain', 'encryption', 'auth_mode', 'command'];
+            $envVariablesAllowed = ['transport', 'url', 'username', 'password', 'host', 'port', 'timeout', 'source_ip', 'local_domain', 'encryption', 'auth_mode', 'command','stream_options'];
             foreach ($envVariablesAllowed as $key) {
                 $container->resolveEnvPlaceholders($mailer[$key], null, $usedEnvs);
                 $options[$key] = $mailer[$key];
@@ -146,7 +146,7 @@ class SwiftmailerExtension extends Extension
 
     protected function configureMailerTransport($name, array $mailer, ContainerBuilder $container, $transport, $isDefaultMailer = false)
     {
-        foreach (['encryption', 'port', 'host', 'username', 'password', 'auth_mode', 'timeout', 'source_ip', 'local_domain'] as $key) {
+        foreach (['encryption', 'port', 'host', 'username', 'password', 'auth_mode', 'timeout', 'source_ip', 'local_domain','stream_options'] as $key) {
             $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.smtp.%s', $name, $key), $mailer[$key]);
         }
 
