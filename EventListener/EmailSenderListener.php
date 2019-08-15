@@ -49,24 +49,43 @@ class EmailSenderListener implements EventSubscriberInterface
             return;
         }
         $mailers = array_keys($this->container->getParameter('swiftmailer.mailers'));
-        foreach ($mailers as $name) {
-            if (method_exists($this->container, 'initialized') ? $this->container->initialized(sprintf('swiftmailer.mailer.%s', $name)) : true) {
-                if ($this->container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $name))) {
-                    $mailer = $this->container->get(sprintf('swiftmailer.mailer.%s', $name));
-                    $transport = $mailer->getTransport();
-                    if ($transport instanceof \Swift_Transport_SpoolTransport) {
-                        $spool = $transport->getSpool();
-                        if ($spool instanceof \Swift_MemorySpool) {
-                            try {
-                                $spool->flushQueue($this->container->get(sprintf('swiftmailer.mailer.%s.transport.real', $name)));
-                            } catch (\Swift_TransportException $exception) {
-                                if (null !== $this->logger) {
-                                    $this->logger->error(sprintf('Exception occurred while flushing email queue: %s', $exception->getMessage()));
-                                }
-                            }
-                        }
-                    }
-                }
+        foreach ($mailers as $mailerName) {
+            $this->flushQueue($mailerName);
+        }
+    }
+
+    private function flushQueue(string $mailerName)
+    {
+        $initialized = !method_exists($this->container, 'initialized')
+            || $this->container->initialized(sprintf('swiftmailer.mailer.%s', $mailerName));
+        if (!$initialized) {
+            return;
+        }
+
+        $spoolIsEnabled = $this->container->getParameter(sprintf('swiftmailer.mailer.%s.spool.enabled', $mailerName));
+        if (!$spoolIsEnabled) {
+            return;
+        }
+
+        $mailer = $this->container->get(sprintf('swiftmailer.mailer.%s', $mailerName));
+        $transport = $mailer->getTransport();
+
+        $isSpollTransport = $transport instanceof \Swift_Transport_SpoolTransport;
+        if (!$isSpollTransport) {
+            return;
+        }
+
+        $spool = $transport->getSpool();
+        $isMemorySpoll = $spool instanceof \Swift_MemorySpool;
+        if (!$isMemorySpoll) {
+            return;
+        }
+
+        try {
+            $spool->flushQueue($this->container->get(sprintf('swiftmailer.mailer.%s.transport.real', $mailerName)));
+        } catch (\Swift_TransportException $exception) {
+            if (null !== $this->logger) {
+                $this->logger->error(sprintf('Exception occurred while flushing email queue: %s', $exception->getMessage()));
             }
         }
     }
