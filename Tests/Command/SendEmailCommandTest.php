@@ -20,7 +20,7 @@ class SendEmailCommandTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('flushQueue')
             ->with($realTransport)
-            ->will($this->returnValue(5))
+            ->willReturn(5)
         ;
 
         $spoolTransport = new \Swift_Transport_SpoolTransport(new \Swift_Events_SimpleEventDispatcher(), $spool);
@@ -96,7 +96,7 @@ class SendEmailCommandTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('flushQueue')
             ->with($realTransport)
-            ->will($this->returnValue(7))
+            ->willReturn(7)
         ;
 
         $spoolTransport = new \Swift_Transport_SpoolTransport(new \Swift_Events_SimpleEventDispatcher(), $spool);

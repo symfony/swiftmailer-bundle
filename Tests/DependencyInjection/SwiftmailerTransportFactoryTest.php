@@ -79,12 +79,11 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf('Swift_Transport_NullTransport', $transport);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The fake_encryption encryption is not supported
-     */
     public function testCreateTransportWithWrongEncryption()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The fake_encryption encryption is not supported');
+
         SwiftmailerTransportFactory::createTransport(
             [
                 'transport' => 'smtp',
@@ -103,12 +102,11 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The fake_auth authentication mode is not supported
-     */
     public function testCreateTransportWithWrongAuthMode()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The fake_auth authentication mode is not supported');
+
         SwiftmailerTransportFactory::createTransport(
             [
                 'transport' => 'smtp',
@@ -161,12 +159,11 @@ class SwiftmailerTransportFactoryTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($authHandler->getAuthMode(), $options['auth_mode']);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage The Swiftmailer URL "smtp://localhost:25&auth_mode=cra-md5" is not valid.
-     */
     public function testCreateTransportWithBadURLFormat()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The Swiftmailer URL "smtp://localhost:25&auth_mode=cra-md5" is not valid.');
+
         $options = [
             'url' => 'smtp://localhost:25&auth_mode=cra-md5',
             'transport' => 'smtp',
