@@ -1,0 +1,32 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2019-11-06T16:15:16Z
+
+@l-vo good catch!
+
+@nicolas-grekas could you please check if this PR is the right fix for this issue? Thanks!
+
+The installation of Symfony 5 is showing the following error at the moment:
+
+```
+$ symfony new --full --version=dev-master my_project
+
+[...]
+
+Script cache:clear returned with error code 1
+!!
+!!  In ParameterBag.php line 98:
+!!
+!!    The service "swiftmailer.spool.file.abstract" has a dependency
+!!    on a non-existent parameter "kernel.root_dir".
+!!
+!!    Did you mean one of these: "kernel.project_dir",
+!!    "kernel.cache_dir", "kernel.logs_dir"?
+!!
+```
+
+---------------------------------------------------------------------------
+
+by l-vo at 2019-11-06T19:39:44Z
+
+@javiereguiluz modified taking in account @nicolas-grekas comment :)
