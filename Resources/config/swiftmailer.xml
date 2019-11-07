@@ -48,7 +48,7 @@
         <service id="swiftmailer.transport.spool.abstract" class="Swift_Transport_SpoolTransport" public="false" abstract="true" />
 
         <service id="swiftmailer.spool.file.abstract" class="Swift_FileSpool" public="false" abstract="true">
-            <argument>%kernel.root_dir%/../data/swiftmailer/spool</argument>
+            <argument />
         </service>
 
         <service id="swiftmailer.spool.memory.abstract" class="Swift_MemorySpool" public="false" abstract="true" />
