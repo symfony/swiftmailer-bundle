@@ -23,7 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * @author Clément JOBEILI <clement.jobeili@gmail.com>
  * @author Jérémy Romey <jeremy@free-agent.fr>
  */
-class MessageDataCollector extends DataCollector
+final class MessageDataCollector extends DataCollector
 {
     private $container;
 
@@ -39,7 +39,7 @@ class MessageDataCollector extends DataCollector
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Exception $exception = null)
+    public function collect(Request $request, Response $response, \Throwable $exception = null)
     {
         $this->reset();
 
