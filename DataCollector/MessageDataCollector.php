@@ -11,10 +11,10 @@
 
 namespace Symfony\Bundle\SwiftmailerBundle\DataCollector;
 
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
 /**
  * MessageDataCollector.
@@ -110,7 +110,7 @@ final class MessageDataCollector extends DataCollector
     public function getMailerData($name)
     {
         if (!isset($this->data['mailer'][$name])) {
-            throw new \LogicException(sprintf('Missing "%s" data in "%s".', $name, \get_class($this)));
+            throw new \LogicException(sprintf('Missing "%s" data in "%s".', $name, static::class));
         }
 
         return $this->data['mailer'][$name];

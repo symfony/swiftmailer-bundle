@@ -144,9 +144,6 @@ class SendEmailCommandTest extends \PHPUnit\Framework\TestCase
         return $tester;
     }
 
-    /**
-     * @return \Swift_ConfigurableSpool
-     */
     private function configurableSpool(): \Swift_ConfigurableSpool
     {
         return new class() extends \Swift_ConfigurableSpool {

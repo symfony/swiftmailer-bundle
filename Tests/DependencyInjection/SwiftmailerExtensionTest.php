@@ -13,8 +13,8 @@ namespace Symfony\Bundle\SwiftmailerBundle\Tests\DependencyInjection;
 
 use Symfony\Bundle\SwiftmailerBundle\DependencyInjection\SwiftmailerExtension;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Compiler\ResolveDefinitionTemplatesPass; // BC with 2.7
-use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
+use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass; // BC with 2.7
+use Symfony\Component\DependencyInjection\Compiler\ResolveDefinitionTemplatesPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -417,7 +417,6 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
     /**
      * @param string $file
      * @param string $type
-     * @param array  $services
      * @param bool   $skipEnvVars
      *
      * @return ContainerBuilder

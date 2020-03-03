@@ -12,11 +12,11 @@
 namespace Symfony\Bundle\SwiftmailerBundle;
 
 use Symfony\Bundle\SwiftmailerBundle\DependencyInjection\Compiler\EnsureNoHotPathPass;
+use Symfony\Bundle\SwiftmailerBundle\DependencyInjection\Compiler\RegisterPluginsPass;
 use Symfony\Component\Console\Application;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Bundle\SwiftmailerBundle\DependencyInjection\Compiler\RegisterPluginsPass;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
