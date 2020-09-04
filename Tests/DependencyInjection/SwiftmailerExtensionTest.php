@@ -110,7 +110,7 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
         /** @var \Swift_SendmailTransport $transport */
         $transport = $container->get('swiftmailer.transport');
 
-        $this->assertEquals('/usr/sbin/sendmail -bs', $transport->getCommand());
+        $this->assertEquals(@ini_get('sendmail_path') ?: '/usr/sbin/sendmail -bs', $transport->getCommand());
     }
 
     /**
