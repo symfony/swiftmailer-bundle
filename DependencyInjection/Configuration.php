@@ -92,7 +92,7 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('url')->defaultNull()->end()
                 ->scalarNode('transport')->defaultValue('smtp')->end()
-                ->scalarNode('command')->defaultValue('/usr/sbin/sendmail -bs')->end()
+                ->scalarNode('command')->defaultValue(@ini_get('sendmail_path') ?: '/usr/sbin/sendmail -bs')->end()
                 ->scalarNode('username')->defaultNull()->end()
                 ->scalarNode('password')->defaultNull()->end()
                 ->scalarNode('host')->defaultValue('localhost')->end()
