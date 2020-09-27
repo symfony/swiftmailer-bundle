@@ -1,3 +1,7 @@
+# 3.5.0
+
+ * bumped Symfony deps to `^4.4|^5.0`
+
 # 3.4.0
 
  * bumped Symfony deps to `^4.3|^5.0`
