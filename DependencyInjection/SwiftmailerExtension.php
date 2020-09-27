@@ -232,9 +232,7 @@ class SwiftmailerExtension extends Extension
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.transport.%s', $transport));
         }
 
-        if (method_exists(Alias::class, 'setPrivate')) {
-            $container->getAlias(sprintf('swiftmailer.mailer.%s.transport', $name))->setPrivate(false);
-        }
+        $container->getAlias(sprintf('swiftmailer.mailer.%s.transport', $name))->setPublic(true);
 
         $definitionDecorator = $this->createChildDefinition('swiftmailer.mailer.abstract');
         $container
