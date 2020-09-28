@@ -84,7 +84,7 @@ class SwiftmailerExtension extends Extension
 
         if (method_exists($container, 'resolveEnvPlaceholders')) {
             $options = [];
-            $envVariablesAllowed = ['transport', 'url', 'username', 'password', 'host', 'port', 'timeout', 'source_ip', 'local_domain', 'encryption', 'auth_mode', 'command','stream_options'];
+            $envVariablesAllowed = ['transport', 'url', 'username', 'password', 'host', 'port', 'timeout', 'source_ip', 'local_domain', 'encryption', 'auth_mode', 'command', 'stream_options'];
             foreach ($envVariablesAllowed as $key) {
                 $container->resolveEnvPlaceholders($mailer[$key], null, $usedEnvs);
                 $options[$key] = $mailer[$key];
@@ -146,7 +146,7 @@ class SwiftmailerExtension extends Extension
 
     protected function configureMailerTransport($name, array $mailer, ContainerBuilder $container, $transport, $isDefaultMailer = false)
     {
-        foreach (['encryption', 'port', 'host', 'username', 'password', 'auth_mode', 'timeout', 'source_ip', 'local_domain','stream_options'] as $key) {
+        foreach (['encryption', 'port', 'host', 'username', 'password', 'auth_mode', 'timeout', 'source_ip', 'local_domain', 'stream_options'] as $key) {
             $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.smtp.%s', $name, $key), $mailer[$key]);
         }
 
@@ -187,7 +187,7 @@ class SwiftmailerExtension extends Extension
                 ->setConfigurator([new Reference(sprintf('swiftmailer.transport.configurator.%s', $name)), 'configure'])
             ;
 
-            if (isset($mailer['stream_options'])) {
+            if ($mailer['stream_options']) {
                 $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.smtp.stream_options', $name), $mailer['stream_options']);
                 $definitionDecorator->addMethodCall('setStreamOptions', [sprintf('%%swiftmailer.mailer.%s.transport.smtp.stream_options%%', $name)]);
             }
@@ -232,9 +232,7 @@ class SwiftmailerExtension extends Extension
             $container->setAlias(sprintf('swiftmailer.mailer.%s.transport', $name), sprintf('swiftmailer.mailer.transport.%s', $transport));
         }
 
-        if (method_exists(Alias::class, 'setPrivate')) {
-            $container->getAlias(sprintf('swiftmailer.mailer.%s.transport', $name))->setPrivate(false);
-        }
+        $container->getAlias(sprintf('swiftmailer.mailer.%s.transport', $name))->setPublic(true);
 
         $definitionDecorator = $this->createChildDefinition('swiftmailer.mailer.abstract');
         $container

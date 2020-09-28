@@ -16,10 +16,9 @@ matrix:
   include:
     - php: 7.1
       env: COMPOSER_FLAGS="--prefer-lowest" SYMFONY_DEPRECATIONS_HELPER=weak
-    - php: 7.1
-      env: SYMFONY_REQUIRE="3.*"
     - php: 7.2
     - php: 7.3
+    - php: 7.4
       env: DEPENDENCIES=dev
 
 before_install:

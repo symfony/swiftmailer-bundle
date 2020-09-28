@@ -62,7 +62,7 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('localhost', $container->getParameter('swiftmailer.mailer.default.transport.smtp.host'));
         $this->assertEquals(25, $container->getParameter('swiftmailer.mailer.default.transport.smtp.port'));
-        $this->assertFalse($container->hasParameter('swiftmailer.mailer.default.transport.smtp.stream_options'));
+        $this->assertEmpty($container->getParameter('swiftmailer.mailer.default.transport.smtp.stream_options'));
 
         $this->assertEquals('example.org', $container->get('swiftmailer.mailer.default.transport')->getLocalDomain());
     }
@@ -145,7 +145,7 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('1000', $container->getParameter('swiftmailer.mailer.default.transport.smtp.timeout'));
         $this->assertEquals('127.0.0.1', $container->getParameter('swiftmailer.mailer.default.transport.smtp.source_ip'));
         $this->assertEquals('local.example.com', $container->getParameter('swiftmailer.mailer.default.transport.smtp.local_domain'));
-        $this->assertSame(['swiftmailer.default.plugin' => [[]]], $container->getDefinition('swiftmailer.mailer.default.plugin.redirecting')->getTags());
+        $this->assertArrayHasKey('swiftmailer.default.plugin', $container->getDefinition('swiftmailer.mailer.default.plugin.redirecting')->getTags());
         $this->assertSame('single@host.com', $container->getParameter('swiftmailer.mailer.default.single_address'));
         $this->assertEquals(['/foo@.*/', '/.*@bar.com$/'], $container->getParameter('swiftmailer.mailer.default.delivery_whitelist'));
     }
@@ -320,10 +320,6 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
      */
     public function testStreamOptions($type)
     {
-        if (!method_exists('Swift_Transport_EsmtpTransport', 'setStreamOptions')) {
-            $this->markTestSkipped('This test requires Swiftmailer 5.4.2 or later.');
-        }
-
         $container = $this->loadContainerFromFile('stream_options', $type);
         $this->assertEquals('example.org', $container->getParameter('swiftmailer.mailer.default.transport.smtp.host'));
         $this->assertEquals('12345', $container->getParameter('swiftmailer.mailer.default.transport.smtp.port'));
@@ -338,7 +334,7 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
     {
         $container = $this->loadContainerFromFile('redirect', $type);
 
-        $this->assertSame(['swiftmailer.default.plugin' => [[]]], $container->getDefinition('swiftmailer.mailer.default.plugin.redirecting')->getTags());
+        $this->assertArrayHasKey('swiftmailer.default.plugin', $container->getDefinition('swiftmailer.mailer.default.plugin.redirecting')->getTags());
         $this->assertSame('single@host.com', $container->getParameter('swiftmailer.mailer.default.single_address'));
         $this->assertEquals(['/foo@.*/', '/.*@bar.com$/'], $container->getParameter('swiftmailer.mailer.default.delivery_whitelist'));
     }
@@ -350,7 +346,7 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
     {
         $container = $this->loadContainerFromFile('redirect_single', $type);
 
-        $this->assertSame(['swiftmailer.default.plugin' => [[]]], $container->getDefinition('swiftmailer.mailer.default.plugin.redirecting')->getTags());
+        $this->assertArrayHasKey('swiftmailer.default.plugin', $container->getDefinition('swiftmailer.mailer.default.plugin.redirecting')->getTags());
         $this->assertSame('single@host.com', $container->getParameter('swiftmailer.mailer.default.single_address'));
         $this->assertSame(['single@host.com'], $container->getParameter('swiftmailer.mailer.default.delivery_addresses'));
         $this->assertEquals(['/foo@.*/'], $container->getParameter('swiftmailer.mailer.default.delivery_whitelist'));
@@ -363,7 +359,7 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
     {
         $container = $this->loadContainerFromFile('redirect_multi', $type);
 
-        $this->assertSame(['swiftmailer.default.plugin' => [[]]], $container->getDefinition('swiftmailer.mailer.default.plugin.redirecting')->getTags());
+        $this->assertArrayHasKey('swiftmailer.default.plugin', $container->getDefinition('swiftmailer.mailer.default.plugin.redirecting')->getTags());
         $this->assertSame(['first@host.com', 'second@host.com'], $container->getParameter('swiftmailer.mailer.default.delivery_addresses'));
     }
 
@@ -374,7 +370,7 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
     {
         $container = $this->loadContainerFromFile('antiflood', $type);
 
-        $this->assertSame(['swiftmailer.default.plugin' => [[]]], $container->getDefinition('swiftmailer.mailer.default.plugin.antiflood')->getTags());
+        $this->assertArrayHasKey('swiftmailer.default.plugin', $container->getDefinition('swiftmailer.mailer.default.plugin.antiflood')->getTags());
     }
 
     /**
@@ -424,11 +420,6 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
     private function loadContainerFromFile($file, $type, array $services = [], $skipEnvVars = false)
     {
         $container = new ContainerBuilder();
-
-        if ($skipEnvVars && !method_exists($container, 'resolveEnvPlaceholders')) {
-            $this->markTestSkipped('Runtime environment variables has been introduced in the Dependency Injection version 3.2.');
-        }
-
         $container->setParameter('kernel.debug', false);
         $container->setParameter('kernel.cache_dir', '/tmp');
 
