@@ -1,6 +1,8 @@
 # 3.5.0
 
- * bumped Symfony deps to `^4.4|^5.0`
+ * Fix support for "stream_options" in configuration
+ * Use "sendmail_path" from "php.ini" as default value for the sendmail path
+ * Bump Symfony deps to `^4.4|^5.0`
 
 # 3.4.0
 
