@@ -62,7 +62,7 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals('localhost', $container->getParameter('swiftmailer.mailer.default.transport.smtp.host'));
         $this->assertEquals(25, $container->getParameter('swiftmailer.mailer.default.transport.smtp.port'));
-        $this->assertFalse($container->hasParameter('swiftmailer.mailer.default.transport.smtp.stream_options'));
+        $this->assertEmpty($container->getParameter('swiftmailer.mailer.default.transport.smtp.stream_options'));
 
         $this->assertEquals('example.org', $container->get('swiftmailer.mailer.default.transport')->getLocalDomain());
     }

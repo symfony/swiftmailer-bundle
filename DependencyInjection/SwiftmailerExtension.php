@@ -187,7 +187,7 @@ class SwiftmailerExtension extends Extension
                 ->setConfigurator([new Reference(sprintf('swiftmailer.transport.configurator.%s', $name)), 'configure'])
             ;
 
-            if (isset($mailer['stream_options'])) {
+            if ($mailer['stream_options']) {
                 $container->setParameter(sprintf('swiftmailer.mailer.%s.transport.smtp.stream_options', $name), $mailer['stream_options']);
                 $definitionDecorator->addMethodCall('setStreamOptions', [sprintf('%%swiftmailer.mailer.%s.transport.smtp.stream_options%%', $name)]);
             }

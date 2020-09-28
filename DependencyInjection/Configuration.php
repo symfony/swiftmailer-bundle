@@ -101,6 +101,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('source_ip')->defaultNull()->end()
                 ->scalarNode('local_domain')->defaultNull()->end()
                 ->arrayNode('stream_options')
+                    ->addDefaultsIfNotSet()
                     ->ignoreExtraKeys(false)
                     ->normalizeKeys(false)
                     ->beforeNormalization()
