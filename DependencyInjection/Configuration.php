@@ -128,12 +128,6 @@ class Configuration implements ConfigurationInterface
                             return $recurse($v['stream-option']);
                         })
                     ->end()
-                    ->validate()
-                        ->ifTrue(function ($v) {
-                            return !method_exists('Swift_Transport_EsmtpTransport', 'setStreamOptions');
-                        })
-                        ->thenInvalid('stream_options is only available in Swiftmailer 5.4.2 or later.')
-                    ->end()
                 ->end()
                 ->scalarNode('encryption')
                     ->defaultNull()

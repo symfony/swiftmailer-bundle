@@ -320,10 +320,6 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
      */
     public function testStreamOptions($type)
     {
-        if (!method_exists('Swift_Transport_EsmtpTransport', 'setStreamOptions')) {
-            $this->markTestSkipped('This test requires Swiftmailer 5.4.2 or later.');
-        }
-
         $container = $this->loadContainerFromFile('stream_options', $type);
         $this->assertEquals('example.org', $container->getParameter('swiftmailer.mailer.default.transport.smtp.host'));
         $this->assertEquals('12345', $container->getParameter('swiftmailer.mailer.default.transport.smtp.port'));
@@ -424,11 +420,6 @@ class SwiftmailerExtensionTest extends \PHPUnit\Framework\TestCase
     private function loadContainerFromFile($file, $type, array $services = [], $skipEnvVars = false)
     {
         $container = new ContainerBuilder();
-
-        if ($skipEnvVars && !method_exists($container, 'resolveEnvPlaceholders')) {
-            $this->markTestSkipped('Runtime environment variables has been introduced in the Dependency Injection version 3.2.');
-        }
-
         $container->setParameter('kernel.debug', false);
         $container->setParameter('kernel.cache_dir', '/tmp');
 
