@@ -144,7 +144,7 @@ class SwiftmailerTransportFactory
      */
     public static function validateConfig($options)
     {
-        if (!\in_array($options['encryption'], ['tls', 'ssl', null], true)) {
+        if (!\in_array($options['encryption'], ['tcp', 'tls', 'ssl', null], true)) {
             throw new \InvalidArgumentException(sprintf('The %s encryption is not supported', $options['encryption']));
         }
 
