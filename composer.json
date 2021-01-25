@@ -29,7 +29,7 @@
         "symfony/yaml": "^4.4|^5.0"
     },
     "conflict": {
-        "twig/twig": "<1.41|<2.10"
+        "twig/twig": "<1.41|>=2.0,<2.10"
     },
     "autoload": {
         "psr-4": { "Symfony\\Bundle\\SwiftmailerBundle\\": "" },
