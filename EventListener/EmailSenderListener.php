@@ -45,7 +45,7 @@ class EmailSenderListener implements EventSubscriberInterface
 
     public function onTerminate()
     {
-        if (!$this->container->has('mailer') || $this->wasExceptionThrown) {
+        if ((!$this->container->has('mailer') && !$this->container->has('swiftmailer.mailer.default')) || $this->wasExceptionThrown) {
             return;
         }
         $mailers = array_keys($this->container->getParameter('swiftmailer.mailers'));
