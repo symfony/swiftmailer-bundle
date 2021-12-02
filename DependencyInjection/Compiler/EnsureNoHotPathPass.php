@@ -20,7 +20,7 @@ class EnsureNoHotPathPass extends AbstractRecursivePass
 {
     protected function processValue($value, $isRoot = false)
     {
-        if ($value instanceof Definition && 0 === strpos($value->getClass(), 'Swift_')) {
+        if ($value instanceof Definition && null !== ($class = $value->getClass()) && 0 === strpos($class, 'Swift_')) {
             $value->clearTag('container.hot_path');
         }
 
