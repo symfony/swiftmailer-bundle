@@ -1,0 +1,46 @@
+---------------------------------------------------------------------------
+
+by fabpot at 2021-03-25T16:47:22Z
+
+Can you check on a recent version of Symfony? 3.5 is very old and not maintained anymore.
+
+---------------------------------------------------------------------------
+
+by mklewitz at 2021-03-25T20:38:00Z
+
+Actually I'm using the newest stable releases. 3.5.2 is the version of swiftmailer-bundle. And the 2.5.2 should've been 5.2.5. Sorry for the typo.
+
+---------------------------------------------------------------------------
+
+by mklewitz at 2021-03-25T21:12:42Z
+
+To make the problem clearer:
+When I inject ContainerInterface as $container this is what happens:
+
+```
+var_dump($container->has('mailer'));
+var_dump($container->has('swiftmailer.mailer'));
+var_dump($container->has('swiftmailer.mailer.default'));
+```
+results in:
+```
+bool(false) bool(false) bool(true)
+```
+
+However, `bin/console debug:container` results in:
+```
+  mailer                                                                               alias for "mailer.mailer"
+  swiftmailer.mailer                                                                   alias for "swiftmailer.mailer.default"
+  swiftmailer.mailer.default                                                           Swift_Mailer
+```
+
+---------------------------------------------------------------------------
+
+by marphi at 2021-08-03T21:55:54Z
+
+I would like to confirm that issue.
+
+When we added to our project (based on symfony 4.4.26) `symfony/mailer`, `mailer` alias has been pointed to `Symfony\Component\Mailer\Mailer` and has been inlined. Execution of `$this->container->has('mailer')` has been return false.
+
+So as a result of that memory spool has been stop sending emails.
+This PR fixes the memory spool.
